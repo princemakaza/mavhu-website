@@ -1,22 +1,32 @@
 import React from "react";
 import {
-  Building2,
+  Database,
+  Smartphone,
+  BarChart3,
+  Cloud,
   Users,
-  CreditCard,
-  Car,
   Shield,
-  Clock,
+  CheckCircle,
   ChevronDown,
   ChevronUp,
-  CheckCircle,
-  DollarSign,
-  FileText,
-  TrendingUp,
-  User,
-  Percent,
+  Zap,
+  MapPin,
+  ArrowRight,
+  Target,
+  BookOpen,
+  Layers,
+  CloudRain,
+  Navigation,
+  Activity,
 } from "lucide-react";
 import Navbar from "../../components/navbar";
 import Footer from "../../components/Footer";
+import skyImage from "../../assets/sky.jpeg";
+import earthImage from "../../assets/earth.jpeg";
+import aiImage from "../../assets/automa.jpeg";
+import esgImage from "../../assets/esg.jpeg";
+import farmersApp from "../../assets/bg-land.png";
+import apiClimate from "../../assets/api.jpg";
 
 const ServicesPage = () => {
   const [isDarkMode, setIsDarkMode] = React.useState(true);
@@ -37,489 +47,660 @@ const ServicesPage = () => {
     setExpandedService(expandedService === index ? null : index);
   };
 
-  // Theme-aware classes
+  // MAVHU Color Theme
+  const logoGreen = isDarkMode ? "#00FF00" : "#008000";
+  const logoYellow = isDarkMode ? "#FFD700" : "#B8860B";
+  const darkBg = "#0A0A0A";
+  const lightBg = "#F5F5F5";
+  const lightCardBg = "#FFFFFF";
+
+  // Theme-aware classes with MAVHU color scheme
   const themeClasses = {
-    bg: isDarkMode ? "bg-gray-950" : "bg-gray-50",
+    bg: isDarkMode ? darkBg : lightBg,
     text: isDarkMode ? "text-white" : "text-gray-900",
-    textSecondary: isDarkMode ? "text-gray-300" : "text-gray-600",
-    textMuted: isDarkMode ? "text-gray-400" : "text-gray-500",
-    cardBg: isDarkMode ? "bg-black/30" : "bg-white/30",
-    cardBgAlt: isDarkMode ? "bg-black/40" : "bg-white/40",
-    border: isDarkMode ? "border-white/10" : "border-gray-200/30",
-    borderHover: isDarkMode ? "border-white/20" : "border-gray-300/50",
+    textSecondary: isDarkMode ? "text-gray-300" : "text-gray-700",
+    textMuted: isDarkMode ? "text-gray-400" : "text-gray-600",
+    cardBg: isDarkMode ? `${darkBg}/30` : `${lightCardBg}/95`,
+    cardBgAlt: isDarkMode ? `${darkBg}/40` : `${lightCardBg}/90`,
+    border: isDarkMode ? "border-white/10" : "border-gray-300/70",
+    borderHover: isDarkMode ? "border-white/20" : "border-gray-400",
     backgroundGradient: isDarkMode
-      ? "bg-gradient-to-br from-gray-900 via-gray-950 to-black"
-      : "bg-gradient-to-br from-gray-100 via-white to-gray-200",
-    glowEffect: isDarkMode ? "shadow-red-500/25" : "shadow-red-500/15",
-    hoverBg: isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100/50",
+      ? `bg-gradient-to-br from-gray-900 via-${darkBg.replace('#', '')} to-black`
+      : `bg-gradient-to-br from-gray-50 via-${lightBg.replace('#', '')} to-gray-100`,
+    glowEffect: isDarkMode ? `shadow-[${logoGreen}]/25` : `shadow-[${logoGreen}]/15`,
+    hoverBg: isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100",
   };
 
   const services = [
     {
-      id: "business-loans",
-      title: "Business Loans",
-      icon: <Building2 className="w-8 h-8" />,
-      image:
-        "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=400&fit=crop",
-      shortDescription:
-        "Fuel your business growth with flexible financing solutions tailored for entrepreneurs and established businesses.",
-      fullDescription:
-        "These are loans for registered businesses, designed to help expand operations, purchase equipment, manage cash flow, or invest in new opportunities. Our business loans come with competitive rates and flexible repayment terms.",
-      color: "from-blue-500 to-indigo-500",
-      features: [
-        "Quick approval process",
-        "Flexible repayment terms",
-        "Competitive interest rates",
-        "No hidden fees",
-        "Business growth support",
-      ],
-      requirements: [
-        "Valid business registration",
-        "Business financial statements",
-        "Bank statements (6 months)",
-        "Business plan",
-        "Collateral (if applicable)",
-      ],
-      loanAmount: "$5,000 - $500,000",
-      interestRate: "8% - 15% per annum",
-      repaymentPeriod: "6 months - 5 years",
-    },
-    {
-      id: "civil-servants-loans",
-      title: "Civil Servants/SSB Loans",
-      icon: <Users className="w-8 h-8" />,
-      image:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=400&fit=crop",
-      shortDescription:
-        "Specialized loans for government employees with competitive rates and salary-based repayments.",
-      fullDescription:
-        "These are loans for government employees and are based on one's salary with repayments being made directly from the government's Salary Services Bureau. Mainly targeting individuals employed by the government of Zimbabwe whose primary source of repayment is their monthly salary. Facility is only available for civil servants.",
+      id: "esg-dashboard",
+      title: "ESG & Climate Intelligence Dashboard",
+      icon: <BarChart3 className="w-8 h-8" />,
+      image: esgImage,
+      shortDescription: "Comprehensive platform for monitoring climate indicators, tracking verified outcomes, and supporting ESG disclosures with accurate, audit-ready data.",
+      fullDescription: "The MAVHU ESG & Climate Intelligence Dashboard integrates satellite data, drone imagery, ground verification, and automated MRV systems to deliver trusted climate and sustainability data. Built for financial institutions, corporates, governments, and climate project developers who require accurate data for decision-making and reporting.",
       color: "from-green-500 to-emerald-500",
       features: [
-        "Salary-based repayments",
-        "Direct deduction from payroll",
-        "Preferential rates for government employees",
-        "Quick processing",
-        "Minimal documentation",
+        "Real-time climate monitoring and alerts",
+        "ESG reporting compliance automation",
+        "Portfolio tracking and analytics",
+        "Automated MRV (Measurement, Reporting, Verification)",
+        "Audit-ready data verification trails",
+        "Multi-stakeholder customizable dashboards",
       ],
-      requirements: [
-        "Government employment certificate",
-        "Salary slips (3 months)",
-        "National ID",
-        "Bank statements",
-        "Service letter",
+      useCases: [
+        "Financial institutions for climate risk assessment",
+        "Corporate ESG teams for sustainability reporting",
+        "Government agencies for climate policy monitoring",
+        "Project developers for impact verification and carbon credits",
       ],
-      loanAmount: "$1,000 - $50,000",
-      interestRate: "6% - 12% per annum",
-      repaymentPeriod: "12 months - 4 years",
+      dataSources: [
+        "Satellite imagery (historical & real-time)",
+        "Drone data collection",
+        "Ground truth verification teams",
+        "IoT sensor networks",
+        "Government climate databases",
+      ],
+      // ctaText: "Request Dashboard Demo",
     },
     {
-      id: "salary-based-loans",
-      title: "Salary Based Loans",
-      icon: <CreditCard className="w-8 h-8" />,
-      image:
-        "https://images.unsplash.com/photo-1494790108755-2616c58e9c9d?w=600&h=400&fit=crop",
-      shortDescription:
-        "Quick personal loans based on your monthly salary with instant approval and competitive rates.",
-      fullDescription:
-        "Quick loans based on your monthly salary with instant approval and competitive interest rates for salaried employees. Perfect for personal expenses, emergencies, or planned purchases.",
+      id: "farmer-app",
+      title: "Farmer App & Field Intelligence",
+      icon: <Smartphone className="w-8 h-8" />,
+      image: farmersApp,
+      shortDescription: "Mobile application for farmers to capture farm-level data, receive climate insights, and ensure compliance with agricultural and climate programs.",
+      fullDescription: "The MAVHU Farmer App is designed for farmers, cooperatives, and field teams participating in climate, sustainability, or agricultural programmes. It combines on-the-ground data collection with drone and satellite monitoring, delivering localized climate insights that improve resilience and decision-making. Verified farm-level data feeds securely into broader climate and ESG systems.",
+      color: "from-yellow-500 to-amber-500",
+      features: [
+        "Offline-first data collection (works without internet)",
+        "GPS field mapping and boundary delineation",
+        "Climate-smart farming recommendations",
+        "Program compliance tracking and reporting",
+        "Yield prediction models using AI",
+        "Multi-language support for African languages",
+        "Automated data sync with central systems",
+      ],
+      capabilities: [
+        "Crop health monitoring via satellite NDVI",
+        "Soil moisture and nutrient tracking",
+        "Weather alerts and climate predictions",
+        "Pest and disease early warning",
+        "Input usage optimization",
+        "Carbon sequestration tracking",
+      ],
+      targetUsers: [
+        "Smallholder farmers for data-driven decisions",
+        "Agricultural cooperatives for collective monitoring",
+        "Field extension officers for program implementation",
+        "NGOs for impact assessment",
+        "Insurance companies for risk assessment",
+      ],
+      // ctaText: "Download App / Request Demo",
+    },
+    {
+      id: "climate-apis",
+      title: "Climate Data APIs Suite",
+      icon: <Database className="w-8 h-8" />,
+      image: apiClimate,
+      shortDescription: "Enterprise-grade APIs providing verified, locally grounded climate intelligence for integration into organizational systems and applications.",
+      fullDescription: "MAVHU provides secure, enterprise-grade climate data APIs that enable organisations to integrate verified, locally grounded climate intelligence directly into their systems. Our APIs combine Earth observation data, ground verification, and AI analytics to deliver actionable insights across multiple climate dimensions.",
+      color: "from-blue-500 to-cyan-500",
+      apiCategories: [
+        {
+          name: "Earth Surface Intelligence",
+          icon: <MapPin className="w-5 h-5" />,
+          apis: [
+            {
+              title: "Land & Land-Use Intelligence API",
+              description: "Verified data on land use, land cover change, and vegetation dynamics to support monitoring, verification, and risk assessment.",
+              features: ["Historical land use analysis", "Deforestation alerts", "Crop type classification", "Land degradation scoring"],
+            },
+            {
+              title: "Soil & Carbon Intelligence API",
+              description: "Soil indicators and carbon measurement insights derived from geospatial intelligence and ground-truth verification.",
+              features: ["Soil health metrics", "Carbon stock estimation", "Erosion risk assessment", "Nutrient level monitoring"],
+            },
+          ],
+        },
+        {
+          name: "Climate & Atmospheric Intelligence",
+          icon: <Cloud className="w-5 h-5" />,
+          apis: [
+            {
+              title: "Climate Risk & Resilience API",
+              description: "Localized climate risk and resilience indicators to inform planning, underwriting, and adaptation strategies.",
+              features: ["Extreme weather risk scores", "Drought/flood vulnerability", "Climate adaptation indices", "Long-term trend analysis"],
+            },
+            {
+              title: "Weather & Microclimate API",
+              description: "Hyper-local weather data and microclimate conditions for agricultural and infrastructure planning.",
+              features: ["Precipitation forecasts", "Temperature extremes", "Humidity patterns", "Wind speed/direction data"],
+            },
+          ],
+        },
+        {
+          name: "Verification & Compliance",
+          icon: <Shield className="w-5 h-5" />,
+          apis: [
+            {
+              title: "MRV & Verification Status API",
+              description: "Access to verification status, audit trails, and MRV outputs for climate and sustainability programmes.",
+              features: ["Automated verification workflows", "Audit trail generation", "Compliance status tracking", "Real-time validation updates"],
+            },
+            {
+              title: "ESG & Sustainability Metrics API",
+              description: "Standardized climate and environmental indicators designed to integrate directly into ESG reporting platforms.",
+              features: ["SDG alignment metrics", "Carbon footprint calculations", "Biodiversity impact scores", "Water usage analytics"],
+            },
+          ],
+        },
+      ],
+      // ctaText: "Request API Access",
+    },
+    {
+      id: "training",
+      title: "Training & Capacity Building",
+      icon: <Users className="w-8 h-8" />,
+      image: "https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=600&h=400&fit=crop",
+      shortDescription: "Comprehensive training programs to build capacity in climate data management, ESG reporting, and sustainable agricultural practices.",
+      fullDescription: "MAVHU's training services support farmers, agricultural organisations, institutions, and implementation partners involved in climate and sustainability initiatives. We deliver locally grounded field engagement, structured learning modules, and digital tools aligned with our data systems to ensure long-term data quality and local capacity building.",
       color: "from-purple-500 to-pink-500",
-      features: [
-        "Instant approval",
-        "Based on salary multiples",
-        "Quick disbursement",
-        "Online application",
-        "Flexible use of funds",
+      trainingModules: [
+        "Climate Data Literacy & Digital Skills",
+        "ESG Reporting Fundamentals & Standards",
+        "MRV System Implementation & Management",
+        "Farm-Level Data Collection Best Practices",
+        "Climate Risk Assessment & Adaptation",
+        "Sustainable Agriculture Practices & Certification",
+        "Drone & Satellite Data Interpretation",
+        "Carbon Credit Project Development",
       ],
-      requirements: [
-        "Employment letter",
-        "Salary slips (3 months)",
-        "Bank statements",
-        "National ID",
-        "Proof of address",
+      deliveryMethods: [
+        "In-person field training sessions",
+        "Digital learning platforms with certifications",
+        "Train-the-trainer programs for scalability",
+        "Customized organizational training packages",
+        "Workshops and webinars on emerging topics",
+        "Field demonstrations and practical exercises",
       ],
-      loanAmount: "$500 - $25,000",
-      interestRate: "10% - 18% per annum",
-      repaymentPeriod: "6 months - 3 years",
-    },
-    {
-      id: "asset-finance",
-      title: "Asset Finance",
-      icon: <Car className="w-8 h-8" />,
-      image:
-        "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=600&h=400&fit=crop",
-      shortDescription:
-        "Finance your valuable assets including vehicles, property, and equipment with competitive terms.",
-      fullDescription:
-        "Loans financing against your valuable assets including vehicles, property, and equipment as collateral. Perfect for acquiring business assets or personal property with the asset serving as security.",
-      color: "from-orange-500 to-red-500",
-      features: [
-        "Asset as collateral",
-        "Lower interest rates",
-        "Longer repayment terms",
-        "Retain asset ownership",
-        "Quick valuation process",
+      targetAudience: [
+        "Farmers and agricultural cooperatives",
+        "Government extension officers & agencies",
+        "NGO implementation partners",
+        "Corporate sustainability & ESG teams",
+        "Financial institution analysts",
+        "Climate project developers",
+        "Academic & research institutions",
       ],
-      requirements: [
-        "Asset valuation report",
-        "Proof of ownership",
-        "Insurance documents",
-        "Income verification",
-        "National ID",
-      ],
-      loanAmount: "$10,000 - $1,000,000",
-      interestRate: "7% - 14% per annum",
-      repaymentPeriod: "1 year - 7 years",
-    },
-    {
-      id: "collateral-loans",
-      title: "Collateral Loans",
-      icon: <Shield className="w-8 h-8" />,
-      image:
-        "https://images.unsplash.com/photo-1544427920-c49ccfb85579?w=600&h=400&fit=crop",
-      shortDescription:
-        "Secure loans backed by valuable assets with lower interest rates and flexible repayment terms.",
-      fullDescription:
-        "Secure loans backed by your valuable assets. Lower interest rates with flexible repayment terms using property, vehicles, or other valuable assets as security for the loan.",
-      color: "from-teal-500 to-cyan-500",
-      features: [
-        "Lower interest rates",
-        "Higher loan amounts",
-        "Flexible terms",
-        "Multiple collateral options",
-        "Quick approval with collateral",
-      ],
-      requirements: [
-        "Collateral documents",
-        "Asset valuation",
-        "Proof of ownership",
-        "Insurance coverage",
-        "Income proof",
-      ],
-      loanAmount: "$15,000 - $2,000,000",
-      interestRate: "5% - 12% per annum",
-      repaymentPeriod: "1 year - 10 years",
-    },
-    {
-      id: "pensioner-loans",
-      title: "Pensioner Loans",
-      icon: <User className="w-8 h-8" />,
-      image:
-        "https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=600&h=400&fit=crop",
-      shortDescription:
-        "Specialized loans for retirees with pension-backed security and favorable terms.",
-      fullDescription:
-        "These are loans specifically designed for retirees with pension-backed security and favorable terms. Perfect for pensioners who need financial assistance with guaranteed pension income as security.",
-      color: "from-indigo-500 to-purple-500",
-      features: [
-        "Pension-backed security",
-        "Senior-friendly terms",
-        "Lower documentation",
-        "Favorable interest rates",
-        "Flexible repayment",
-      ],
-      requirements: [
-        "Pension certificate",
-        "Pension slips (6 months)",
-        "National ID",
-        "Bank statements",
-        "Medical certificate",
-      ],
-      loanAmount: "$1,000 - $30,000",
-      interestRate: "8% - 15% per annum",
-      repaymentPeriod: "12 months - 5 years",
+      // ctaText: "Enroll Now / Request Training",
     },
   ];
+
+  const mavhuApproach = [
+    {
+      title: "MAVHU Sky",
+      description: "Harnessing drones, satellites, and geospatial technology for comprehensive aerial data collection",
+      image: skyImage,
+      features: [
+        "Multi-spectral satellite imagery",
+        "Drone-based high-resolution mapping",
+        "Weather satellite data integration",
+        "Aerial sensor networks",
+        "Real-time atmospheric monitoring",
+      ],
+      color: "from-blue-500 to-cyan-500",
+    },
+    {
+      title: "MAVHU Earth",
+      description: "Ground-truthing through field verification, ensuring data is accurate and locally relevant",
+      image: earthImage,
+      features: [
+        "Field verification teams across Africa",
+        "Soil sampling and analysis",
+        "Vegetation ground truthing",
+        "Local knowledge integration",
+        "Community-led data collection",
+      ],
+      color: "from-green-500 to-emerald-500",
+    },
+    {
+      title: "MAVHU AI",
+      description: "Utilizing machine learning and automated MRV to process and report data efficiently",
+      image: aiImage,
+      features: [
+        "Machine learning algorithms for pattern recognition",
+        "Automated data validation pipelines",
+        "Predictive analytics for climate trends",
+        "Natural language processing for reports",
+        "Automated anomaly detection",
+      ],
+      color: "from-purple-500 to-pink-500",
+    },
+  ];
+
 
   return (
     <div
       className={`min-h-screen ${themeClasses.bg} ${themeClasses.text} overflow-hidden transition-colors duration-300`}
+      style={{
+        '--logo-green': logoGreen,
+        '--logo-yellow': logoYellow,
+      } as React.CSSProperties}
     >
       {/* Animated Background */}
       <div
         className={`fixed inset-0 ${themeClasses.backgroundGradient} transition-all duration-300`}
       >
         <div
-          className={`absolute inset-0 ${
-            isDarkMode
-              ? "bg-[radial-gradient(circle_at_50%_50%,rgba(239,68,68,0.1),transparent_50%)]"
-              : "bg-[radial-gradient(circle_at_50%_50%,rgba(239,68,68,0.05),transparent_50%)]"
-          }`}
+          className={`absolute inset-0 ${isDarkMode
+            ? "bg-[radial-gradient(circle_at_50%_50%,rgba(0,255,0,0.1),transparent_50%)]"
+            : "bg-[radial-gradient(circle_at_50%_50%,rgba(0,128,0,0.05),transparent_50%)]"
+            }`}
         ></div>
         <div
-          className={`absolute inset-0 ${
-            isDarkMode
-              ? "bg-[radial-gradient(circle_at_80%_20%,rgba(251,191,36,0.1),transparent_50%)]"
-              : "bg-[radial-gradient(circle_at_80%_20%,rgba(251,191,36,0.05),transparent_50%)]"
-          }`}
+          className={`absolute inset-0 ${isDarkMode
+            ? "bg-[radial-gradient(circle_at_80%_20%,rgba(255,215,0,0.1),transparent_50%)]"
+            : "bg-[radial-gradient(circle_at_80%_20%,rgba(184,134,11,0.05),transparent_50%)]"
+            }`}
         ></div>
         <div
-          className={`absolute w-96 h-96 bg-gradient-to-r ${
-            isDarkMode
-              ? "from-red-500/20 to-yellow-500/20"
-              : "from-red-500/10 to-yellow-500/10"
-          } rounded-full blur-3xl transition-all duration-1000 ease-out`}
+          className={`absolute w-96 h-96 rounded-full blur-3xl transition-all duration-1000 ease-out`}
           style={{
             left: mousePosition.x - 192,
             top: mousePosition.y - 192,
+            background: isDarkMode
+              ? `radial-gradient(circle, ${logoGreen}20, transparent 70%)`
+              : `radial-gradient(circle, ${logoGreen}10, transparent 70%)`,
           }}
         ></div>
       </div>
 
       {/* Navigation */}
-      <Navbar
-        isDarkMode={isDarkMode}
-        setIsDarkMode={setIsDarkMode}
-        // scrollToSection={scrollToSection}
-      />
+      <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
 
       {/* Hero Section */}
-      <section className="relative pt-10 ">
+      <section className="relative pt-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center ">
+          <div className="text-center">
             <h1
               className={`text-6xl lg:text-7xl font-bold leading-tight mb-8 ${themeClasses.text}`}
             >
               Our
-              <span className="bg-gradient-to-r from-red-400 via-yellow-400 to-red-400 bg-clip-text text-transparent">
-                {" "}
-                Services
-              </span>
+              <span style={{ color: logoGreen }}> Integrated</span>
+              <br />
+              <span style={{ color: logoYellow }}>Climate Solutions</span>
             </h1>
             <p
               className={`text-xl ${themeClasses.textSecondary} mb-10 leading-relaxed max-w-4xl mx-auto`}
             >
-              Discover our comprehensive range of financial solutions designed
-              to meet your unique needs. From business growth to personal goals,
-              we have the perfect loan product for you.
+              Combining Earth observation, ground verification, and AI analytics to deliver trusted climate intelligence across Africa's skies, earth, and communities.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Services Grid */}
-      <section className="py-10 relative">
+      {/* MAVHU Approach Section */}
+      <section className="py-16 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-8">
-            {services.map((service, index) => (
+          <div className="text-center mb-12">
+            <h2 className={`text-4xl font-bold ${themeClasses.text} mb-6`}>
+              The
+              <span style={{ color: logoGreen }}> MAVHU</span>
+              <span style={{ color: logoYellow }}> Approach</span>
+            </h2>
+            <p className={`text-lg ${themeClasses.textMuted} max-w-3xl mx-auto`}>
+              Our integrated methodology spans from the skies above to the earth below,
+              powered by intelligent analytics for complete climate intelligence.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {mavhuApproach.map((approach, index) => (
               <div
-                key={service.id}
-                className={`${themeClasses.cardBg} backdrop-blur-xl rounded-3xl overflow-hidden border ${themeClasses.border} hover:${themeClasses.borderHover} transition-all duration-500 hover:shadow-2xl hover:shadow-red-500/10`}
+                key={index}
+                className={`${themeClasses.cardBg} backdrop-blur-xl rounded-2xl overflow-hidden border ${themeClasses.border} hover:${themeClasses.borderHover} transition-all duration-300 hover:transform hover:scale-105 group`}
               >
-                {/* Service Header */}
-                <div className="grid lg:grid-cols-3 gap-8 p-8">
-                  {/* Service Image */}
-                  <div className="lg:col-span-1">
-                    <div className="relative h-64 lg:h-full min-h-[250px] rounded-2xl overflow-hidden">
-                      <img
-                        src={service.image}
-                        alt={service.title}
-                        className="w-full h-full object-cover"
-                      />
-                      <div
-                        className={`absolute inset-0 bg-gradient-to-br ${service.color} opacity-20`}
-                      ></div>
-                      <div className="absolute top-4 left-4">
-                        <div
-                          className={`w-12 h-12 bg-gradient-to-br ${service.color} rounded-xl flex items-center justify-center text-white shadow-lg`}
-                        >
-                          {service.icon}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                {/* Image with gradient overlay */}
+                <div className="relative h-48 overflow-hidden">
+                  <img
+                    src={approach.image}
+                    alt={approach.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  {/* Gradient overlay based on approach */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${approach.color} opacity-30`}></div>
+                  {/* Dark overlay for text readability */}
+                  <div className={`absolute inset-0 bg-gradient-to-t ${isDarkMode ? 'from-black/80 via-black/40 to-transparent' : 'from-black/60 via-black/30 to-transparent'}`}></div>
 
-                  {/* Service Content */}
-                  <div className="lg:col-span-2 space-y-6">
-                    <div>
-                      <h3
-                        className={`text-3xl font-bold ${themeClasses.text} mb-4`}
-                      >
-                        {service.title}
-                      </h3>
-                      <p
-                        className={`${themeClasses.textSecondary} text-lg leading-relaxed mb-6`}
-                      >
-                        {service.shortDescription}
-                      </p>
-                    </div>
-
-                    {/* Key Details */}
-                    <div className="grid md:grid-cols-3 gap-4">
-                      <div
-                        className={`${
-                          isDarkMode ? "bg-white/5" : "bg-gray-100/50"
-                        } rounded-xl p-4 backdrop-blur-sm`}
-                      >
-                        <div className="flex items-center mb-2">
-                          <DollarSign className="w-5 h-5 text-green-400 mr-2" />
-                          <span
-                            className={`text-sm font-semibold ${themeClasses.text}`}
-                          >
-                            Loan Amount
-                          </span>
-                        </div>
-                        <p className={`${themeClasses.textMuted} text-sm`}>
-                          {service.loanAmount}
-                        </p>
-                      </div>
-                      <div
-                        className={`${
-                          isDarkMode ? "bg-white/5" : "bg-gray-100/50"
-                        } rounded-xl p-4 backdrop-blur-sm`}
-                      >
-                        <div className="flex items-center mb-2">
-                          <Percent className="w-5 h-5 text-blue-400 mr-2" />
-                          <span
-                            className={`text-sm font-semibold ${themeClasses.text}`}
-                          >
-                            Interest Rate
-                          </span>
-                        </div>
-                        <p className={`${themeClasses.textMuted} text-sm`}>
-                          {service.interestRate}
-                        </p>
-                      </div>
-                      <div
-                        className={`${
-                          isDarkMode ? "bg-white/5" : "bg-gray-100/50"
-                        } rounded-xl p-4 backdrop-blur-sm`}
-                      >
-                        <div className="flex items-center mb-2">
-                          <Clock className="w-5 h-5 text-orange-400 mr-2" />
-                          <span
-                            className={`text-sm font-semibold ${themeClasses.text}`}
-                          >
-                            Repayment
-                          </span>
-                        </div>
-                        <p className={`${themeClasses.textMuted} text-sm`}>
-                          {service.repaymentPeriod}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Expand Button */}
-                    <button
-                      onClick={() => toggleService(index)}
-                      className={`w-full flex items-center justify-center py-3 px-6 bg-gradient-to-r ${service.color} text-white rounded-xl font-semibold transition-all hover:scale-105 shadow-lg`}
-                    >
-                      {expandedService === index ? (
-                        <>
-                          Less Details <ChevronUp className="ml-2 w-5 h-5" />
-                        </>
-                      ) : (
-                        <>
-                          More Details <ChevronDown className="ml-2 w-5 h-5" />
-                        </>
-                      )}
-                    </button>
+                  {/* Title overlay on image */}
+                  <div className="absolute bottom-0 left-0 right-0 p-6">
+                    <h3 className={`text-2xl font-bold text-white mb-2`}>
+                      {approach.title}
+                    </h3>
+                    <p className={`text-white/80 text-sm`}>
+                      {approach.description}
+                    </p>
                   </div>
                 </div>
 
+                {/* Features list below */}
+                <div className="p-6">
+                  <h4 className={`text-lg font-semibold ${themeClasses.text} mb-4 flex items-center`}>
+                    <div className="w-3 h-3 rounded-full mr-2"
+                      style={{
+                        backgroundColor: approach.title.includes('Sky') ? '#3b82f6' :
+                          approach.title.includes('Earth') ? logoGreen :
+                            '#a855f7'
+                      }}></div>
+                    Key Capabilities
+                  </h4>
+                  <ul className="space-y-2">
+                    {approach.features.map((feature, idx) => (
+                      <li key={idx} className={`flex items-start ${themeClasses.textMuted} text-sm`}>
+                        <CheckCircle className="w-4 h-4 mr-3 mt-0.5 flex-shrink-0"
+                          style={{
+                            color: approach.title.includes('Sky') ? '#3b82f6' :
+                              approach.title.includes('Earth') ? logoGreen :
+                                '#a855f7'
+                          }} />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Services Grid - Single Column Layout */}
+      <section className="py-10 relative">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className={`text-4xl font-bold ${themeClasses.text} mb-6`}>
+              <span style={{ color: logoGreen }}>Our</span>
+              <span style={{ color: logoYellow }}> Services</span>
+            </h2>
+            <p className={`text-lg ${themeClasses.textMuted} max-w-3xl mx-auto`}>
+              Click or hover on any service card to view detailed information
+            </p>
+          </div>
+
+          <div className="space-y-8">
+            {services.map((service, index) => (
+              <div
+                key={service.id}
+                className={`${themeClasses.cardBg} backdrop-blur-xl rounded-2xl overflow-hidden border ${themeClasses.border} hover:${themeClasses.borderHover} transition-all duration-500 group relative`}
+                onMouseEnter={() => expandedService === null && setExpandedService(index)}
+                onMouseLeave={() => expandedService === index && setExpandedService(null)}
+                onClick={() => toggleService(index)}
+              >
+                {/* Service Header */}
+                <div className="p-6 cursor-pointer">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start space-x-4">
+                      <div className={`p-3 rounded-xl bg-gradient-to-br ${service.color} backdrop-blur-sm flex-shrink-0`}>
+                        <div className="text-white">{service.icon}</div>
+                      </div>
+                      <div>
+                        <h3 className={`text-2xl font-bold ${themeClasses.text} mb-2`}>
+                          {service.title}
+                        </h3>
+                        <p className={`${themeClasses.textMuted} mb-4`}>
+                          {service.shortDescription}
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          <span className="px-3 py-1 rounded-full text-sm font-medium backdrop-blur-sm bg-black/50 text-white">
+                            {service.id.includes('api') ? 'Enterprise APIs' :
+                              service.id.includes('app') ? 'Mobile Platform' :
+                                service.id.includes('dashboard') ? 'Web Platform' : 'Services'}
+                          </span>
+                          <span className="px-3 py-1 rounded-full text-sm font-medium backdrop-blur-sm"
+                            style={{
+                              background: `${logoGreen}${isDarkMode ? '30' : '20'}`,
+                              color: logoGreen
+                            }}>
+                            Pan-African Coverage
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex-shrink-0 ml-4">
+                      {expandedService === index ? (
+                        <ChevronUp className="w-6 h-6" style={{ color: logoGreen }} />
+                      ) : (
+                        <ChevronDown className="w-6 h-6" style={{ color: logoGreen }} />
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Service Image */}
+                <div className="relative h-64 overflow-hidden">
+                  <img
+                    src={service.image}
+                    alt={service.title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className={`absolute inset-0 bg-gradient-to-t ${isDarkMode ? 'from-black/70 via-black/40 to-transparent' : 'from-black/60 via-black/30 to-transparent'}`}></div>
+                </div>
+
                 {/* Expanded Content */}
-                {expandedService === index && (
-                  <div
-                    className={`border-t ${themeClasses.border} p-8 ${
-                      isDarkMode ? "bg-white/5" : "bg-gray-100/30"
-                    } backdrop-blur-sm`}
-                  >
-                    <div className="grid lg:grid-cols-3 gap-8">
-                      {/* Full Description */}
-                      <div className="lg:col-span-3 mb-8">
-                        <h4
-                          className={`text-xl font-semibold ${themeClasses.text} mb-4`}
-                        >
-                          What is a {service.title}?
+                {(expandedService === index) && (
+                  <div className={`p-6 border-t ${themeClasses.border} ${isDarkMode ? "bg-white/5" : "bg-gray-100/30"}`}>
+                    <div className="grid md:grid-cols-2 gap-8">
+                      {/* Left Column */}
+                      <div>
+                        <h4 className={`text-xl font-bold ${themeClasses.text} mb-4`}>
+                          Detailed Description
                         </h4>
-                        <p
-                          className={`${themeClasses.textSecondary} leading-relaxed`}
-                        >
+                        <p className={`${themeClasses.textSecondary} leading-relaxed mb-6`}>
                           {service.fullDescription}
                         </p>
+
+                        {/* Features */}
+                        {service.features && (
+                          <div className="mb-6">
+                            <h5 className={`text-lg font-semibold ${themeClasses.text} mb-3 flex items-center`}>
+                              <CheckCircle className="w-5 h-5 mr-2" style={{ color: logoGreen }} />
+                              Key Features
+                            </h5>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                              {service.features.map((feature, idx) => (
+                                <div key={idx} className="flex items-start">
+                                  <div className="w-2 h-2 rounded-full mt-2 mr-3 flex-shrink-0" style={{ backgroundColor: logoGreen }}></div>
+                                  <span className={`${themeClasses.textMuted} text-sm`}>{feature}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Training Modules */}
+                        {service.trainingModules && (
+                          <div className="mb-6">
+                            <h5 className={`text-lg font-semibold ${themeClasses.text} mb-3 flex items-center`}>
+                              <BookOpen className="w-5 h-5 mr-2" style={{ color: logoGreen }} />
+                              Training Modules
+                            </h5>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                              {service.trainingModules.slice(0, 6).map((module, idx) => (
+                                <div key={idx} className="flex items-start">
+                                  <div className="w-2 h-2 rounded-full mt-2 mr-3 flex-shrink-0"
+                                    style={{
+                                      background: `linear-gradient(to bottom right, ${logoGreen}, ${logoYellow})`
+                                    }}></div>
+                                  <span className={`${themeClasses.textMuted} text-sm`}>{module}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
 
-                      {/* Features */}
+                      {/* Right Column */}
                       <div>
-                        <h4
-                          className={`text-lg font-semibold ${themeClasses.text} mb-4 flex items-center`}
-                        >
-                          <CheckCircle className="w-5 h-5 text-green-400 mr-2" />
-                          Key Features
-                        </h4>
-                        <ul className="space-y-2">
-                          {service.features.map((feature, idx) => (
-                            <li
-                              key={idx}
-                              className={`flex items-start ${themeClasses.textSecondary} text-sm`}
-                            >
-                              <div className="w-2 h-2 bg-gradient-to-br from-red-400 to-yellow-400 rounded-full mr-3 mt-2 flex-shrink-0"></div>
-                              {feature}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
+                        {/* Use Cases */}
+                        {service.useCases && (
+                          <div className="mb-8">
+                            <h5 className={`text-lg font-semibold ${themeClasses.text} mb-3 flex items-center`}>
+                              <Target className="w-5 h-5 mr-2" style={{ color: logoGreen }} />
+                              Use Cases
+                            </h5>
+                            <div className="space-y-2">
+                              {service.useCases.map((useCase, idx) => (
+                                <div key={idx} className="flex items-start">
+                                  <div className="w-2 h-2 rounded-full mt-2 mr-3 flex-shrink-0" style={{ backgroundColor: logoYellow }}></div>
+                                  <span className={`${themeClasses.textMuted}`}>{useCase}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
 
-                      {/* Requirements */}
-                      <div>
-                        <h4
-                          className={`text-lg font-semibold ${themeClasses.text} mb-4 flex items-center`}
-                        >
-                          <FileText className="w-5 h-5 text-blue-400 mr-2" />
-                          Requirements
-                        </h4>
-                        <ul className="space-y-2">
-                          {service.requirements.map((requirement, idx) => (
-                            <li
-                              key={idx}
-                              className={`flex items-start ${themeClasses.textSecondary} text-sm`}
-                            >
-                              <div className="w-2 h-2 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full mr-3 mt-2 flex-shrink-0"></div>
-                              {requirement}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
+                        {/* Capabilities */}
+                        {service.capabilities && (
+                          <div className="mb-8">
+                            <h5 className={`text-lg font-semibold ${themeClasses.text} mb-3 flex items-center`}>
+                              <Zap className="w-5 h-5 mr-2" style={{ color: logoGreen }} />
+                              Capabilities
+                            </h5>
+                            <div className="grid grid-cols-2 gap-3">
+                              {service.capabilities.map((capability, idx) => (
+                                <div key={idx} className={`text-center p-3 rounded-lg ${isDarkMode ? 'bg-white/5' : 'bg-gray-100/50'}`}>
+                                  <div className={`text-sm ${themeClasses.textMuted}`}>{capability}</div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
 
-                      {/* Application Process */}
-                      <div>
-                        <h4
-                          className={`text-lg font-semibold ${themeClasses.text} mb-4 flex items-center`}
-                        >
-                          <TrendingUp className="w-5 h-5 text-yellow-400 mr-2" />
-                          How to Apply
-                        </h4>
-                        <div className="space-y-3">
-                          {[
-                            "Complete online application",
-                            "Submit required documents",
-                            "Wait for instant review",
-                            "Receive approval decision",
-                            "Get funds disbursed",
-                          ].map((step, idx) => (
-                            <div
-                              key={idx}
-                              className={`flex items-center ${themeClasses.textSecondary} text-sm`}
-                            >
-                              <div
-                                className={`w-6 h-6 bg-gradient-to-br ${service.color} rounded-full flex items-center justify-center text-white text-xs font-bold mr-3 flex-shrink-0`}
-                              >
-                                {idx + 1}
+                        {/* Target Users */}
+                        {service.targetUsers && (
+                          <div className="mb-8">
+                            <h5 className={`text-lg font-semibold ${themeClasses.text} mb-3 flex items-center`}>
+                              <Users className="w-5 h-5 mr-2" style={{ color: logoGreen }} />
+                              Target Users
+                            </h5>
+                            <div className="space-y-2">
+                              {service.targetUsers.map((user, idx) => (
+                                <div key={idx} className="flex items-start">
+                                  <div className="w-2 h-2 rounded-full mt-2 mr-3 flex-shrink-0" style={{ backgroundColor: logoGreen }}></div>
+                                  <span className={`${themeClasses.textMuted} text-sm`}>{user}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Data Sources */}
+                        {service.dataSources && (
+                          <div className="mb-8">
+                            <h5 className={`text-lg font-semibold ${themeClasses.text} mb-3 flex items-center`}>
+                              <Database className="w-5 h-5 mr-2" style={{ color: logoGreen }} />
+                              Data Sources
+                            </h5>
+                            <div className="flex flex-wrap gap-2">
+                              {service.dataSources.map((source, idx) => (
+                                <span key={idx} className="px-3 py-1 rounded-full text-xs font-medium"
+                                  style={{
+                                    background: `${logoGreen}${isDarkMode ? '20' : '10'}`,
+                                    color: logoGreen
+                                  }}>
+                                  {source}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Delivery Methods */}
+                        {service.deliveryMethods && (
+                          <div>
+                            <h5 className={`text-lg font-semibold ${themeClasses.text} mb-3 flex items-center`}>
+                              <ArrowRight className="w-5 h-5 mr-2" style={{ color: logoGreen }} />
+                              Delivery Methods
+                            </h5>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                              {service.deliveryMethods.map((method, idx) => (
+                                <div key={idx} className="flex items-start">
+                                  <div className="w-2 h-2 rounded-full mt-2 mr-3 flex-shrink-0" style={{ backgroundColor: logoYellow }}></div>
+                                  <span className={`${themeClasses.textMuted} text-sm`}>{method}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* API Categories Section - Full Width */}
+                    {service.apiCategories && (
+                      <div className="mt-8 pt-8 border-t border-white/10">
+                        <h5 className={`text-xl font-bold ${themeClasses.text} mb-6 flex items-center`}>
+                          <Database className="w-6 h-6 mr-3" style={{ color: logoGreen }} />
+                          API Categories
+                        </h5>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                          {service.apiCategories.map((category, catIdx) => (
+                            <div key={catIdx} className={`${isDarkMode ? 'bg-white/5' : 'bg-gray-100/50'} rounded-xl p-5`}>
+                              <div className="flex items-center mb-3">
+                                <div className="p-2 rounded-lg mr-3" style={{
+                                  background: `${logoGreen}${isDarkMode ? '20' : '10'}`,
+                                  color: logoGreen
+                                }}>
+                                  {category.icon}
+                                </div>
+                                <h6 className={`font-semibold ${themeClasses.text}`}>{category.name}</h6>
                               </div>
-                              {step}
+                              <div className="space-y-4">
+                                {category.apis.map((api, apiIdx) => (
+                                  <div key={apiIdx} className="text-sm">
+                                    <div className="font-medium mb-2" style={{ color: logoYellow }}>{api.title}</div>
+                                    <div className={`${themeClasses.textMuted} text-xs mb-3`}>{api.description}</div>
+                                    <div className="flex flex-wrap gap-2">
+                                      {api.features?.map((feature, fIdx) => (
+                                        <span key={fIdx} className="px-3 py-1 rounded-full text-xs"
+                                          style={{
+                                            background: `${logoGreen}${isDarkMode ? '20' : '10'}`,
+                                            color: logoGreen
+                                          }}>
+                                          {feature}
+                                        </span>
+                                      ))}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
                             </div>
                           ))}
                         </div>
                       </div>
-                    </div>
+                    )}
 
-                    {/* Apply Button */}
-                    <div className="mt-8 text-center">
-                      <button
-                        className={`bg-gradient-to-r ${service.color} text-white px-8 py-3 rounded-xl font-semibold transition-all hover:scale-105 shadow-lg`}
-                      >
-                        Apply for {service.title}
-                      </button>
+                    {/* Service-specific CTA */}
+                    <div className="mt-8 pt-6 border-t border-white/10">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className={`${themeClasses.textMuted} text-sm`}>
+                            Ready to explore {service.title}?
+                          </p>
+                        </div>
+                        <button
+                          className={`px-6 py-2 rounded-xl font-semibold transition-all hover:scale-105 shadow-lg flex items-center justify-center gap-2`}
+                          style={{
+                            background: `linear-gradient(to right, ${logoGreen}, ${logoYellow})`,
+                            color: isDarkMode ? '#000000' : '#000000',
+                            boxShadow: isDarkMode
+                              ? `0 5px 20px ${logoGreen}30`
+                              : `0 5px 20px ${logoGreen}20`
+                          }}
+                        >
+                          {service.ctaText}
+                          <ArrowRight className="w-4 h-4" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -529,43 +710,107 @@ const ServicesPage = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* Integrated Ecosystem Section */}
+      <section className="py-16 relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className={`text-4xl font-bold ${themeClasses.text} mb-6`}>
+              <span style={{ color: logoGreen }}>Integrated</span>
+              <span style={{ color: logoYellow }}> Climate Intelligence</span>
+              <span className={themeClasses.text}> Ecosystem</span>
+            </h2>
+            <p className={`text-lg ${themeClasses.textMuted} max-w-3xl mx-auto`}>
+              Our ecosystem combines multiple data layers and technologies to deliver comprehensive climate intelligence
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className={`${themeClasses.cardBg} backdrop-blur-xl rounded-2xl p-8 text-center border ${themeClasses.border}`}>
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6"
+                style={{
+                  background: `linear-gradient(to bottom right, ${logoGreen}30, ${logoYellow}30)`,
+                  border: `2px solid ${logoGreen}${isDarkMode ? '40' : '30'}`
+                }}>
+                <CloudRain className="w-8 h-8" style={{ color: logoGreen }} />
+              </div>
+              <h3 className={`text-xl font-bold ${themeClasses.text} mb-3`}>Atmospheric Data</h3>
+              <p className={themeClasses.textMuted}>Real-time weather, climate patterns, and atmospheric conditions</p>
+            </div>
+
+            <div className={`${themeClasses.cardBg} backdrop-blur-xl rounded-2xl p-8 text-center border ${themeClasses.border}`}>
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6"
+                style={{
+                  background: `linear-gradient(to bottom right, ${logoGreen}30, ${logoYellow}30)`,
+                  border: `2px solid ${logoGreen}${isDarkMode ? '40' : '30'}`
+                }}>
+                <Layers className="w-8 h-8" style={{ color: logoYellow }} />
+              </div>
+              <h3 className={`text-xl font-bold ${themeClasses.text} mb-3`}>Earth Surface Intelligence</h3>
+              <p className={themeClasses.textMuted}>Land use, vegetation, soil health, and surface temperature</p>
+            </div>
+
+            <div className={`${themeClasses.cardBg} backdrop-blur-xl rounded-2xl p-8 text-center border ${themeClasses.border}`}>
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6"
+                style={{
+                  background: `linear-gradient(to bottom right, ${logoGreen}30, ${logoYellow}30)`,
+                  border: `2px solid ${logoGreen}${isDarkMode ? '40' : '30'}`
+                }}>
+                <Navigation className="w-8 h-8" style={{ color: logoGreen }} />
+              </div>
+              <h3 className={`text-xl font-bold ${themeClasses.text} mb-3`}>Automated Data Collection</h3>
+              <p className={themeClasses.textMuted}>Satellite, drone, and IoT networks for continuous monitoring</p>
+            </div>
+
+            <div className={`${themeClasses.cardBg} backdrop-blur-xl rounded-2xl p-8 text-center border ${themeClasses.border}`}>
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6"
+                style={{
+                  background: `linear-gradient(to bottom right, ${logoGreen}30, ${logoYellow}30)`,
+                  border: `2px solid ${logoGreen}${isDarkMode ? '40' : '30'}`
+                }}>
+                <Activity className="w-8 h-8" style={{ color: logoYellow }} />
+              </div>
+              <h3 className={`text-xl font-bold ${themeClasses.text} mb-3`}>Historical Analysis</h3>
+              <p className={themeClasses.textMuted}>Decades of historical climate data for trend analysis and prediction</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Main CTA Section */}
       <section className="py-24 relative">
         <div
-          className={`absolute inset-0 bg-gradient-to-r ${
-            isDarkMode
-              ? "from-red-500/20 via-yellow-500/20 to-red-500/20"
-              : "from-red-500/10 via-yellow-500/10 to-red-500/10"
-          }`}
+          className="absolute inset-0"
+          style={{
+            background: isDarkMode
+              ? `linear-gradient(45deg, ${logoGreen}20, ${logoYellow}20)`
+              : `linear-gradient(45deg, ${logoGreen}10, ${logoYellow}10)`,
+          }}
         ></div>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <h2 className={`text-5xl font-bold ${themeClasses.text} mb-8`}>
-            Ready to
-            <span className="bg-gradient-to-r from-red-400 to-yellow-400 bg-clip-text text-transparent">
-              {" "}
-              Get Started?
-            </span>
+            Transform Climate Action
+            <br />
+            <span style={{ color: logoGreen }}>With Integrated</span>
+            <span style={{ color: logoYellow }}> Intelligence</span>
           </h2>
           <p
             className={`text-xl ${themeClasses.textSecondary} mb-12 leading-relaxed`}
           >
-            Choose the loan that fits your needs and start your application
-            today. Our team is here to help you every step of the way.
+            Join governments, financial institutions, and organizations across Africa
+            who trust MAVHU for comprehensive climate intelligence that drives meaningful impact.
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <button
-              className={`relative bg-gradient-to-r from-red-500 to-yellow-500 hover:from-red-600 hover:to-yellow-600 text-white px-10 py-4 rounded-2xl text-lg font-bold transition-all transform hover:scale-110 shadow-2xl ${themeClasses.glowEffect}`}
+              className={`relative bg-gradient-to-r from-[${logoGreen}] to-[${logoYellow}] hover:from-[${logoGreen}]/90 hover:to-[${logoYellow}]/90 text-black px-10 py-4 rounded-2xl text-lg font-bold transition-all transform hover:scale-110 shadow-2xl ${themeClasses.glowEffect}`}
+              style={{
+                background: `linear-gradient(to right, ${logoGreen}, ${logoYellow})`,
+                boxShadow: isDarkMode
+                  ? `0 20px 40px ${logoGreen}40`
+                  : `0 20px 40px ${logoGreen}20`
+              }}
             >
-              Start Application
-            </button>
-            <button
-              className={`border-2 ${
-                isDarkMode
-                  ? "border-white/30 hover:border-white/50 text-white hover:bg-white/10"
-                  : "border-gray-300 hover:border-gray-500 text-gray-900 hover:bg-gray-100/50"
-              } px-10 py-4 rounded-2xl text-lg font-semibold transition-all backdrop-blur-sm`}
-            >
-              Contact Us
+              Request Full Demo
+              <ArrowRight className="w-5 h-5 ml-2 inline-block" />
             </button>
           </div>
         </div>
@@ -573,6 +818,27 @@ const ServicesPage = () => {
 
       {/* Footer */}
       <Footer isDarkMode={isDarkMode} themeClasses={themeClasses} />
+
+      {/* Add custom style tag for dynamic colors */}
+      <style>{`
+        @media (min-width: 1024px) {
+          .group:hover .lg\\:group-hover\\:block {
+            display: block;
+          }
+        }
+        
+        button:hover, a:hover {
+          transition: all 0.3s ease;
+        }
+        
+        .service-card {
+          transition: all 0.3s ease;
+        }
+        
+        .service-card:hover {
+          transform: translateY(-4px);
+        }
+      `}</style>
     </div>
   );
 };

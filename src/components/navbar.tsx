@@ -3,7 +3,7 @@ import { Menu, X, LogIn, Sun, Moon } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 // Import the logo from assets (adjust the path as needed)
-import Loan from "../assets/loan.png";
+import Loan from "../assets/logo.png";
 
 type NavbarProps = {
   isDarkMode: boolean;
@@ -29,18 +29,50 @@ const Navbar: React.FC<NavbarProps> = ({ isDarkMode, setIsDarkMode }) => {
     return location.pathname === route;
   };
 
-  // Theme-aware classes
+  // Colors extracted from the logo
+  // Primary green from the "MAVHU" text - vibrant green
+  const logoGreen = "#00FF00";
+  // Dark background similar to the logo
+  const darkBg = "#0A0A0A"; // Not pure black, better for dark mode
+  const lightBg = "#F5F5F5"; // Light but not pure white
+  
+  // Theme-aware classes based on logo colors
   const themeClasses = {
+    // Backgrounds
+    navBg: isDarkMode 
+      ? `bg-[${darkBg}]/95` 
+      : `bg-[${lightBg}]/95`,
+    
+    // Text colors
     text: isDarkMode ? "text-white" : "text-gray-900",
-    textSecondary: isDarkMode ? "text-gray-300" : "text-gray-600",
-    navBg: isDarkMode ? "bg-black/20" : "bg-white/20",
-    border: isDarkMode ? "border-white/10" : "border-gray-200/30",
-    cardBg: isDarkMode ? "bg-black/30" : "bg-white/30",
-    hoverBg: isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100/50",
-    glowEffect: isDarkMode ? "shadow-green-500/25" : "shadow-green-500/15",
-    // Active state classes
-    activeText: isDarkMode ? "text-white" : "text-gray-900",
-    activeBg: isDarkMode ? "bg-white/10" : "bg-gray-100/50",
+    textSecondary: isDarkMode ? "text-gray-300" : "text-gray-700",
+    brandText: isDarkMode ? "text-white" : "text-gray-900",
+    
+    // Borders
+    border: isDarkMode 
+      ? `border-[${logoGreen}]/20` 
+      : "border-gray-300/50",
+    
+    // Cards/Containers
+    cardBg: isDarkMode 
+      ? `bg-[${darkBg}]/90` 
+      : "bg-white/90",
+    
+    // Hover states
+    hoverBg: isDarkMode 
+      ? "hover:bg-white/10" 
+      : "hover:bg-gray-100",
+    
+    // Active states
+    activeText: `text-[${logoGreen}]`,
+    activeBg: isDarkMode 
+      ? `bg-[${logoGreen}]/10` 
+      : `bg-[${logoGreen}]/10`,
+    
+    // Logo container background for better visibility
+    logoContainerBg: isDarkMode 
+      ? "bg-transparent" 
+      : "bg-black/5",
   };
 
   // Navigation items with their routes
@@ -48,15 +80,19 @@ const Navbar: React.FC<NavbarProps> = ({ isDarkMode, setIsDarkMode }) => {
     { name: "Home", route: "/" },
     { name: "About", route: "/about" },
     { name: "Services", route: "/services" },
-    { name: "Pricing", route: "/pricing" },
+    // { name: "Products", route: "/pricing" },
     { name: "Contact", route: "/contact" },
-    // { name: "How It Works", route: "/how-it-works" },
-    // { name: "Stats", route: "/stats" },
   ];
+
+  // Custom styles for the logo green
+  const logoGreenStyle = {
+    '--logo-green': logoGreen,
+  } as React.CSSProperties;
 
   return (
     <nav
       className={`relative z-50 ${themeClasses.navBg} backdrop-blur-xl border-b ${themeClasses.border} fixed w-full top-0 transition-all duration-300`}
+      style={logoGreenStyle}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
@@ -65,27 +101,25 @@ const Navbar: React.FC<NavbarProps> = ({ isDarkMode, setIsDarkMode }) => {
               className="flex-shrink-0 flex items-center cursor-pointer"
               onClick={() => navigate("/")}
             >
-             <img
-                   src={Loan}
-                   alt="Clear Finance Logo"
-                 className="h-35 w-auto mt-12 ml-0 mr-auto"
-                  />
-
-
+              {/* Logo container with background for visibility */}
+              <div className={`p-2 rounded-lg ${themeClasses.logoContainerBg} transition-all duration-300`}>
+                <img
+                  src={Loan}
+                  alt="MAVHU AFRICA Logo"
+                  className="h-10 w-auto" // Slightly smaller for better balance
+                />
+              </div>
+              
               <span
-                className={`ml-3 text-2xl font-bold ${
-                  isDarkMode
-                    ? "text-white"
-                    : "text-gray-900"
-                }`}
+                className={`ml-3 text-xl font-bold tracking-tight ${themeClasses.brandText}`}
               >
-                Real time Capital
+                MAVHU AFRICA
               </span>
             </div>
           </div>
 
           <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-8">
+            <div className="ml-10 flex items-baseline space-x-14">
               {navItems.map((item) => {
                 const isActive = isActiveRoute(item.route);
                 return (
@@ -100,9 +134,15 @@ const Navbar: React.FC<NavbarProps> = ({ isDarkMode, setIsDarkMode }) => {
                   >
                     {item.name}
                     <div
-                      className={`absolute bottom-1 left-1/2 transform -translate-x-1/2 h-0.5 bg-gradient-to-r from-green-500 to-emerald-500 transition-all duration-300 ${
+                      className={`absolute bottom-1 left-1/2 transform -translate-x-1/2 h-0.5 transition-all duration-300 ${
                         isActive ? "w-6" : "w-0 group-hover:w-6"
                       }`}
+                      style={{ 
+                        backgroundColor: isActive ? logoGreen : 'transparent',
+                        background: isActive 
+                          ? `linear-gradient(to right, ${logoGreen}, ${logoGreen}80)` 
+                          : `linear-gradient(to right, ${logoGreen}, ${logoGreen}80)`
+                      }}
                     ></div>
                   </button>
                 );
@@ -126,21 +166,30 @@ const Navbar: React.FC<NavbarProps> = ({ isDarkMode, setIsDarkMode }) => {
               )}
             </button>
 
-            <button
+            {/* <button
               onClick={() => navigate("/userlogin")}
-              className={`${themeClasses.textSecondary} hover:${themeClasses.text} px-4 py-2 text-sm font-medium transition-all duration-300 flex items-center`}
+              className={`${themeClasses.textSecondary} hover:${themeClasses.text} px-4 py-2 text-sm font-medium transition-all duration-300 flex items-center hover:underline`}
             >
               <LogIn className="w-4 h-4 mr-2" />
               Login
-            </button>
+            </button> */}
 
-            <button
+            {/* <button
               onClick={() => navigate("/usersignup")}
-              className={`relative bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white px-6 py-2.5 rounded-xl text-sm font-semibold transition-all transform hover:scale-105 shadow-lg ${themeClasses.glowEffect} overflow-hidden group`}
+              className={`relative px-6 py-2.5 rounded-xl text-sm font-semibold transition-all transform hover:scale-105 overflow-hidden group`}
+              style={{
+                background: `linear-gradient(to right, ${logoGreen}, ${logoGreen}80)`,
+                color: isDarkMode ? '#000000' : '#000000' // Black text on green
+              }}
             >
-              <span className="relative z-10">Get Started</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-green-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            </button>
+              <span className="relative z-10 font-bold">Get Started</span>
+              <div 
+                className="absolute inset-0 transition-opacity duration-300 opacity-0 group-hover:opacity-100"
+                style={{
+                  background: `linear-gradient(to right, ${logoGreen}CC, ${logoGreen}99)`
+                }}
+              ></div>
+            </button> */}
           </div>
 
           <div className="md:hidden flex items-center space-x-2">
@@ -190,7 +239,10 @@ const Navbar: React.FC<NavbarProps> = ({ isDarkMode, setIsDarkMode }) => {
                 >
                   {item.name}
                   {isActive && (
-                    <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-6 bg-gradient-to-b from-green-500 to-emerald-500 rounded-r"></div>
+                    <div 
+                      className="absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-6 rounded-r"
+                      style={{ backgroundColor: logoGreen }}
+                    ></div>
                   )}
                 </button>
               );
@@ -207,7 +259,11 @@ const Navbar: React.FC<NavbarProps> = ({ isDarkMode, setIsDarkMode }) => {
               </button>
               <button
                 onClick={() => navigate("/usersignup")}
-                className="w-full bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-2 rounded-xl font-medium"
+                className="w-full font-medium py-2.5 rounded-xl text-sm font-semibold"
+                style={{
+                  background: `linear-gradient(to right, ${logoGreen}, ${logoGreen}80)`,
+                  color: isDarkMode ? '#000000' : '#000000' // Black text on green
+                }}
               >
                 Get Started
               </button>
@@ -215,6 +271,13 @@ const Navbar: React.FC<NavbarProps> = ({ isDarkMode, setIsDarkMode }) => {
           </div>
         </div>
       )}
+      
+      {/* Add custom style tag for the logo green color */}
+      <style>{`
+        :root {
+          --logo-green: ${logoGreen};
+        }
+      `}</style>
     </nav>
   );
 };

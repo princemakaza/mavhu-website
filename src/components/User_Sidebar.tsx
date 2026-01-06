@@ -9,7 +9,7 @@ import {
   Bell,
 } from "lucide-react";
 import { useNavigate, useLocation, type To } from "react-router-dom";
-import Loan from "../assets/loan.png";
+import Loan from "../assets/logo.png";
 
 const UserSidebar = ({ isOpen = true, onClose = () => {} }) => {
   const navigate = useNavigate();
