@@ -23,8 +23,7 @@ const Footer: React.FC<FooterProps> = ({ isDarkMode, themeClasses }) => {
   // Colors extracted from the logo
   const logoGreen = "#00FF00"; // Green from "MAVHU" text
   const logoYellow = "#FFD700"; // Yellow/gold color for accent
-  const darkBg = "#0A0A0A";
-  const lightBg = "#F5F5F5";
+
 
   return (
     <footer
