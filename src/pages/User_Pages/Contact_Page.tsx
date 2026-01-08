@@ -49,28 +49,32 @@ const Contact = () => {
   const lightBg = "#F5F5F5";
   const lightCardBg = "#FFFFFF";
   // Updated theme-aware classes with MAVHU color scheme
-  const themeClasses = {
-    bg: isDarkMode ? darkBg : lightBg,
-    text: isDarkMode ? "text-white" : "text-gray-900",
-    textSecondary: isDarkMode ? "text-gray-300" : "text-gray-700",
-    textMuted: isDarkMode ? "text-gray-400" : "text-gray-600",
-    navBg: isDarkMode ? `${darkBg}/95` : `${lightBg}/95`,
-    cardBg: isDarkMode ? `${darkBg}/30` : `${lightCardBg}/95`,
-    cardBgAlt: isDarkMode ? `${darkBg}/40` : `${lightCardBg}/90`,
-    border: isDarkMode ? "border-white/10" : "border-gray-300/70",
-    borderHover: isDarkMode ? "border-white/20" : "border-gray-400",
-    backgroundGradient: isDarkMode
-      ? `bg-gradient-to-br from-gray-900 via-${darkBg.replace('#', '')} to-black`
-      : `bg-gradient-to-br from-gray-50 via-${lightBg.replace('#', '')} to-gray-100`,
-    hoverBg: isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100",
-    input: isDarkMode
-      ? "bg-black/20 border-white/10"
-      : "bg-white/50 border-gray-200",
-    inputFocus: isDarkMode
-      ? `border-[${logoGreen}]/50 bg-black/30`
-      : `border-[${logoGreen}]/50 bg-white/70`,
-  };
-
+// Updated themeClasses object in Contact_Page.tsx
+const themeClasses = {
+  bg: isDarkMode ? darkBg : lightBg,
+  text: isDarkMode ? "text-white" : "text-gray-900",
+  textSecondary: isDarkMode ? "text-gray-300" : "text-gray-700",
+  textMuted: isDarkMode ? "text-gray-400" : "text-gray-600",
+  navBg: isDarkMode ? `${darkBg}/95` : `${lightBg}/95`,
+  cardBg: isDarkMode ? `${darkBg}/30` : `${lightCardBg}/95`,
+  cardBgAlt: isDarkMode ? `${darkBg}/40` : `${lightCardBg}/90`,
+  border: isDarkMode ? "border-white/10" : "border-gray-300/70",
+  borderHover: isDarkMode ? "border-white/20" : "border-gray-400",
+  backgroundGradient: isDarkMode
+    ? `bg-gradient-to-br from-gray-900 via-${darkBg.replace('#', '')} to-black`
+    : `bg-gradient-to-br from-gray-50 via-${lightBg.replace('#', '')} to-gray-100`,
+  hoverBg: isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100",
+  input: isDarkMode
+    ? "bg-black/20 border-white/10"
+    : "bg-white/50 border-gray-200",
+  inputFocus: isDarkMode
+    ? `border-[${logoGreen}]/50 bg-black/30`
+    : `border-[${logoGreen}]/50 bg-white/70`,
+  // ADD THIS LINE
+  glowEffect: isDarkMode 
+    ? "shadow-[0_0_20px_rgba(0,255,0,0.3)]" 
+    : "shadow-[0_0_20px_rgba(0,128,0,0.1)]",
+};
   const handleInputChange = (e: { target: { name: any; value: any } }) => {
     setFormData({
       ...formData,
