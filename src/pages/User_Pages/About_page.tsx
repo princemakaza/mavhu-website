@@ -2,25 +2,21 @@ import React from "react";
 import {
   Globe,
   Shield,
-  Users,
   ArrowRight,
   CheckCircle,
   Map,
-  Cloud,
   BarChart3,
   Cpu,
   Target,
   Eye,
   Database,
   TrendingUp,
-  Leaf,
-  Thermometer,
+
   Satellite,
   HardDrive,
   MapPin,
   Phone,
   Mail,
-  Lightbulb,
 } from "lucide-react";
 import Navbar from "../../components/navbar";
 import Footer from "../../components/Footer";
@@ -45,6 +41,7 @@ const AboutPage = () => {
   const lightCardBg = "#FFFFFF"; // Pure white for cards in light mode
 
   // Updated theme-aware classes with MAVHU color scheme
+  // In About_page.tsx, update themeClasses to include glowEffect:
   const themeClasses = {
     bg: isDarkMode ? darkBg : lightBg,
     text: isDarkMode ? "text-white" : "text-gray-900",
@@ -59,6 +56,10 @@ const AboutPage = () => {
       ? `bg-gradient-to-br from-gray-900 via-${darkBg.replace('#', '')} to-black`
       : `bg-gradient-to-br from-gray-50 via-${lightBg.replace('#', '')} to-gray-100`,
     hoverBg: isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100",
+    // ADD THIS LINE
+    glowEffect: isDarkMode
+      ? "shadow-[0_0_20px_rgba(0,255,0,0.3)]"
+      : "shadow-[0_0_20px_rgba(0,128,0,0.1)]",
   };
 
   const values = [
@@ -149,18 +150,16 @@ const AboutPage = () => {
         className={`fixed inset-0 ${themeClasses.backgroundGradient} transition-all duration-300`}
       >
         <div
-          className={`absolute inset-0 ${
-            isDarkMode
+          className={`absolute inset-0 ${isDarkMode
               ? "bg-[radial-gradient(circle_at_50%_50%,rgba(0,255,0,0.1),transparent_50%)]"
               : "bg-[radial-gradient(circle_at_50%_50%,rgba(0,128,0,0.05),transparent_50%)]"
-          }`}
+            }`}
         ></div>
         <div
-          className={`absolute inset-0 ${
-            isDarkMode
+          className={`absolute inset-0 ${isDarkMode
               ? "bg-[radial-gradient(circle_at_80%_20%,rgba(255,215,0,0.1),transparent_50%)]"
               : "bg-[radial-gradient(circle_at_80%_20%,rgba(184,134,11,0.05),transparent_50%)]"
-          }`}
+            }`}
         ></div>
         <div
           className={`absolute w-96 h-96 rounded-full blur-3xl transition-all duration-1000 ease-out`}
@@ -190,7 +189,7 @@ const AboutPage = () => {
             <p
               className={`text-xl ${themeClasses.textSecondary} mb-10 leading-relaxed max-w-4xl mx-auto`}
             >
-              MAVHU is an Africa-focused climate data and verification company building 
+              MAVHU is an Africa-focused climate data and verification company building
               the foundational data infrastructure required for credible climate action.
             </p>
           </div>
@@ -203,14 +202,13 @@ const AboutPage = () => {
           <div className="grid lg:grid-cols-2 gap-12">
             {/* Mission */}
             <div
-              className={`${themeClasses.cardBg} backdrop-blur-xl rounded-3xl p-8 border ${themeClasses.border} hover:${themeClasses.borderHover} transition-all duration-300 shadow-xl ${
-                isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
-              }`}
+              className={`${themeClasses.cardBg} backdrop-blur-xl rounded-3xl p-8 border ${themeClasses.border} hover:${themeClasses.borderHover} transition-all duration-300 shadow-xl ${isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
+                }`}
             >
               <div className="flex items-center mb-6">
-                <div 
+                <div
                   className="w-16 h-16 rounded-xl flex items-center justify-center mr-6"
-                  style={{ 
+                  style={{
                     backgroundColor: `${logoGreen}${isDarkMode ? '30' : '20'}`,
                     border: `1px solid ${logoGreen}${isDarkMode ? '40' : '30'}`
                   }}
@@ -227,22 +225,21 @@ const AboutPage = () => {
                 To make African climate action measurable, verifiable, and investible.
               </p>
               <p className={`${themeClasses.textMuted} leading-relaxed`}>
-                We're building the data infrastructure that transforms climate initiatives 
-                from fragmented efforts into credible, investible opportunities that drive 
+                We're building the data infrastructure that transforms climate initiatives
+                from fragmented efforts into credible, investible opportunities that drive
                 real impact across the continent.
               </p>
             </div>
 
             {/* Vision */}
             <div
-              className={`${themeClasses.cardBg} backdrop-blur-xl rounded-3xl p-8 border ${themeClasses.border} hover:${themeClasses.borderHover} transition-all duration-300 shadow-xl ${
-                isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
-              }`}
+              className={`${themeClasses.cardBg} backdrop-blur-xl rounded-3xl p-8 border ${themeClasses.border} hover:${themeClasses.borderHover} transition-all duration-300 shadow-xl ${isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
+                }`}
             >
               <div className="flex items-center mb-6">
-                <div 
+                <div
                   className="w-16 h-16 rounded-xl flex items-center justify-center mr-6"
-                  style={{ 
+                  style={{
                     backgroundColor: `${logoYellow}${isDarkMode ? '30' : '20'}`,
                     border: `1px solid ${logoYellow}${isDarkMode ? '40' : '30'}`
                   }}
@@ -256,12 +253,12 @@ const AboutPage = () => {
               <p
                 className={`${themeClasses.textSecondary} leading-relaxed mb-6 text-lg`}
               >
-                To become Africa's trusted climate data partner, enabling transparent, 
+                To become Africa's trusted climate data partner, enabling transparent,
                 data-driven climate action across the continent.
               </p>
               <p className={`${themeClasses.textMuted} leading-relaxed`}>
-                We envision a future where every climate initiative in Africa is backed by 
-                verified, localized data that builds trust, attracts investment, and ensures 
+                We envision a future where every climate initiative in Africa is backed by
+                verified, localized data that builds trust, attracts investment, and ensures
                 sustainable impact for generations to come.
               </p>
             </div>
@@ -287,13 +284,12 @@ const AboutPage = () => {
             </h2>
           </div>
 
-          <div className={`${themeClasses.cardBg} backdrop-blur-xl rounded-3xl p-8 border ${themeClasses.border} shadow-xl ${
-            isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
-          }`}>
+          <div className={`${themeClasses.cardBg} backdrop-blur-xl rounded-3xl p-8 border ${themeClasses.border} shadow-xl ${isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
+            }`}>
             <div className="flex items-start mb-8">
-              <div 
+              <div
                 className="w-12 h-12 rounded-lg flex items-center justify-center mr-6 flex-shrink-0"
-                style={{ 
+                style={{
                   backgroundColor: `${logoGreen}${isDarkMode ? '30' : '20'}`,
                   border: `1px solid ${logoGreen}${isDarkMode ? '40' : '30'}`
                 }}
@@ -305,12 +301,12 @@ const AboutPage = () => {
                   The Problem
                 </h3>
                 <p className={`${themeClasses.textSecondary} leading-relaxed text-lg`}>
-                  Across Africa, climate initiatives are constrained by fragmented, inconsistent, 
+                  Across Africa, climate initiatives are constrained by fragmented, inconsistent,
                   or unverifiable data — limiting confidence, decision-making, and long-term impact.
                 </p>
               </div>
             </div>
-            
+
             <div className="grid md:grid-cols-3 gap-6 mt-8">
               {[
                 {
@@ -334,9 +330,9 @@ const AboutPage = () => {
                   className={`${themeClasses.cardBgAlt} backdrop-blur-xl rounded-xl p-6 border ${themeClasses.border} transition-all duration-300`}
                 >
                   <div className="flex items-center mb-4">
-                    <div 
+                    <div
                       className="p-2 rounded-lg mr-3"
-                      style={{ 
+                      style={{
                         backgroundColor: `${logoGreen}${isDarkMode ? '20' : '10'}`,
                         border: `1px solid ${logoGreen}${isDarkMode ? '30' : '20'}`
                       }}
@@ -366,7 +362,7 @@ const AboutPage = () => {
               <span style={{ color: logoGreen }}> Approach</span>
             </h2>
             <p className={`text-xl ${themeClasses.textSecondary} max-w-3xl mx-auto`}>
-              We combine multiple technologies and methodologies to deliver climate data 
+              We combine multiple technologies and methodologies to deliver climate data
               that is accurate, transparent, and usable.
             </p>
           </div>
@@ -375,14 +371,13 @@ const AboutPage = () => {
             {approach.map((item, index) => (
               <div
                 key={index}
-                className={`${themeClasses.cardBg} backdrop-blur-xl rounded-3xl p-8 border ${themeClasses.border} hover:${themeClasses.borderHover} transition-all duration-300 shadow-lg ${
-                  isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
-                }`}
+                className={`${themeClasses.cardBg} backdrop-blur-xl rounded-3xl p-8 border ${themeClasses.border} hover:${themeClasses.borderHover} transition-all duration-300 shadow-lg ${isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
+                  }`}
               >
                 <div className="flex flex-col md:flex-row items-start md:items-center">
-                  <div 
+                  <div
                     className="w-20 h-20 rounded-xl flex items-center justify-center mr-8 mb-6 md:mb-0"
-                    style={{ 
+                    style={{
                       backgroundColor: `${item.color}${isDarkMode ? '30' : '20'}`,
                       border: `1px solid ${item.color}${isDarkMode ? '40' : '30'}`
                     }}
@@ -433,14 +428,13 @@ const AboutPage = () => {
               ].map((item, index) => (
                 <div
                   key={index}
-                  className={`${themeClasses.cardBgAlt} backdrop-blur-xl rounded-xl p-6 border ${themeClasses.border} transition-all duration-300 hover:${themeClasses.borderHover} shadow-md ${
-                    isDarkMode ? "shadow-black/10" : "shadow-gray-200/30"
-                  }`}
+                  className={`${themeClasses.cardBgAlt} backdrop-blur-xl rounded-xl p-6 border ${themeClasses.border} transition-all duration-300 hover:${themeClasses.borderHover} shadow-md ${isDarkMode ? "shadow-black/10" : "shadow-gray-200/30"
+                    }`}
                 >
                   <div className="flex items-center mb-4">
-                    <div 
+                    <div
                       className="p-2 rounded-lg mr-3"
-                      style={{ 
+                      style={{
                         backgroundColor: `${logoGreen}${isDarkMode ? '20' : '10'}`,
                         border: `1px solid ${logoGreen}${isDarkMode ? '30' : '20'}`
                       }}
@@ -486,13 +480,12 @@ const AboutPage = () => {
             {values.map((value, index) => (
               <div
                 key={index}
-                className={`${themeClasses.cardBg} backdrop-blur-xl rounded-2xl p-8 border ${themeClasses.border} hover:${themeClasses.borderHover} transition-all duration-300 hover:transform hover:scale-105 text-center shadow-lg ${
-                  isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
-                }`}
+                className={`${themeClasses.cardBg} backdrop-blur-xl rounded-2xl p-8 border ${themeClasses.border} hover:${themeClasses.borderHover} transition-all duration-300 hover:transform hover:scale-105 text-center shadow-lg ${isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
+                  }`}
               >
-                <div 
+                <div
                   className="w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-6"
-                  style={{ 
+                  style={{
                     backgroundColor: `${index === 2 ? logoYellow : logoGreen}${isDarkMode ? '30' : '20'}`,
                     border: `1px solid ${index === 2 ? logoYellow : logoGreen}${isDarkMode ? '40' : '30'}`
                   }}
@@ -528,9 +521,8 @@ const AboutPage = () => {
             {teamMembers.map((member, index) => (
               <div
                 key={index}
-                className={`${themeClasses.cardBg} backdrop-blur-xl rounded-2xl overflow-hidden border ${themeClasses.border} hover:${themeClasses.borderHover} transition-all duration-300 hover:transform hover:scale-105 group shadow-lg ${
-                  isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
-                }`}
+                className={`${themeClasses.cardBg} backdrop-blur-xl rounded-2xl overflow-hidden border ${themeClasses.border} hover:${themeClasses.borderHover} transition-all duration-300 hover:transform hover:scale-105 group shadow-lg ${isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
+                  }`}
               >
                 <div className="relative h-64 overflow-hidden">
                   <img
@@ -538,7 +530,7 @@ const AboutPage = () => {
                     alt={member.name}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
-                  <div 
+                  <div
                     className="absolute inset-0"
                     style={{
                       background: `linear-gradient(to top, ${isDarkMode ? 'rgba(0,0,0,0.7)' : 'rgba(255,255,255,0.7)'}, transparent 50%)`
@@ -598,13 +590,12 @@ const AboutPage = () => {
             ].map((contact, index) => (
               <div
                 key={index}
-                className={`${themeClasses.cardBg} backdrop-blur-xl rounded-2xl p-8 border ${themeClasses.border} hover:${themeClasses.borderHover} transition-all duration-300 text-center group hover:transform hover:scale-105 shadow-lg ${
-                  isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
-                }`}
+                className={`${themeClasses.cardBg} backdrop-blur-xl rounded-2xl p-8 border ${themeClasses.border} hover:${themeClasses.borderHover} transition-all duration-300 text-center group hover:transform hover:scale-105 shadow-lg ${isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
+                  }`}
               >
-                <div 
+                <div
                   className="w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-6"
-                  style={{ 
+                  style={{
                     backgroundColor: `${contact.color}${isDarkMode ? '30' : '20'}`,
                     border: `1px solid ${contact.color}${isDarkMode ? '40' : '30'}`
                   }}
@@ -640,7 +631,7 @@ const AboutPage = () => {
             <span style={{ color: logoGreen }}>African Climate Action?</span>
           </h2>
           <p className={`text-2xl ${themeClasses.textSecondary} mb-12 leading-relaxed`}>
-            Join governments, financial institutions, and organizations across Africa 
+            Join governments, financial institutions, and organizations across Africa
             who trust MAVHU for accurate, verified climate intelligence.
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
@@ -650,8 +641,8 @@ const AboutPage = () => {
               style={{
                 background: `linear-gradient(to right, ${logoYellow}, ${isDarkMode ? '#FFC107' : '#DAA520'})`,
                 color: isDarkMode ? '#000000' : '#000000',
-                boxShadow: isDarkMode 
-                  ? `0 20px 40px ${logoYellow}30` 
+                boxShadow: isDarkMode
+                  ? `0 20px 40px ${logoYellow}30`
                   : `0 20px 40px ${logoYellow}20`
               }}
             >
@@ -659,7 +650,7 @@ const AboutPage = () => {
                 Request a Demo
                 <ArrowRight className="ml-3 w-6 h-6 group-hover:translate-x-1 transition-transform" />
               </span>
-              <div 
+              <div
                 className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                 style={{
                   background: `linear-gradient(to right, ${logoYellow}CC, ${isDarkMode ? '#FFC107CC' : '#DAA520CC'})`
@@ -668,13 +659,11 @@ const AboutPage = () => {
             </button>
             <button
               onClick={() => window.location.href = "/partner"}
-              className={`border-2 ${
-                isDarkMode
+              className={`border-2 ${isDarkMode
                   ? "border-white/30 hover:border-white/50 text-white hover:bg-white/10"
                   : "border-gray-300 hover:border-gray-500 text-gray-900 hover:bg-gray-100/50"
-              } px-12 py-5 rounded-2xl text-lg font-semibold transition-all backdrop-blur-sm shadow-lg ${
-                isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
-              }`}
+                } px-12 py-5 rounded-2xl text-lg font-semibold transition-all backdrop-blur-sm shadow-lg ${isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
+                }`}
             >
               Partner With Us
             </button>

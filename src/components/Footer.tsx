@@ -1,5 +1,5 @@
 import React from "react";
-import { Star, Shield, Clock, Mail, Phone, ExternalLink } from "lucide-react";
+import { Star, Shield, Clock, Mail, ExternalLink } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 // Import the logo from assets

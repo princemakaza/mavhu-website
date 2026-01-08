@@ -60,6 +60,7 @@ const LandingPage = () => {
   const lightBg = "#F5F5F5"; // Light but not pure white
   const lightCardBg = "#FFFFFF"; // Pure white for cards in light mode
   // Updated theme-aware classes with MAVHU color scheme
+  // Updated themeClasses object
   const themeClasses = {
     bg: isDarkMode ? darkBg : lightBg,
     text: isDarkMode ? "text-white" : "text-gray-900",
@@ -74,8 +75,11 @@ const LandingPage = () => {
       ? `bg-gradient-to-br from-gray-900 via-${darkBg.replace('#', '')} to-black`
       : `bg-gradient-to-br from-gray-50 via-${lightBg.replace('#', '')} to-gray-100`,
     hoverBg: isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100",
+    // Add the missing glowEffect property
+    glowEffect: isDarkMode
+      ? "shadow-[0_0_20px_rgba(0,255,0,0.3)]"
+      : "shadow-[0_0_20px_rgba(0,128,0,0.1)]",
   };
-
   return (
     <div
       className={`min-h-screen ${themeClasses.bg} ${themeClasses.text} overflow-hidden transition-colors duration-300`}
@@ -91,18 +95,16 @@ const LandingPage = () => {
         className={`fixed inset-0 ${themeClasses.backgroundGradient} transition-all duration-300`}
       >
         <div
-          className={`absolute inset-0 ${
-            isDarkMode
+          className={`absolute inset-0 ${isDarkMode
               ? "bg-[radial-gradient(circle_at_50%_50%,rgba(0,255,0,0.1),transparent_50%)]"
               : "bg-[radial-gradient(circle_at_50%_50%,rgba(0,128,0,0.05),transparent_50%)]"
-          }`}
+            }`}
         ></div>
         <div
-          className={`absolute inset-0 ${
-            isDarkMode
+          className={`absolute inset-0 ${isDarkMode
               ? "bg-[radial-gradient(circle_at_80%_20%,rgba(255,215,0,0.1),transparent_50%)]"
               : "bg-[radial-gradient(circle_at_80%_20%,rgba(184,134,11,0.05),transparent_50%)]"
-          }`}
+            }`}
         ></div>
         <div
           className={`absolute w-96 h-96 rounded-full blur-3xl transition-all duration-1000 ease-out`}
@@ -128,16 +130,14 @@ const LandingPage = () => {
         <div className="absolute inset-0">
           {/* Slide 1 Background */}
           <div
-            className={`w-full h-full transition-opacity duration-1000 ${
-              currentSlide === 0 ? "opacity-100" : "opacity-0"
-            } absolute inset-0`}
+            className={`w-full h-full transition-opacity duration-1000 ${currentSlide === 0 ? "opacity-100" : "opacity-0"
+              } absolute inset-0`}
           >
             <div
-              className={`w-full h-full bg-gradient-to-r ${
-                isDarkMode
+              className={`w-full h-full bg-gradient-to-r ${isDarkMode
                   ? "from-gray-900/80 via-gray-800/60 to-gray-900/80"
                   : "from-gray-50/80 via-white/60 to-gray-50/80"
-              }`}
+                }`}
             >
               <img
                 src={BackgroundImage1}
@@ -146,26 +146,23 @@ const LandingPage = () => {
               />
             </div>
             <div
-              className={`absolute inset-0 ${
-                isDarkMode
+              className={`absolute inset-0 ${isDarkMode
                   ? "bg-gradient-to-r from-black/70 via-black/50 to-black/70"
                   : "bg-gradient-to-r from-white/70 via-white/50 to-white/70"
-              }`}
+                }`}
             ></div>
           </div>
 
           {/* Slide 2 Background */}
           <div
-            className={`w-full h-full transition-opacity duration-1000 ${
-              currentSlide === 1 ? "opacity-100" : "opacity-0"
-            } absolute inset-0`}
+            className={`w-full h-full transition-opacity duration-1000 ${currentSlide === 1 ? "opacity-100" : "opacity-0"
+              } absolute inset-0`}
           >
             <div
-              className={`w-full h-full bg-gradient-to-r ${
-                isDarkMode
+              className={`w-full h-full bg-gradient-to-r ${isDarkMode
                   ? "from-gray-900/80 via-gray-800/60 to-gray-900/80"
                   : "from-gray-50/80 via-white/60 to-gray-50/80"
-              }`}
+                }`}
             >
               <img
                 src={BackgroundImage2}
@@ -174,26 +171,23 @@ const LandingPage = () => {
               />
             </div>
             <div
-              className={`absolute inset-0 ${
-                isDarkMode
+              className={`absolute inset-0 ${isDarkMode
                   ? "bg-gradient-to-r from-black/70 via-black/50 to-black/70"
                   : "bg-gradient-to-r from-white/70 via-white/50 to-white/70"
-              }`}
+                }`}
             ></div>
           </div>
 
           {/* Slide 3 Background */}
           <div
-            className={`w-full h-full transition-opacity duration-1000 ${
-              currentSlide === 2 ? "opacity-100" : "opacity-0"
-            } absolute inset-0`}
+            className={`w-full h-full transition-opacity duration-1000 ${currentSlide === 2 ? "opacity-100" : "opacity-0"
+              } absolute inset-0`}
           >
             <div
-              className={`w-full h-full bg-gradient-to-r ${
-                isDarkMode
+              className={`w-full h-full bg-gradient-to-r ${isDarkMode
                   ? "from-gray-900/80 via-gray-800/60 to-gray-900/80"
                   : "from-gray-50/80 via-white/60 to-gray-50/80"
-              }`}
+                }`}
             >
               <img
                 src={BackgroundImage3}
@@ -202,11 +196,10 @@ const LandingPage = () => {
               />
             </div>
             <div
-              className={`absolute inset-0 ${
-                isDarkMode
+              className={`absolute inset-0 ${isDarkMode
                   ? "bg-gradient-to-r from-black/70 via-black/50 to-black/70"
                   : "bg-gradient-to-r from-white/70 via-white/50 to-white/70"
-              }`}
+                }`}
             ></div>
           </div>
         </div>
@@ -216,11 +209,10 @@ const LandingPage = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
             {/* Slide 1 */}
             <div
-              className={`text-center transition-all duration-1000 ${
-                currentSlide === 0
+              className={`text-center transition-all duration-1000 ${currentSlide === 0
                   ? "opacity-100 transform translate-x-0"
                   : "opacity-0 transform translate-x-full absolute inset-0 flex items-center justify-center"
-              }`}
+                }`}
             >
               <div className="max-w-6xl">
                 <div
@@ -266,8 +258,8 @@ const LandingPage = () => {
                     style={{
                       background: `linear-gradient(to right, ${logoYellow}, ${isDarkMode ? '#FFC107' : '#DAA520'})`,
                       color: isDarkMode ? '#000000' : '#000000',
-                      boxShadow: isDarkMode 
-                        ? `0 20px 40px ${logoYellow}30` 
+                      boxShadow: isDarkMode
+                        ? `0 20px 40px ${logoYellow}30`
                         : `0 20px 40px ${logoYellow}20`
                     }}
                   >
@@ -275,7 +267,7 @@ const LandingPage = () => {
                       Request a Demo
                       <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </span>
-                    <div 
+                    <div
                       className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                       style={{
                         background: `linear-gradient(to right, ${logoYellow}CC, ${isDarkMode ? '#FFC107CC' : '#DAA520CC'})`
@@ -285,11 +277,10 @@ const LandingPage = () => {
 
                   <button
                     onClick={() => navigate("/partner")}
-                    className={`border-2 ${
-                      isDarkMode
+                    className={`border-2 ${isDarkMode
                         ? "border-white/20 hover:border-white/40 text-white hover:bg-white/10"
                         : "border-gray-300 hover:border-gray-500 text-gray-900 hover:bg-gray-100/50"
-                    } px-10 py-4 rounded-2xl text-lg font-semibold transition-all backdrop-blur-sm`}
+                      } px-10 py-4 rounded-2xl text-lg font-semibold transition-all backdrop-blur-sm`}
                   >
                     Partner With Us
                   </button>
@@ -299,11 +290,10 @@ const LandingPage = () => {
 
             {/* Slide 2 */}
             <div
-              className={`text-center transition-all duration-1000 ${
-                currentSlide === 1
+              className={`text-center transition-all duration-1000 ${currentSlide === 1
                   ? "opacity-100 transform translate-x-0"
                   : "opacity-0 transform translate-x-full absolute inset-0 flex items-center justify-center"
-              }`}
+                }`}
             >
               <div className="max-w-6xl">
                 <div
@@ -345,8 +335,8 @@ const LandingPage = () => {
                     style={{
                       background: `linear-gradient(to right, ${logoGreen}, ${isDarkMode ? '#00CC00' : '#006400'})`,
                       color: isDarkMode ? '#000000' : '#FFFFFF',
-                      boxShadow: isDarkMode 
-                        ? `0 20px 40px ${logoGreen}30` 
+                      boxShadow: isDarkMode
+                        ? `0 20px 40px ${logoGreen}30`
                         : `0 20px 40px ${logoGreen}20`
                     }}
                   >
@@ -354,7 +344,7 @@ const LandingPage = () => {
                       Explore Our Solutions
                       <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </span>
-                    <div 
+                    <div
                       className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                       style={{
                         background: `linear-gradient(to right, ${logoGreen}CC, ${isDarkMode ? '#00CC00CC' : '#006400CC'})`
@@ -364,11 +354,10 @@ const LandingPage = () => {
 
                   <button
                     onClick={() => scrollToSection("who-we-serve")}
-                    className={`border-2 ${
-                      isDarkMode
+                    className={`border-2 ${isDarkMode
                         ? "border-white/20 hover:border-white/40 text-white hover:bg-white/10"
                         : "border-gray-300 hover:border-gray-500 text-gray-900 hover:bg-gray-100/50"
-                    } px-10 py-4 rounded-2xl text-lg font-semibold transition-all backdrop-blur-sm`}
+                      } px-10 py-4 rounded-2xl text-lg font-semibold transition-all backdrop-blur-sm`}
                   >
                     Our Clients
                   </button>
@@ -378,11 +367,10 @@ const LandingPage = () => {
 
             {/* Slide 3 */}
             <div
-              className={`text-center transition-all duration-1000 ${
-                currentSlide === 2
+              className={`text-center transition-all duration-1000 ${currentSlide === 2
                   ? "opacity-100 transform translate-x-0"
                   : "opacity-0 transform translate-x-full absolute inset-0 flex items-center justify-center"
-              }`}
+                }`}
             >
               <div className="max-w-6xl">
                 <div
@@ -424,8 +412,8 @@ const LandingPage = () => {
                     style={{
                       background: `linear-gradient(to right, ${logoYellow}, ${isDarkMode ? '#FFC107' : '#DAA520'})`,
                       color: isDarkMode ? '#000000' : '#000000',
-                      boxShadow: isDarkMode 
-                        ? `0 20px 40px ${logoYellow}30` 
+                      boxShadow: isDarkMode
+                        ? `0 20px 40px ${logoYellow}30`
                         : `0 20px 40px ${logoYellow}20`
                     }}
                   >
@@ -433,7 +421,7 @@ const LandingPage = () => {
                       View Products
                       <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </span>
-                    <div 
+                    <div
                       className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                       style={{
                         background: `linear-gradient(to right, ${logoYellow}CC, ${isDarkMode ? '#FFC107CC' : '#DAA520CC'})`
@@ -443,11 +431,10 @@ const LandingPage = () => {
 
                   <button
                     onClick={() => navigate("/contact")}
-                    className={`border-2 ${
-                      isDarkMode
+                    className={`border-2 ${isDarkMode
                         ? "border-white/20 hover:border-white/40 text-white hover:bg-white/10"
                         : "border-gray-300 hover:border-gray-500 text-gray-900 hover:bg-gray-100/50"
-                    } px-10 py-4 rounded-2xl text-lg font-semibold transition-all backdrop-blur-sm`}
+                      } px-10 py-4 rounded-2xl text-lg font-semibold transition-all backdrop-blur-sm`}
                   >
                     Contact Us
                   </button>
@@ -463,13 +450,12 @@ const LandingPage = () => {
             <button
               key={slide}
               onClick={() => setCurrentSlide(slide)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                currentSlide === slide
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${currentSlide === slide
                   ? "w-8"
                   : isDarkMode
-                  ? "bg-white/30 hover:bg-white/50"
-                  : "bg-gray-400/50 hover:bg-gray-600/70"
-              }`}
+                    ? "bg-white/30 hover:bg-white/50"
+                    : "bg-gray-400/50 hover:bg-gray-600/70"
+                }`}
               style={{
                 backgroundColor: currentSlide === slide ? logoGreen : undefined,
                 background: currentSlide === slide ? `linear-gradient(to right, ${logoGreen}, ${logoYellow})` : undefined,
@@ -481,30 +467,24 @@ const LandingPage = () => {
         {/* Navigation Arrows */}
         <button
           onClick={() => setCurrentSlide((prev) => (prev - 1 + 3) % 3)}
-          className={`absolute left-8 top-1/2 transform -translate-y-1/2 w-12 h-12 rounded-full ${
-            isDarkMode
+          className={`absolute left-8 top-1/2 transform -translate-y-1/2 w-12 h-12 rounded-full ${isDarkMode
               ? "bg-black/30 hover:bg-black/50 text-white"
               : "bg-white/70 hover:bg-white text-gray-900"
-          } backdrop-blur-sm border ${
-            isDarkMode ? "border-white/10" : "border-gray-300"
-          } hover:${
-            themeClasses.borderHover
-          } transition-all duration-300 flex items-center justify-center z-20 group`}
+            } backdrop-blur-sm border ${isDarkMode ? "border-white/10" : "border-gray-300"
+            } hover:${themeClasses.borderHover
+            } transition-all duration-300 flex items-center justify-center z-20 group`}
         >
           <ArrowRight className="w-5 h-5 rotate-180 group-hover:scale-110 transition-transform" />
         </button>
 
         <button
           onClick={() => setCurrentSlide((prev) => (prev + 1) % 3)}
-          className={`absolute right-8 top-1/2 transform -translate-y-1/2 w-12 h-12 rounded-full ${
-            isDarkMode
+          className={`absolute right-8 top-1/2 transform -translate-y-1/2 w-12 h-12 rounded-full ${isDarkMode
               ? "bg-black/30 hover:bg-black/50 text-white"
               : "bg-white/70 hover:bg-white text-gray-900"
-          } backdrop-blur-sm border ${
-            isDarkMode ? "border-white/10" : "border-gray-300"
-          } hover:${
-            themeClasses.borderHover
-          } transition-all duration-300 flex items-center justify-center z-20 group`}
+            } backdrop-blur-sm border ${isDarkMode ? "border-white/10" : "border-gray-300"
+            } hover:${themeClasses.borderHover
+            } transition-all duration-300 flex items-center justify-center z-20 group`}
         >
           <ArrowRight className="w-5 h-5 group-hover:scale-110 transition-transform" />
         </button>
@@ -557,15 +537,13 @@ const LandingPage = () => {
             ].map((item, index) => (
               <div
                 key={index}
-                className={`${themeClasses.cardBg} backdrop-blur-xl rounded-2xl p-8 border ${themeClasses.border} hover:${
-                  themeClasses.borderHover
-                } transition-all duration-300 hover:transform hover:scale-105 shadow-lg ${
-                  isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
-                }`}
+                className={`${themeClasses.cardBg} backdrop-blur-xl rounded-2xl p-8 border ${themeClasses.border} hover:${themeClasses.borderHover
+                  } transition-all duration-300 hover:transform hover:scale-105 shadow-lg ${isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
+                  }`}
               >
                 <div
                   className="w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-6"
-                  style={{ 
+                  style={{
                     backgroundColor: `${item.color}${isDarkMode ? '20' : '10'}`,
                     border: `1px solid ${item.color}${isDarkMode ? '30' : '20'}`
                   }}
@@ -613,18 +591,15 @@ const LandingPage = () => {
               ].map((client, index) => (
                 <div
                   key={index}
-                  className={`${themeClasses.cardBgAlt} backdrop-blur-xl rounded-xl p-6 border ${
-                    themeClasses.border
-                  } transition-all duration-300 hover:${
-                    themeClasses.borderHover
-                  } shadow-md ${
-                    isDarkMode ? "shadow-black/10" : "shadow-gray-200/30"
-                  }`}
+                  className={`${themeClasses.cardBgAlt} backdrop-blur-xl rounded-xl p-6 border ${themeClasses.border
+                    } transition-all duration-300 hover:${themeClasses.borderHover
+                    } shadow-md ${isDarkMode ? "shadow-black/10" : "shadow-gray-200/30"
+                    }`}
                 >
                   <div className="flex items-center mb-4">
-                    <div 
-                      className="p-2 rounded-lg mr-3" 
-                      style={{ 
+                    <div
+                      className="p-2 rounded-lg mr-3"
+                      style={{
                         backgroundColor: `${logoGreen}${isDarkMode ? '20' : '10'}`,
                         border: `1px solid ${logoGreen}${isDarkMode ? '30' : '20'}`
                       }}
@@ -719,18 +694,15 @@ const LandingPage = () => {
                 ].map((approach, index) => (
                   <div
                     key={index}
-                    className={`${themeClasses.cardBg} backdrop-blur-xl rounded-xl p-6 border ${
-                      themeClasses.border
-                    } transition-all duration-300 hover:${
-                      themeClasses.borderHover
-                    } shadow-md ${
-                      isDarkMode ? "shadow-black/10" : "shadow-gray-200/30"
-                    }`}
+                    className={`${themeClasses.cardBg} backdrop-blur-xl rounded-xl p-6 border ${themeClasses.border
+                      } transition-all duration-300 hover:${themeClasses.borderHover
+                      } shadow-md ${isDarkMode ? "shadow-black/10" : "shadow-gray-200/30"
+                      }`}
                   >
                     <div className="flex items-start">
                       <div
                         className="p-3 rounded-lg mr-4 flex-shrink-0"
-                        style={{ 
+                        style={{
                           backgroundColor: `${approach.color}${isDarkMode ? '20' : '10'}`,
                           border: `1px solid ${approach.color}${isDarkMode ? '30' : '20'}`
                         }}
@@ -809,17 +781,15 @@ const LandingPage = () => {
             ].map((product, index) => (
               <div
                 key={index}
-                className={`${themeClasses.cardBg} backdrop-blur-xl rounded-2xl overflow-hidden border ${
-                  themeClasses.border
-                } transition-all duration-300 hover:transform hover:scale-105 shadow-xl ${
-                  isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
-                }`}
+                className={`${themeClasses.cardBg} backdrop-blur-xl rounded-2xl overflow-hidden border ${themeClasses.border
+                  } transition-all duration-300 hover:transform hover:scale-105 shadow-xl ${isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
+                  }`}
               >
                 <div className="p-8">
                   <div className="flex items-center mb-6">
                     <div
                       className="p-3 rounded-xl mr-4"
-                      style={{ 
+                      style={{
                         backgroundColor: `${product.color}${isDarkMode ? '20' : '10'}`,
                         border: `1px solid ${product.color}${isDarkMode ? '30' : '20'}`
                       }}
@@ -848,14 +818,13 @@ const LandingPage = () => {
                     onClick={() => navigate(product.cta === "Request Demo" ? "/request-demo" : "/products")}
                     className="w-full py-3 rounded-xl font-semibold transition-all hover:opacity-90 shadow-md"
                     style={{
-                      background: `linear-gradient(to right, ${product.color}, ${
-                        product.color === logoGreen 
+                      background: `linear-gradient(to right, ${product.color}, ${product.color === logoGreen
                           ? (isDarkMode ? '#00CC00' : '#006400')
                           : (isDarkMode ? '#FFC107' : '#DAA520')
-                      })`,
+                        })`,
                       color: product.color === logoYellow && !isDarkMode ? '#000000' : '#000000',
-                      boxShadow: isDarkMode 
-                        ? `0 10px 20px ${product.color}30` 
+                      boxShadow: isDarkMode
+                        ? `0 10px 20px ${product.color}30`
                         : `0 10px 20px ${product.color}20`
                     }}
                   >
@@ -903,18 +872,15 @@ const LandingPage = () => {
               ].map((api, index) => (
                 <div
                   key={index}
-                  className={`${themeClasses.cardBgAlt} backdrop-blur-xl rounded-xl p-6 border ${
-                    themeClasses.border
-                  } transition-all duration-300 hover:${
-                    themeClasses.borderHover
-                  } shadow-md ${
-                    isDarkMode ? "shadow-black/10" : "shadow-gray-200/30"
-                  }`}
+                  className={`${themeClasses.cardBgAlt} backdrop-blur-xl rounded-xl p-6 border ${themeClasses.border
+                    } transition-all duration-300 hover:${themeClasses.borderHover
+                    } shadow-md ${isDarkMode ? "shadow-black/10" : "shadow-gray-200/30"
+                    }`}
                 >
                   <div className="flex items-start mb-4">
-                    <div 
-                      className="p-2 rounded-lg mr-3" 
-                      style={{ 
+                    <div
+                      className="p-2 rounded-lg mr-3"
+                      style={{
                         backgroundColor: `${logoGreen}${isDarkMode ? '20' : '10'}`,
                         border: `1px solid ${logoGreen}${isDarkMode ? '30' : '20'}`
                       }}
@@ -941,17 +907,15 @@ const LandingPage = () => {
           </div>
 
           {/* Training & Capacity Building */}
-          <div className={`${themeClasses.cardBg} backdrop-blur-xl rounded-2xl p-8 border ${
-            themeClasses.border
-          } shadow-xl ${
-            isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
-          }`}>
+          <div className={`${themeClasses.cardBg} backdrop-blur-xl rounded-2xl p-8 border ${themeClasses.border
+            } shadow-xl ${isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
+            }`}>
             <div className="flex flex-col md:flex-row items-center">
               <div className="md:w-2/3 pr-8">
                 <div className="flex items-center mb-4">
-                  <div 
-                    className="p-3 rounded-xl mr-4" 
-                    style={{ 
+                  <div
+                    className="p-3 rounded-xl mr-4"
+                    style={{
                       backgroundColor: `${logoYellow}${isDarkMode ? '20' : '10'}`,
                       border: `1px solid ${logoYellow}${isDarkMode ? '30' : '20'}`
                     }}
@@ -1047,15 +1011,11 @@ const LandingPage = () => {
             ].map((stat, index) => (
               <div key={index} className="group">
                 <div
-                  className={`${
-                    isDarkMode ? "bg-black/20" : "bg-white/90"
-                  } backdrop-blur-xl rounded-2xl p-8 border ${
-                    themeClasses.border
-                  } hover:${
-                    themeClasses.borderHover
-                  } transition-all duration-300 hover:transform hover:scale-105 shadow-lg ${
-                    isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
-                  }`}
+                  className={`${isDarkMode ? "bg-black/20" : "bg-white/90"
+                    } backdrop-blur-xl rounded-2xl p-8 border ${themeClasses.border
+                    } hover:${themeClasses.borderHover
+                    } transition-all duration-300 hover:transform hover:scale-105 shadow-lg ${isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
+                    }`}
                 >
                   <div className="flex justify-center mb-4" style={{ color: logoGreen }}>
                     {stat.icon}
@@ -1100,8 +1060,8 @@ const LandingPage = () => {
               style={{
                 background: `linear-gradient(to right, ${logoYellow}, ${isDarkMode ? '#FFC107' : '#DAA520'})`,
                 color: isDarkMode ? '#000000' : '#000000',
-                boxShadow: isDarkMode 
-                  ? `0 20px 40px ${logoYellow}30` 
+                boxShadow: isDarkMode
+                  ? `0 20px 40px ${logoYellow}30`
                   : `0 20px 40px ${logoYellow}20`
               }}
             >
@@ -1109,7 +1069,7 @@ const LandingPage = () => {
                 Request a Demo
                 <ArrowRight className="ml-3 w-6 h-6 group-hover:translate-x-1 transition-transform" />
               </span>
-              <div 
+              <div
                 className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                 style={{
                   background: `linear-gradient(to right, ${logoYellow}CC, ${isDarkMode ? '#FFC107CC' : '#DAA520CC'})`
@@ -1118,13 +1078,11 @@ const LandingPage = () => {
             </button>
             <button
               onClick={() => navigate("/partner")}
-              className={`border-2 ${
-                isDarkMode
+              className={`border-2 ${isDarkMode
                   ? "border-white/30 hover:border-white/50 text-white hover:bg-white/10"
                   : "border-gray-300 hover:border-gray-500 text-gray-900 hover:bg-gray-100/50"
-              } px-12 py-5 rounded-2xl text-lg font-semibold transition-all backdrop-blur-sm shadow-lg ${
-                isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
-              }`}
+                } px-12 py-5 rounded-2xl text-lg font-semibold transition-all backdrop-blur-sm shadow-lg ${isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
+                }`}
             >
               Partner With Us
             </button>
