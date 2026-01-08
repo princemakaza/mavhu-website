@@ -2,25 +2,21 @@ import React from "react";
 import {
   Globe,
   Shield,
-  Users,
   ArrowRight,
   CheckCircle,
   Map,
-  Cloud,
   BarChart3,
   Cpu,
   Target,
   Eye,
   Database,
   TrendingUp,
-  Leaf,
-  Thermometer,
+
   Satellite,
   HardDrive,
   MapPin,
   Phone,
   Mail,
-  Lightbulb,
 } from "lucide-react";
 import Navbar from "../../components/navbar";
 import Footer from "../../components/Footer";
