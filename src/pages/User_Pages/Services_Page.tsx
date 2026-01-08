@@ -680,7 +680,7 @@ const ServicesPage = () => {
                     )}
 
                     {/* Service-specific CTA */}
-                    <div className="mt-8 pt-6 border-t border-white/10">
+                    {/* <div className="mt-8 pt-6 border-t border-white/10">
                       <div className="flex items-center justify-between">
                         <div>
                           <p className={`${themeClasses.textMuted} text-sm`}>
@@ -701,7 +701,7 @@ const ServicesPage = () => {
                           <ArrowRight className="w-4 h-4" />
                         </button>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 )}
               </div>
