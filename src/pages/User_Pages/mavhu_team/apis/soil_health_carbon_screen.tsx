@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react"; // Add this import
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend, ArcElement, Filler } from 'chart.js';
 import { Line, Bar, Doughnut } from 'react-chartjs-2';
@@ -33,7 +34,6 @@ import {
     Minimize2,
     Factory,
     Trees,
-
     Award,
     AlertTriangle,
     Users,
@@ -1044,7 +1044,7 @@ const SoilHealthCarbonEmissionScreen = () => {
                                                     <span className={`${themeClasses.textSecondary}`}>{trend.label}</span>
                                                 </div>
                                                 <span className={`text-sm font-medium ${trend.value.includes('improving') ? `text-[${logoGreen}]` :
-                                                        trend.value.includes('declining') ? 'text-red-500' : 'text-yellow-500'
+                                                    trend.value.includes('declining') ? 'text-red-500' : 'text-yellow-500'
                                                     }`}>
                                                     {trend.value.charAt(0).toUpperCase() + trend.value.slice(1)}
                                                 </span>
@@ -1098,7 +1098,7 @@ const SoilHealthCarbonEmissionScreen = () => {
                                             <div className="p-3 rounded-lg border border-gray-700/30">
                                                 <p className={`text-xs ${themeClasses.textMuted}`}>Trend</p>
                                                 <p className={`text-lg font-semibold ${soilHealthData.data.carbon_permanence_assessment.trend.includes('improving') ? `text-[${logoGreen}]` :
-                                                        soilHealthData.data.carbon_permanence_assessment.trend.includes('declining') ? 'text-red-500' : 'text-yellow-500'
+                                                    soilHealthData.data.carbon_permanence_assessment.trend.includes('declining') ? 'text-red-500' : 'text-yellow-500'
                                                     }`}>
                                                     {soilHealthData.data.carbon_permanence_assessment.trend}
                                                 </p>
@@ -1162,7 +1162,7 @@ const SoilHealthCarbonEmissionScreen = () => {
                                         <div className="flex items-center justify-between">
                                             <span className={`text-sm ${themeClasses.textSecondary}`}>Confidence Level</span>
                                             <span className={`px-3 py-1 rounded-full text-sm font-medium ${dataQuality?.confidence_level === 'High' ? `bg-[${logoGreen}]/20 text-[${logoGreen}]` :
-                                                    dataQuality?.confidence_level === 'Medium' ? 'bg-yellow-500/20 text-yellow-500' : 'bg-red-500/20 text-red-500'
+                                                dataQuality?.confidence_level === 'Medium' ? 'bg-yellow-500/20 text-yellow-500' : 'bg-red-500/20 text-red-500'
                                                 }`}>
                                                 {dataQuality?.confidence_level || 'N/A'}
                                             </span>
@@ -1174,7 +1174,7 @@ const SoilHealthCarbonEmissionScreen = () => {
                                                 <ul className="space-y-2">
                                                     {dataQuality?.gaps_identified?.map((gap, index) => (
                                                         <li key={index} className="flex items-start gap-2">
-                                                            <AlertCircle className="w-4 h-4 text-yellow-500 mt-0.5 flex-shrink-0" />
+                                                            <AlertCircle className="w-4 h-4 text-yellow-500 mt=0.5 flex-shrink-0" />
                                                             <span className={`text-sm ${themeClasses.textMuted}`}>{gap}</span>
                                                         </li>
                                                     ))}
@@ -1188,7 +1188,7 @@ const SoilHealthCarbonEmissionScreen = () => {
                                                 <ul className="space-y-2">
                                                     {dataQuality?.improvement_suggestions?.map((suggestion, index) => (
                                                         <li key={index} className="flex items-start gap-2">
-                                                            <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                                                            <CheckCircle className="w-4 h-4 text-green-500 mt=0.5 flex-shrink-0" />
                                                             <span className={`text-sm ${themeClasses.textMuted}`}>{suggestion}</span>
                                                         </li>
                                                     ))}
@@ -1424,8 +1424,8 @@ const SoilHealthCarbonEmissionScreen = () => {
                                                             <td className="py-3 px-4">{yearData.soc?.toFixed(2) || "N/A"}</td>
                                                             <td className="py-3 px-4">
                                                                 <span className={`text-xs px-2 py-1 rounded-full ${yearData.verificationStatus === 'verified' ? `bg-[${logoGreen}]/20 text-[${logoGreen}]` :
-                                                                        yearData.verificationStatus === 'audited' ? 'bg-blue-500/20 text-blue-500' :
-                                                                            'bg-gray-500/20 text-gray-500'
+                                                                    yearData.verificationStatus === 'audited' ? 'bg-blue-500/20 text-blue-500' :
+                                                                        'bg-gray-500/20 text-gray-500'
                                                                     }`}>
                                                                     {yearData.verificationStatus || 'unverified'}
                                                                 </span>
@@ -1818,7 +1818,7 @@ const SoilHealthCarbonEmissionScreen = () => {
 
                                 {/* Eligibility Status */}
                                 <div className={`p-6 rounded-xl border ${themeClasses.border} mb-6 ${carbonCreditPredictions.eligibilityStatus.statusColor === 'success' ? 'bg-green-900/20' :
-                                        carbonCreditPredictions.eligibilityStatus.statusColor === 'error' ? 'bg-red-900/20' : 'bg-yellow-900/20'
+                                    carbonCreditPredictions.eligibilityStatus.statusColor === 'error' ? 'bg-red-900/20' : 'bg-yellow-900/20'
                                     }`}>
                                     <div className="flex items-center justify-between mb-4">
                                         <div>
@@ -1918,8 +1918,8 @@ const SoilHealthCarbonEmissionScreen = () => {
                                                         <td className="py-3 px-4" style={{ color: logoYellow }}>{prediction.creditValueFormatted}</td>
                                                         <td className="py-3 px-4">
                                                             <span className={`text-xs px-2 py-1 rounded-full ${prediction.confidenceColor === 'success' ? `bg-[${logoGreen}]/20 text-[${logoGreen}]` :
-                                                                    prediction.confidenceColor === 'warning' ? 'bg-yellow-500/20 text-yellow-500' :
-                                                                        'bg-red-500/20 text-red-500'
+                                                                prediction.confidenceColor === 'warning' ? 'bg-yellow-500/20 text-yellow-500' :
+                                                                    'bg-red-500/20 text-red-500'
                                                                 }`}>
                                                                 {prediction.confidence}
                                                             </span>
