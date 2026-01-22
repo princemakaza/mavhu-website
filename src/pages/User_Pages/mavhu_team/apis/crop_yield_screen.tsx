@@ -4,7 +4,7 @@ import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, PointElement,
 import { Line, Bar, Pie, Doughnut, Scatter } from 'react-chartjs-2';
 import { MapContainer, TileLayer, Marker, Popup, Polygon } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
+import L, { LatLngExpression } from 'leaflet';
 import Sidebar from "../../../../components/Sidebar";
 import {
     TrendingUp,
@@ -155,14 +155,33 @@ interface ExtendedEnvironmentalMetrics {
     }>;
 }
 
-// Type for enhanced carbon emission summary
-interface EnhancedCarbonEmissionSummary extends Omit<CarbonEmissionSummary, 'net_carbon_balance'> {
+// Fixed: EnhancedCarbonEmissionSummary correctly extends without making totals optional
+interface EnhancedCarbonEmissionSummary extends Omit<CarbonEmissionSummary, "net_carbon_balance"> {
     net_carbon_balance?: number;
-    totals?: {
-        total_sequestration_tco2: number;
-        total_emissions_tco2e: number;
-        net_carbon_balance: number;
-        average_area_ha: number;
+    // Remove the optional totals property since it's required in parent
+    // Keep only the additional properties we need
+    period: {
+        start_year: number;
+        end_year: number;
+        years_count: number;
+    };
+    averages: {
+        annual_sequestration: number;
+        annual_emissions: number;
+        carbon_intensity: number;
+        sequestration_rate: number;
+    };
+    trends: {
+        sequestration_trend: number;
+        emission_trend: number;
+        sequestration_direction: string;
+        emission_direction: string;
+    };
+    composition: {
+        scope1_percentage: number;
+        scope2_percentage: number;
+        scope3_percentage: number;
+        soc_sequestration_percentage: number;
     };
 }
 
@@ -185,7 +204,7 @@ const CropYieldScreen = () => {
     const [activeTab, setActiveTab] = useState("overview");
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [mapZoom, setMapZoom] = useState(10);
-    const [mapCenter, setMapCenter] = useState<[number, number]>([0, 0]);
+    const [mapCenter, setMapCenter] = useState<LatLngExpression>([0, 0]);
     const [showFullMap, setShowFullMap] = useState(false);
 
     // Color scheme matching Sidebar
@@ -399,8 +418,11 @@ const CropYieldScreen = () => {
     const areaName = cropYieldData?.data.company.area_of_interest?.name || "Crop Production Area";
     const areaCovered = cropYieldData?.data.company.area_of_interest?.area_covered || "N/A";
 
-    // Cast carbon data to enhanced type
-    const enhancedCarbonData = carbonData as EnhancedCarbonEmissionSummary | null;
+    // Fixed: Properly cast carbon data summary to enhanced type
+    const enhancedCarbonData = carbonData?.summary ? {
+        ...carbonData.summary,
+        net_carbon_balance: carbonData.summary.totals?.net_carbon_balance,
+    } as EnhancedCarbonEmissionSummary : null;
 
     // Format number with commas
     const formatNumber = (num: number) => {
@@ -474,7 +496,7 @@ const CropYieldScreen = () => {
                 zoom={mapZoom}
                 style={{ height: '100%', width: '100%', borderRadius: '0.5rem' }}
                 className="leaflet-container"
-                key={`${mapCenter[0]}-${mapCenter[1]}-${mapZoom}`}
+                key={`${(mapCenter as [number, number])[0]}-${(mapCenter as [number, number])[1]}-${mapZoom}`}
             >
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -485,7 +507,10 @@ const CropYieldScreen = () => {
                 />
 
                 {coordinates.length === 1 ? (
-                    <Marker position={[coordinates[0].lat, coordinates[0].lon]} icon={customIcon}>
+                    <Marker
+                        position={[coordinates[0].lat, coordinates[0].lon] as LatLngExpression}
+                        icon={customIcon}
+                    >
                         <Popup>
                             <div className="p-2">
                                 <h3 className="font-bold" style={{ color: logoGreen }}>{areaName}</h3>
@@ -503,7 +528,7 @@ const CropYieldScreen = () => {
                             fillOpacity: 0.3,
                             weight: 2
                         }}
-                        positions={coordinates.map(coord => [coord.lat, coord.lon])}
+                        positions={coordinates.map(coord => [coord.lat, coord.lon] as LatLngExpression)}
                     >
                         <Popup>
                             <div className="p-2">
