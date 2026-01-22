@@ -4,7 +4,7 @@ import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, PointElement,
 import { Line, Bar, Pie, Doughnut, Scatter } from 'react-chartjs-2';
 import { MapContainer, TileLayer, Marker, Popup, Polygon } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import L, { LatLngExpression } from 'leaflet';
+import L from 'leaflet';
 import Sidebar from "../../../../components/Sidebar";
 import {
     TrendingUp,
@@ -204,7 +204,7 @@ const CropYieldScreen = () => {
     const [activeTab, setActiveTab] = useState("overview");
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [mapZoom, setMapZoom] = useState(10);
-    const [mapCenter, setMapCenter] = useState<LatLngExpression>([0, 0]);
+    const [mapCenter, setMapCenter] = useState<[number, number]>([0, 0]);
     const [showFullMap, setShowFullMap] = useState(false);
 
     // Color scheme matching Sidebar
@@ -491,55 +491,47 @@ const CropYieldScreen = () => {
         const customIcon = createLeafletIcon();
 
         return (
-            <MapContainer
-                center={mapCenter}
-                zoom={mapZoom}
-                style={{ height: '100%', width: '100%', borderRadius: '0.5rem' }}
-                className="leaflet-container"
-                key={`${(mapCenter as [number, number])[0]}-${(mapCenter as [number, number])[1]}-${mapZoom}`}
-            >
-                <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url={isDarkMode
-                        ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-                        : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    }
-                />
+            <div className="h-full w-full">
+                <MapContainer
+                    center={mapCenter}
+                    zoom={mapZoom}
+                    style={{ height: '100%', width: '100%', borderRadius: '0.5rem' }}
+                    className="leaflet-container"
+                    key={`${mapCenter[0]}-${mapCenter[1]}-${mapZoom}`}
+                >
+                    <TileLayer
+                        url={isDarkMode
+                            ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+                            : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        }
+                    />
 
-                {coordinates.length === 1 ? (
-                    <Marker
-                        position={[coordinates[0].lat, coordinates[0].lon] as LatLngExpression}
-                        icon={customIcon}
-                    >
-                        <Popup>
-                            <div className="p-2">
-                                <h3 className="font-bold" style={{ color: logoGreen }}>{areaName}</h3>
-                                <p className="text-sm">Lat: {coordinates[0].lat.toFixed(4)}</p>
-                                <p className="text-sm">Lon: {coordinates[0].lon.toFixed(4)}</p>
-                                <p className="text-sm">Area: {areaCovered}</p>
-                            </div>
-                        </Popup>
-                    </Marker>
-                ) : (
-                    <Polygon
-                        pathOptions={{
-                            fillColor: logoGreen,
-                            color: logoGreen,
-                            fillOpacity: 0.3,
-                            weight: 2
-                        }}
-                        positions={coordinates.map(coord => [coord.lat, coord.lon] as LatLngExpression)}
-                    >
-                        <Popup>
-                            <div className="p-2">
-                                <h3 className="font-bold" style={{ color: logoGreen }}>{areaName}</h3>
-                                <p className="text-sm">Area: {areaCovered}</p>
-                                <p className="text-sm">Coordinates: {coordinates.length} points</p>
-                            </div>
-                        </Popup>
-                    </Polygon>
-                )}
-            </MapContainer>
+                    {coordinates.length === 1 ? (
+                        <Marker position={[coordinates[0].lat, coordinates[0].lon]}>
+                            <Popup>
+                                <div className="p-2">
+                                    <h3 className="font-bold" style={{ color: logoGreen }}>{areaName}</h3>
+                                    <p className="text-sm">Lat: {coordinates[0].lat.toFixed(4)}</p>
+                                    <p className="text-sm">Lon: {coordinates[0].lon.toFixed(4)}</p>
+                                    <p className="text-sm">Area: {areaCovered}</p>
+                                </div>
+                            </Popup>
+                        </Marker>
+                    ) : (
+                        <Polygon
+                            positions={coordinates.map(coord => [coord.lat, coord.lon])}
+                        >
+                            <Popup>
+                                <div className="p-2">
+                                    <h3 className="font-bold" style={{ color: logoGreen }}>{areaName}</h3>
+                                    <p className="text-sm">Area: {areaCovered}</p>
+                                    <p className="text-sm">Coordinates: {coordinates.length} points</p>
+                                </div>
+                            </Popup>
+                        </Polygon>
+                    )}
+                </MapContainer>
+            </div>
         );
     };
 
