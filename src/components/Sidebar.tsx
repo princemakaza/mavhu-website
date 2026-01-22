@@ -1,88 +1,90 @@
+import React, { useState } from "react";
 import {
   LayoutDashboard,
   Users,
-  CreditCard,
   TrendingUp,
   Settings,
-  Lock,
-  Bell,
+  Database,
+  BarChart,
+  Leaf,
+  Cloud,
+  Droplet,
+  Shield,
+  Zap,
+  Recycle,
+  Heart,
+  Building,
+  Globe,
   ChevronRight,
   X,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { useNavigate, useLocation, type To } from "react-router-dom";
-import Loan from "../assets/logo.png";
+import Logo from "../assets/logo.png";
 
 const Sidebar = ({ isOpen = true, onClose = () => {} }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
-  const sidebarItems = [
+  // Colors for both modes
+  const logoGreen = isDarkMode ? "#00FF00" : "#008000";
+  const logoYellow = isDarkMode ? "#FFD700" : "#B8860B";
+
+  // Dashboard navigation items - simplified
+  const dashboardItems = [
     {
       icon: LayoutDashboard,
-      label: "Dashboard",
-      path: "/admindashboard",
-      color: "from-green-500 to-green-600",
+      label: "ESG Dashboard",
+      path: "/esg-dashboard",
     },
     {
       icon: Users,
-      label: "Users",
-      path: "/users",
-      color: "from-green-500 to-green-600",
+      label: "Companies",
+      path: "/portal/companies",
     },
     {
-      icon: CreditCard,
-      label: "Loan Management",
-      path: "/loan-management",
-      color: "from-green-500 to-green-600",
-    },
-    {
-      icon: TrendingUp,
-      label: "Loan Tracking",
-      path: "/loan-tracking",
-      color: "from-green-500 to-green-600",
-    },
-    {
-      icon: CreditCard,
-      label: "Payments",
-      path: "/payments",
-      color: "from-green-500 to-green-600",
-    },
-    {
-      icon: Users,
-      label: "Chat",
-      path: "/chat",
-      color: "from-green-500 to-green-600",
+      icon: BarChart,
+      label: "Reports",
+      path: "/reports",
     },
     {
       icon: Settings,
       label: "Settings",
       path: "/settings",
-      color: "from-green-500 to-green-600",
     },
-    {
-      icon: Lock,
-      label: "Collaterals",
-      path: "/collaterals",
-      color: "from-green-500 to-green-600",
-    },
-    {
-      icon: Bell,
-      label: "Notifications",
-      path: "/notifications",
-      color: "from-green-500 to-green-600",
-    },
-    {
-      icon: Lock,
-      label: "Admin Logout",
-      path: "/Adminlogout",
-      color: "from-green-500 to-green-600",
-    },
+  ];
+
+  // Simplified API items without descriptions
+  const apiItems = [
+    { icon: Leaf, label: "Soil Health", path: "/portal/esg-dashboard/soil-health-carbon" },
+    { icon: TrendingUp, label: "Crop Yield", path: "/portal/esg-dashboard/crop-yield" },
+    { icon: Cloud, label: "GHG Emissions", path: "/portal/esg-dashboard/ghg-emissions" },
+    { icon: Globe, label: "Biodiversity", path: "/apis/biodiversity" },
+    { icon: Droplet, label: "Water Risk", path: "/apis/water-risk" },
+    { icon: Shield, label: "Compliance", path: "/apis/compliance" },
+    { icon: Zap, label: "Energy", path: "/apis/energy" },
+    { icon: Recycle, label: "Waste", path: "/apis/waste" },
+    { icon: Users, label: "Workforce", path: "/apis/workforce" },
+    { icon: Heart, label: "Health & Safety", path: "/apis/health-safety" },
+    { icon: Building, label: "Governance", path: "/apis/governance" },
+    { icon: BarChart, label: "ESG Score", path: "/apis/esg-score" },
   ];
 
   const handleNavigation = (path: To) => {
     navigate(path);
     if (window.innerWidth < 1024) {
       onClose();
+    }
+  };
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+    if (!isDarkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
     }
   };
 
@@ -98,103 +100,277 @@ const Sidebar = ({ isOpen = true, onClose = () => {} }) => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-72 bg-white transform ${
+        className={`fixed inset-y-0 left-0 z-50 w-72 transform ${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-all duration-300 ease-out lg:translate-x-0 lg:static lg:inset-0 overflow-hidden flex flex-col border-r border-gray-200`}
+        } transition-all duration-300 ease-out lg:translate-x-0 lg:static lg:inset-0 overflow-hidden flex flex-col ${
+          isDarkMode
+            ? "bg-gray-900 border-gray-800"
+            : "bg-white border-gray-200"
+        } border-r`}
       >
         {/* Header */}
-        <div className="relative flex items-center justify-between h-16 px-4 border-b border-gray-200 bg-white flex-shrink-0">
+        <div
+          className={`relative flex items-center justify-between h-20 px-4 border-b ${
+            isDarkMode
+              ? "border-gray-800 bg-gray-900"
+              : "border-gray-200 bg-white"
+          } flex-shrink-0`}
+        >
           <div className="flex items-center space-x-3">
-            <img
-                   src={Loan}
-                   alt=""
-                 className="h-35 w-auto mt-12 ml-0 mr-auto"
-                  />
+            <img src={Logo} alt="MAVHU ESG Dashboard" className="h-10 w-auto" />
             <div>
-              <h1 className="text-lg font-bold text-gray-800"></h1>
-              <p className="text-xs text-gray-500 font-medium tracking-wide">
+              <h1
+                className={`text-lg font-bold ${
+                  isDarkMode ? "text-white" : "text-gray-900"
+                }`}
+              >
+                ESG Dashboard
+              </h1>
+              <p
+                className="text-xs font-medium tracking-wide"
+                style={{ color: logoGreen }}
+              >
+                MAVHU Africa
               </p>
             </div>
           </div>
-          <button
-            onClick={onClose}
-            className="lg:hidden p-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 transition-all duration-200 border border-gray-300 group"
-          >
-            <X className="w-4 h-4 text-gray-600 group-hover:text-gray-800 transition-colors" />
-          </button>
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={toggleDarkMode}
+              className={`p-2 rounded-lg transition-all duration-200 ${
+                isDarkMode
+                  ? "bg-gray-800 hover:bg-gray-700 text-yellow-400"
+                  : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+              }`}
+              title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+            >
+              {isDarkMode ? (
+                <Sun className="w-5 h-5" />
+              ) : (
+                <Moon className="w-5 h-5" />
+              )}
+            </button>
+            <button
+              onClick={onClose}
+              className="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200"
+            >
+              <X
+                className={`w-5 h-5 ${
+                  isDarkMode ? "text-gray-400" : "text-gray-600"
+                }`}
+              />
+            </button>
+          </div>
         </div>
 
         {/* Navigation */}
-        <nav className="relative flex-1 overflow-y-auto px-3 py-4 space-y-1 scrollbar-hide">
-          {sidebarItems.map((item, index) => {
-            const IconComponent = item.icon;
-            const isActive = location.pathname === item.path;
+        <nav className="flex-1 overflow-y-auto px-4 py-6 space-y-6 scrollbar-hide">
+          {/* Dashboard Section */}
+          <div>
+            <h2
+              className={`text-xs font-semibold uppercase tracking-wider mb-3 ${
+                isDarkMode ? "text-gray-400" : "text-gray-500"
+              }`}
+            >
+              Dashboard
+            </h2>
+            {dashboardItems.map((item, index) => {
+              const IconComponent = item.icon;
+              const isActive = location.pathname === item.path;
 
-            return (
-              <div
-                key={index}
-                className={`group relative flex items-center px-4 py-3 rounded-lg transition-all duration-300 cursor-pointer ${
-                  isActive
-                    ? `bg-gradient-to-r ${item.color} shadow-lg shadow-green-500/20`
-                    : "hover:bg-gray-100"
-                }`}
-                onClick={() => handleNavigation(item.path)}
-              >
-                {/* Icon */}
+              return (
                 <div
-                  className={`relative p-2 rounded-lg mr-3 transition-all duration-300 ${
-                    isActive ? "bg-white/20 backdrop-blur-sm" : "bg-transparent"
+                  key={index}
+                  className={`group flex items-center px-4 py-3 rounded-xl transition-all duration-300 cursor-pointer mb-2 ${
+                    isActive
+                      ? "text-white"
+                      : isDarkMode
+                      ? "text-gray-300 hover:bg-gray-800"
+                      : "text-gray-700 hover:bg-gray-50"
                   }`}
+                  onClick={() => handleNavigation(item.path)}
+                  style={
+                    isActive
+                      ? {
+                          background: `linear-gradient(to right, ${logoGreen}, ${
+                            isDarkMode ? "#00CC00" : "#006400"
+                          })`,
+                          boxShadow: `0 10px 20px ${
+                            isDarkMode ? "rgba(0, 255, 0, 0.15)" : "rgba(0, 128, 0, 0.15)"
+                          }`,
+                        }
+                      : {}
+                  }
                 >
-                  <IconComponent
-                    className={`w-5 h-5 transition-all duration-300 ${
+                  <div
+                    className={`p-2 rounded-lg mr-3 transition-all duration-300 ${
+                      isActive ? "bg-white/20" : isDarkMode ? "bg-gray-800" : "bg-gray-100"
+                    }`}
+                  >
+                    <IconComponent
+                      className={`w-5 h-5 transition-all duration-300 ${
+                        isActive
+                          ? "text-white"
+                          : isDarkMode
+                          ? "text-gray-400 group-hover:text-gray-300"
+                          : "text-gray-600 group-hover:text-gray-800"
+                      }`}
+                    />
+                  </div>
+                  <div className="flex-1 font-medium text-sm">{item.label}</div>
+                  <ChevronRight
+                    className={`w-4 h-4 transition-all duration-300 ${
                       isActive
-                        ? "text-white"
-                        : "text-gray-600 group-hover:text-gray-800"
+                        ? "text-white opacity-100 translate-x-0.5"
+                        : `${
+                            isDarkMode ? "text-gray-600" : "text-gray-400"
+                          } opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5`
                     }`}
                   />
                 </div>
+              );
+            })}
+          </div>
 
-                {/* Text content */}
-                <div className="flex-1 relative z-10 min-w-0">
-                  <div
-                    className={`font-medium text-sm ${
-                      isActive
-                        ? "text-white"
-                        : "text-gray-700 group-hover:text-gray-900"
-                    }`}
-                  >
-                    {item.label}
-                  </div>
-                </div>
-
-                {/* Arrow */}
-                <ChevronRight
-                  className={`w-4 h-4 transition-all duration-300 ${
-                    isActive
-                      ? "text-white opacity-100 translate-x-0.5"
-                      : "text-gray-400 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5"
-                  }`}
-                />
-              </div>
-            );
-          })}
-        </nav>
-
-        {/* Footer status */}
-        <div className="relative px-4 pb-4 flex-shrink-0">
-          <div className="h-px bg-gray-200 mb-4"></div>
-          <div className="flex items-center justify-center">
-            <div className="flex items-center space-x-2 px-3 py-2 rounded-full bg-white border border-gray-200 shadow-sm">
-              <div className="flex space-x-1">
-                <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></div>
-                <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse delay-150"></div>
-                <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse delay-300"></div>
-              </div>
-              <span className="text-xs text-gray-600 font-medium">
-                System Online
+          {/* APIs Section */}
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <h2
+                className={`text-xs font-semibold uppercase tracking-wider ${
+                  isDarkMode ? "text-gray-400" : "text-gray-500"
+                }`}
+              >
+                ESG APIs
+              </h2>
+              <span
+                className={`text-xs font-medium px-2 py-1 rounded-full ${
+                  isDarkMode ? "bg-green-900/30 text-green-400" : "bg-green-100 text-green-800"
+                }`}
+              >
+                13
               </span>
             </div>
+            <div className="space-y-2">
+              {apiItems.map((item, index) => {
+                const IconComponent = item.icon;
+                const isActive = location.pathname === item.path;
+
+                return (
+                  <div
+                    key={index}
+                    className={`group flex items-center px-4 py-3 rounded-xl transition-all duration-300 cursor-pointer ${
+                      isActive
+                        ? "text-white"
+                        : isDarkMode
+                        ? "text-gray-300 hover:bg-gray-800"
+                        : "text-gray-700 hover:bg-gray-50"
+                    }`}
+                    onClick={() => handleNavigation(item.path)}
+                    style={
+                      isActive
+                        ? {
+                            background: `linear-gradient(to right, ${logoGreen}, ${
+                              isDarkMode ? "#00CC00" : "#006400"
+                            })`,
+                            boxShadow: `0 10px 20px ${
+                              isDarkMode ? "rgba(0, 255, 0, 0.15)" : "rgba(0, 128, 0, 0.15)"
+                            }`,
+                          }
+                        : {}
+                    }
+                  >
+                    <div
+                      className={`p-2 rounded-lg mr-3 transition-all duration-300 ${
+                        isActive ? "bg-white/20" : isDarkMode ? "bg-gray-800" : "bg-gray-100"
+                      }`}
+                    >
+                      <IconComponent
+                        className={`w-4 h-4 transition-all duration-300 ${
+                          isActive
+                            ? "text-white"
+                            : isDarkMode
+                            ? "text-gray-400 group-hover:text-gray-300"
+                            : "text-gray-600 group-hover:text-gray-800"
+                        }`}
+                      />
+                    </div>
+                    <div className="flex-1 font-medium text-sm">{item.label}</div>
+                    <ChevronRight
+                      className={`w-3 h-3 transition-all duration-300 ${
+                        isActive
+                          ? "text-white opacity-100 translate-x-0.5"
+                          : `${
+                              isDarkMode ? "text-gray-600" : "text-gray-400"
+                            } opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5`
+                      }`}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* API Documentation Link */}
+          <div className="mt-8">
+            <div
+              className={`group flex items-center justify-center px-4 py-3 rounded-xl transition-all duration-300 cursor-pointer border ${
+                isDarkMode
+                  ? "border-gray-700 hover:bg-gray-800 text-gray-300"
+                  : "border-gray-200 hover:bg-gray-50 text-gray-700"
+              }`}
+              onClick={() => handleNavigation("/api-documentation")}
+            >
+              <Database
+                className={`w-5 h-5 mr-2 ${
+                  isDarkMode ? "text-gray-400" : "text-gray-600"
+                }`}
+              />
+              <span className="font-medium text-sm">View API Docs</span>
+            </div>
+          </div>
+        </nav>
+
+        {/* Footer */}
+        <div
+          className={`px-4 pb-6 pt-4 border-t ${
+            isDarkMode ? "border-gray-800" : "border-gray-200"
+          } flex-shrink-0`}
+        >
+          {/* Logout Button */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div
+                className="px-3 py-1.5 rounded-lg text-xs font-medium"
+                style={{
+                  background: isDarkMode
+                    ? `linear-gradient(to right, ${logoGreen}20, ${logoYellow}20)`
+                    : `linear-gradient(to right, ${logoGreen}10, ${logoYellow}10)`,
+                  border: isDarkMode
+                    ? `1px solid ${logoGreen}30`
+                    : `1px solid ${logoGreen}20`,
+                  color: logoGreen,
+                }}
+              >
+                MAVHU Platform
+              </div>
+              <span
+                className={`text-xs ${
+                  isDarkMode ? "text-gray-500" : "text-gray-400"
+                }`}
+              >
+                v1.0.0
+              </span>
+            </div>
+            <button
+              onClick={() => handleNavigation("/admin-logout")}
+              className={`text-xs font-medium px-3 py-1.5 rounded-full transition-colors ${
+                isDarkMode
+                  ? "text-red-400 hover:text-red-300 hover:bg-red-400/10"
+                  : "text-red-600 hover:text-red-700 hover:bg-red-50"
+              }`}
+            >
+              Logout
+            </button>
           </div>
         </div>
       </aside>
@@ -207,6 +383,11 @@ const Sidebar = ({ isOpen = true, onClose = () => {} }) => {
         }
         .scrollbar-hide::-webkit-scrollbar {
           display: none;
+        }
+        
+        /* Dark mode global styles */
+        .dark {
+          color-scheme: dark;
         }
       `}</style>
     </>
