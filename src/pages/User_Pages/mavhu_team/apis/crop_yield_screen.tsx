@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend, ArcElement, Filler, ScatterController } from 'chart.js';
 import { Line, Bar, Pie, Doughnut, Scatter } from 'react-chartjs-2';
-import { MapContainer, TileLayer, Marker, Popup, Polygon, LayersControl } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polygon } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import Sidebar from "../../../../components/Sidebar";
@@ -10,7 +10,6 @@ import {
     TrendingUp,
     TrendingDown,
     Leaf,
-    Thermometer,
     Shield,
     CheckCircle,
     AlertCircle,
@@ -19,10 +18,8 @@ import {
     Download,
     RefreshCw,
     ChevronLeft,
-    Cloud,
     Activity,
     Database,
-    Cpu,
     Target,
     LineChart,
     Moon,
@@ -38,7 +35,6 @@ import {
     Factory,
     Sprout,
     BarChart3,
-    TrendingUp as TrendingUpIcon,
     AlertTriangle,
 } from "lucide-react";
 import {
@@ -59,7 +55,6 @@ import {
     getNDVIIndicators,
     getCalculationFactors,
     getMonthlyCarbonData,
-    getMetricsByCategory,
     getRecommendations,
     getReportingPeriod,
     type CropYieldForecastResponse,
