@@ -4,7 +4,7 @@ import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, PointElement,
 import { Line, Doughnut } from 'react-chartjs-2';
 import { MapContainer, TileLayer, Marker, Popup, Polygon } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
+import L, { LatLngExpression } from 'leaflet';
 import Sidebar from "../../../../components/Sidebar";
 import {
     TrendingUp,
@@ -25,7 +25,6 @@ import {
     Wind,
     Zap,
     Factory,
-
     Scale,
     Target as TargetIcon,
     Award,
@@ -94,6 +93,21 @@ L.Icon.Default.mergeOptions({
     iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 });
+
+// Type definitions for Chart.js data
+interface ChartDataset {
+    label: string;
+    data: (number | null)[];
+    backgroundColor?: string | string[];
+    borderColor?: string | string[];
+    borderWidth?: number;
+    fill?: boolean;
+}
+
+interface ChartData {
+    labels: string[];
+    datasets: ChartDataset[];
+}
 
 // Skeleton Loading Components
 const SkeletonCard = ({ className = "" }: { className?: string }) => (
@@ -258,15 +272,15 @@ const GhgEmissionScreen = () => {
             const sortedYears = [...years].sort((a, b) => b - a);
             setAvailableYears(sortedYears);
 
-            // Set map center if coordinates exist
-            if (data.data.company.area_of_interest_metadata?.coordinates?.length > 0) {
-                const coords = data.data.company.area_of_interest_metadata.coordinates;
-                if (coords.length === 1) {
-                    setMapCenter([coords[0].lat, coords[0].lon]);
+            // Set map center if coordinates exist - Fixed optional chaining
+            const coordinates = data.data.company.area_of_interest_metadata?.coordinates;
+            if (coordinates && coordinates.length > 0) {
+                if (coordinates.length === 1) {
+                    setMapCenter([coordinates[0].lat, coordinates[0].lon]);
                 } else {
                     // Calculate center of polygon
-                    const avgLat = coords.reduce((sum: number, c: any) => sum + c.lat, 0) / coords.length;
-                    const avgLon = coords.reduce((sum: number, c: any) => sum + c.lon, 0) / coords.length;
+                    const avgLat = coordinates.reduce((sum: number, c: any) => sum + c.lat, 0) / coordinates.length;
+                    const avgLon = coordinates.reduce((sum: number, c: any) => sum + c.lon, 0) / coordinates.length;
                     setMapCenter([avgLat, avgLon]);
                 }
             }
@@ -454,9 +468,11 @@ const GhgEmissionScreen = () => {
             iconAnchor: [10, 10],
         });
 
+        const polygonPositions = coordinates.map((coord: any) => [coord.lat, coord.lon] as LatLngExpression);
+
         return (
             <MapContainer
-                center={mapCenter}
+                center={mapCenter as LatLngExpression}
                 zoom={mapZoom}
                 style={{ height: '100%', width: '100%', borderRadius: '0.5rem' }}
                 className="leaflet-container"
@@ -470,7 +486,10 @@ const GhgEmissionScreen = () => {
                 />
 
                 {coordinates.length === 1 ? (
-                    <Marker position={[coordinates[0].lat, coordinates[0].lon]} icon={customIcon}>
+                    <Marker
+                        position={[coordinates[0].lat, coordinates[0].lon] as LatLngExpression}
+                        icon={customIcon as L.Icon<L.IconOptions>}
+                    >
                         <Popup>
                             <div className="p-2">
                                 <h3 className="font-bold" style={{ color: logoGreen }}>{areaName}</h3>
@@ -488,7 +507,7 @@ const GhgEmissionScreen = () => {
                             fillOpacity: 0.3,
                             weight: 2
                         }}
-                        positions={coordinates.map((coord: any) => [coord.lat, coord.lon])}
+                        positions={polygonPositions}
                     >
                         <Popup>
                             <div className="p-2">
@@ -501,6 +520,47 @@ const GhgEmissionScreen = () => {
                 )}
             </MapContainer>
         );
+    };
+
+    // Helper function to create chart data with proper typing
+    const createLineChartData = (graphData: ChartData | undefined) => {
+        if (!graphData || !graphData.labels || !graphData.datasets) {
+            return {
+                labels: [],
+                datasets: []
+            };
+        }
+
+        return {
+            labels: graphData.labels,
+            datasets: graphData.datasets.map((dataset, index) => ({
+                ...dataset,
+                borderColor: chartColors.border[index % chartColors.border.length],
+                backgroundColor: chartColors.background[index % chartColors.background.length],
+                tension: 0.4,
+                fill: index === 0, // Only fill the main dataset
+            }))
+        };
+    };
+
+    // Helper function to create doughnut chart data
+    const createDoughnutChartData = (graphData: ChartData | undefined) => {
+        if (!graphData || !graphData.labels || !graphData.datasets) {
+            return {
+                labels: [],
+                datasets: []
+            };
+        }
+
+        return {
+            labels: graphData.labels,
+            datasets: graphData.datasets.map((dataset, index) => ({
+                ...dataset,
+                backgroundColor: chartColors.background.slice(0, 3),
+                borderColor: chartColors.border.slice(0, 3),
+                borderWidth: 2,
+            }))
+        };
     };
 
     // Skeleton Loading Screen
@@ -996,15 +1056,7 @@ const GhgEmissionScreen = () => {
                                         <div className="h-64">
                                             {graphs && graphs.scope_composition ? (
                                                 <Doughnut
-                                                    data={{
-                                                        labels: graphs.scope_composition.labels,
-                                                        datasets: graphs.scope_composition.datasets.map((dataset, index) => ({
-                                                            ...dataset,
-                                                            backgroundColor: chartColors.background.slice(0, 3), // Use same colors as CropYieldScreen
-                                                            borderColor: chartColors.border.slice(0, 3), // Use same colors as CropYieldScreen
-                                                            borderWidth: 2,
-                                                        }))
-                                                    }}
+                                                    data={createDoughnutChartData(graphs.scope_composition)}
                                                     options={{
                                                         responsive: true,
                                                         maintainAspectRatio: false,
@@ -1064,16 +1116,7 @@ const GhgEmissionScreen = () => {
                                 <div className="h-64">
                                     {graphs && graphs.total_emissions_trend ? (
                                         <Line
-                                            data={{
-                                                labels: graphs.total_emissions_trend.labels,
-                                                datasets: graphs.total_emissions_trend.datasets.map((dataset, index) => ({
-                                                    ...dataset,
-                                                    borderColor: chartColors.border[index % chartColors.border.length],
-                                                    backgroundColor: chartColors.background[index % chartColors.background.length],
-                                                    tension: 0.4,
-                                                    fill: index === 0, // Only fill the main dataset
-                                                }))
-                                            }}
+                                            data={createLineChartData(graphs.total_emissions_trend)}
                                             options={{
                                                 responsive: true,
                                                 maintainAspectRatio: false,
