@@ -273,7 +273,7 @@ const GhgEmissionScreen = () => {
             setAvailableYears(sortedYears);
 
             // Set map center if coordinates exist - Fixed optional chaining
-            const coordinates = data.data.company.area_of_interest_metadata?.coordinates;
+            const coordinates = data.data.company.area_of_interest_metadata?.coordinates || [];
             if (coordinates && coordinates.length > 0) {
                 if (coordinates.length === 1) {
                     setMapCenter([coordinates[0].lat, coordinates[0].lon]);

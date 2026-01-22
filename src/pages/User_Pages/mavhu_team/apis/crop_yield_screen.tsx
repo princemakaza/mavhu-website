@@ -88,6 +88,19 @@ L.Icon.Default.mergeOptions({
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 });
 
+// Create custom icon for Leaflet
+const createLeafletIcon = () => {
+    return L.icon({
+        iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+        iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+};
+
 // Skeleton Loading Components
 const SkeletonCard = ({ className = "" }: { className?: string }) => (
     <div className={`animate-pulse ${className}`}>
@@ -453,6 +466,8 @@ const CropYieldScreen = () => {
             );
         }
 
+        const customIcon = createLeafletIcon();
+
         return (
             <MapContainer
                 center={mapCenter}
@@ -470,7 +485,7 @@ const CropYieldScreen = () => {
                 />
 
                 {coordinates.length === 1 ? (
-                    <Marker position={[coordinates[0].lat, coordinates[0].lon]}>
+                    <Marker position={[coordinates[0].lat, coordinates[0].lon]} icon={customIcon}>
                         <Popup>
                             <div className="p-2">
                                 <h3 className="font-bold" style={{ color: logoGreen }}>{areaName}</h3>
@@ -663,7 +678,7 @@ const CropYieldScreen = () => {
 
     // Helper function to transform chart data
     const transformChartData = (graphData: any) => {
-        if (!graphData || !graphData.datasets || !graphData.labels) return null;
+        if (!graphData || !graphData.datasets || !graphData.labels) return { labels: [], datasets: [] };
 
         return {
             labels: graphData.labels || [],
@@ -689,7 +704,7 @@ const CropYieldScreen = () => {
 
     // Helper function to transform bar chart data
     const transformBarChartData = (graphData: any) => {
-        if (!graphData || !graphData.datasets || !graphData.labels) return null;
+        if (!graphData || !graphData.datasets || !graphData.labels) return { labels: [], datasets: [] };
 
         return {
             labels: graphData.labels || [],
@@ -706,6 +721,31 @@ const CropYieldScreen = () => {
                     data: data as number[],
                     backgroundColor: chartColors.background[index % chartColors.background.length],
                     borderColor: chartColors.border[index % chartColors.border.length],
+                    borderWidth: 1,
+                };
+            })
+        };
+    };
+
+    // Helper function to transform doughnut/pie chart data
+    const transformPieChartData = (graphData: any) => {
+        if (!graphData || !graphData.datasets || !graphData.labels) return { labels: [], datasets: [] };
+
+        return {
+            labels: graphData.labels || [],
+            datasets: graphData.datasets.map((dataset: any, index: number) => {
+                // For pie/doughnut charts, ensure data is number[]
+                let data = dataset.data;
+                if (data && data.length > 0 && typeof data[0] === 'object' && 'y' in data[0]) {
+                    // Extract y values for pie chart
+                    data = (data as ScatterPoint[]).map(point => point.y);
+                }
+
+                return {
+                    ...dataset,
+                    data: data as number[],
+                    backgroundColor: chartColors.background.slice(0, data.length),
+                    borderColor: chartColors.border.slice(0, data.length),
                     borderWidth: 1,
                 };
             })
@@ -1043,7 +1083,7 @@ const CropYieldScreen = () => {
                                         <div className="h-64">
                                             {graphs && graphs.ndvi_trend ? (
                                                 <Line
-                                                    data={transformChartData(graphs.ndvi_trend) || { labels: [], datasets: [] }}
+                                                    data={transformChartData(graphs.ndvi_trend)}
                                                     options={{
                                                         responsive: true,
                                                         maintainAspectRatio: false,
@@ -1164,7 +1204,7 @@ const CropYieldScreen = () => {
                                     <div className="h-64">
                                         {graphs && graphs.risk_distribution ? (
                                             <Bar
-                                                data={transformBarChartData(graphs.risk_distribution) || { labels: [], datasets: [] }}
+                                                data={transformBarChartData(graphs.risk_distribution)}
                                                 options={{
                                                     responsive: true,
                                                     maintainAspectRatio: false,
@@ -1493,7 +1533,7 @@ const CropYieldScreen = () => {
                                 <div className="h-80">
                                     {graphs && graphs.ndvi_trend ? (
                                         <Line
-                                            data={transformChartData(graphs.ndvi_trend) || { labels: [], datasets: [] }}
+                                            data={transformChartData(graphs.ndvi_trend)}
                                             options={{
                                                 responsive: true,
                                                 maintainAspectRatio: false,
@@ -1683,7 +1723,7 @@ const CropYieldScreen = () => {
                                 <div className="h-80">
                                     {graphs && graphs.risk_distribution ? (
                                         <Bar
-                                            data={transformBarChartData(graphs.risk_distribution) || { labels: [], datasets: [] }}
+                                            data={transformBarChartData(graphs.risk_distribution)}
                                             options={{
                                                 responsive: true,
                                                 maintainAspectRatio: false,
@@ -1889,15 +1929,7 @@ const CropYieldScreen = () => {
                                     <div className="h-64">
                                         {graphs && graphs.emissions_breakdown ? (
                                             <Doughnut
-                                                data={{
-                                                    labels: graphs.emissions_breakdown.labels as string[],
-                                                    datasets: graphs.emissions_breakdown.datasets.map((dataset, index) => ({
-                                                        ...dataset,
-                                                        backgroundColor: chartColors.background[index % chartColors.background.length],
-                                                        borderColor: chartColors.border[index % chartColors.border.length],
-                                                        borderWidth: 1,
-                                                    }))
-                                                }}
+                                                data={transformPieChartData(graphs.emissions_breakdown)}
                                                 options={{
                                                     responsive: true,
                                                     maintainAspectRatio: false,
@@ -1960,7 +1992,7 @@ const CropYieldScreen = () => {
                                     <div className="h-64">
                                         {graphs && graphs.soc_trend ? (
                                             <Line
-                                                data={transformChartData(graphs.soc_trend) || { labels: [], datasets: [] }}
+                                                data={transformChartData(graphs.soc_trend)}
                                                 options={{
                                                     responsive: true,
                                                     maintainAspectRatio: false,
@@ -2010,7 +2042,7 @@ const CropYieldScreen = () => {
                                     <div className="h-64">
                                         {graphs && graphs.biomass_accumulation ? (
                                             <Bar
-                                                data={transformBarChartData(graphs.biomass_accumulation) || { labels: [], datasets: [] }}
+                                                data={transformBarChartData(graphs.biomass_accumulation)}
                                                 options={{
                                                     responsive: true,
                                                     maintainAspectRatio: false,
@@ -2278,7 +2310,8 @@ const CropYieldScreen = () => {
                                             <Scatter
                                                 data={{
                                                     datasets: graphs.yield_risk_correlation.datasets.map((dataset: any) => ({
-                                                        ...dataset,
+                                                        label: dataset.label,
+                                                        data: dataset.data as ScatterPoint[],
                                                         backgroundColor: chartColors.border[0],
                                                     }))
                                                 }}
@@ -2339,15 +2372,7 @@ const CropYieldScreen = () => {
                                     <div className="h-80">
                                         {graphs.forecast_confidence ? (
                                             <Pie
-                                                data={{
-                                                    labels: graphs.forecast_confidence.labels as string[],
-                                                    datasets: graphs.forecast_confidence.datasets.map((dataset, index) => ({
-                                                        ...dataset,
-                                                        backgroundColor: chartColors.background[index % chartColors.background.length],
-                                                        borderColor: chartColors.border[index % chartColors.border.length],
-                                                        borderWidth: 1,
-                                                    }))
-                                                }}
+                                                data={transformPieChartData(graphs.forecast_confidence)}
                                                 options={{
                                                     responsive: true,
                                                     maintainAspectRatio: false,
@@ -2375,7 +2400,7 @@ const CropYieldScreen = () => {
                                     <div className="h-80">
                                         {graphs && graphs.ndvi_trend ? (
                                             <Line
-                                                data={transformChartData(graphs.ndvi_trend) || { labels: [], datasets: [] }}
+                                                data={transformChartData(graphs.ndvi_trend)}
                                                 options={{
                                                     responsive: true,
                                                     maintainAspectRatio: false,
