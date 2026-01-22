@@ -98,6 +98,19 @@ L.Icon.Default.mergeOptions({
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 });
 
+// Create custom icon for Leaflet
+const createLeafletIcon = (color = "#008000") => {
+    return L.icon({
+        iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+        iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+};
+
 // Skeleton Loading Components
 const SkeletonCard = ({ className = "" }: { className?: string }) => (
     <div className={`animate-pulse ${className}`}>
@@ -353,17 +366,6 @@ const SoilHealthCarbonEmissionScreen = () => {
     const areaName = soilHealthData?.data.company.area_of_interest_metadata?.name || "Project Area";
     const areaCovered = soilHealthData?.data.company.area_of_interest_metadata?.area_covered || "N/A";
 
-    // Custom icon
-    const customIcon = new L.Icon({
-        iconUrl: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${logoGreen}"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>`,
-        iconSize: [32, 32],
-        iconAnchor: [16, 32],
-        popupAnchor: [0, -32],
-        shadowUrl: undefined,
-        shadowSize: undefined,
-        shadowAnchor: undefined
-    });
-
     // Format helpers
     const formatNumber = (num: number) => {
         return new Intl.NumberFormat('en-US').format(num);
@@ -412,6 +414,8 @@ const SoilHealthCarbonEmissionScreen = () => {
                 </div>
             );
         }
+
+        const customIcon = createLeafletIcon(logoGreen);
 
         return (
             <MapContainer
@@ -620,6 +624,52 @@ const SoilHealthCarbonEmissionScreen = () => {
             </div>
         );
     }
+
+    // Helper function to transform chart data for line charts
+    const transformChartData = (graphData: any) => {
+        if (!graphData || !graphData.datasets || !graphData.labels) return { labels: [], datasets: [] };
+        
+        return {
+            labels: graphData.labels || [],
+            datasets: graphData.datasets.map((dataset: any, index: number) => ({
+                ...dataset,
+                borderColor: chartColors.border[index % chartColors.border.length],
+                backgroundColor: chartColors.background[index % chartColors.background.length],
+                tension: 0.4,
+                fill: true,
+            }))
+        };
+    };
+
+    // Helper function to transform chart data for bar charts
+    const transformBarChartData = (graphData: any) => {
+        if (!graphData || !graphData.datasets || !graphData.labels) return { labels: [], datasets: [] };
+        
+        return {
+            labels: graphData.labels || [],
+            datasets: graphData.datasets.map((dataset: any, index: number) => ({
+                ...dataset,
+                backgroundColor: chartColors.background[index % chartColors.background.length],
+                borderColor: chartColors.border[index % chartColors.border.length],
+                borderWidth: 1,
+            }))
+        };
+    };
+
+    // Helper function to transform chart data for doughnut/pie charts
+    const transformPieChartData = (graphData: any) => {
+        if (!graphData || !graphData.datasets || !graphData.labels) return { labels: [], datasets: [] };
+        
+        return {
+            labels: graphData.labels || [],
+            datasets: graphData.datasets.map((dataset: any) => ({
+                ...dataset,
+                backgroundColor: chartColors.background.slice(0, graphData.labels.length),
+                borderColor: chartColors.border.slice(0, graphData.labels.length),
+                borderWidth: 2,
+            }))
+        };
+    };
 
     return (
         <div className={`flex min-h-screen transition-colors duration-300 ${themeClasses.bg} ${themeClasses.text}`}>
@@ -973,16 +1023,7 @@ const SoilHealthCarbonEmissionScreen = () => {
                                         <div className="h-64">
                                             {graphs && graphs.soc_trend && (
                                                 <Line
-                                                    data={{
-                                                        labels: graphs.soc_trend.labels as string[],
-                                                        datasets: graphs.soc_trend.datasets.map((dataset, index) => ({
-                                                            ...dataset,
-                                                            borderColor: chartColors.border[index % chartColors.border.length],
-                                                            backgroundColor: chartColors.background[index % chartColors.background.length],
-                                                            tension: 0.4,
-                                                            fill: true,
-                                                        }))
-                                                    }}
+                                                    data={transformChartData(graphs.soc_trend)}
                                                     options={{
                                                         responsive: true,
                                                         maintainAspectRatio: false,
@@ -1341,15 +1382,7 @@ const SoilHealthCarbonEmissionScreen = () => {
                                     <div className="h-64">
                                         {graphs && graphs.carbon_balance && (
                                             <Bar
-                                                data={{
-                                                    labels: graphs.carbon_balance.labels as string[],
-                                                    datasets: graphs.carbon_balance.datasets.map((dataset, index) => ({
-                                                        ...dataset,
-                                                        backgroundColor: chartColors.background[index % chartColors.background.length],
-                                                        borderColor: chartColors.border[index % chartColors.border.length],
-                                                        borderWidth: 1,
-                                                    }))
-                                                }}
+                                                data={transformBarChartData(graphs.carbon_balance)}
                                                 options={{
                                                     responsive: true,
                                                     maintainAspectRatio: false,
@@ -1480,15 +1513,7 @@ const SoilHealthCarbonEmissionScreen = () => {
                                 <div className="h-80 mb-6">
                                     {graphs && graphs.emissions_breakdown && (
                                         <Doughnut
-                                            data={{
-                                                labels: graphs.emissions_breakdown.labels as string[],
-                                                datasets: graphs.emissions_breakdown.datasets.map((dataset, index) => ({
-                                                    ...dataset,
-                                                    backgroundColor: chartColors.background.slice(0, 3),
-                                                    borderColor: chartColors.border.slice(0, 3),
-                                                    borderWidth: 2,
-                                                }))
-                                            }}
+                                            data={transformPieChartData(graphs.emissions_breakdown)}
                                             options={{
                                                 responsive: true,
                                                 maintainAspectRatio: false,
@@ -1586,16 +1611,7 @@ const SoilHealthCarbonEmissionScreen = () => {
                                 <div className="h-80">
                                     {graphs && graphs.ndvi_trend && (
                                         <Line
-                                            data={{
-                                                labels: graphs.ndvi_trend.labels as string[],
-                                                datasets: graphs.ndvi_trend.datasets.map((dataset, index) => ({
-                                                    ...dataset,
-                                                    borderColor: chartColors.border[index % chartColors.border.length],
-                                                    backgroundColor: chartColors.background[index % chartColors.background.length],
-                                                    tension: 0.4,
-                                                    fill: true,
-                                                }))
-                                            }}
+                                            data={transformChartData(graphs.ndvi_trend)}
                                             options={{
                                                 responsive: true,
                                                 maintainAspectRatio: false,
