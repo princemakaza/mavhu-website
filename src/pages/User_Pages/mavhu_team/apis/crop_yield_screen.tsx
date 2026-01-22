@@ -59,6 +59,9 @@ import {
     getReportingPeriod,
     type CropYieldForecastResponse,
     type CropYieldForecastParams,
+    type CarbonEmissionSummary,
+    type ScatterPoint,
+    type CategorySummary,
 } from "../../../../../src/services/crop_yield_service";
 import { getCompanies, type Company } from "../../../../../src/services/companies_service";
 
@@ -78,7 +81,7 @@ ChartJS.register(
 );
 
 // Fix Leaflet icon issue
-delete L.Icon.Default.prototype._getIconUrl;
+delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
     iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
     iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
@@ -99,6 +102,56 @@ const SkeletonText = ({ width = "full", height = "h-4" }: { width?: string, heig
 const SkeletonChart = () => (
     <div className="animate-pulse h-64 w-full rounded-lg bg-gray-700/30 dark:bg-gray-800/30"></div>
 );
+
+// Type for extended environmental metrics
+interface ExtendedEnvironmentalMetrics {
+    water_use_efficiency: {
+        value: number;
+        unit: string;
+        benchmark: number;
+        status: string;
+    };
+    energy_productivity: {
+        value: number;
+        unit: string;
+        benchmark: number;
+        status: string;
+    };
+    carbon_intensity: {
+        value: number;
+        unit: string;
+        benchmark: number;
+        status: string;
+    };
+    soil_health_index: {
+        value: number;
+        unit: string;
+        benchmark: number;
+        status: string;
+    };
+    efficiency_trend?: string;
+    recycling_rate?: number;
+    total_usage?: number;
+    total_consumption?: number;
+    total_emissions?: number;
+    total_waste?: number;
+    key_metrics?: Array<{
+        name: string;
+        current_value: number;
+        unit: string;
+    }>;
+}
+
+// Type for enhanced carbon emission summary
+interface EnhancedCarbonEmissionSummary extends Omit<CarbonEmissionSummary, 'net_carbon_balance'> {
+    net_carbon_balance?: number;
+    totals: {
+        total_sequestration_tco2: number;
+        total_emissions_tco2e: number;
+        net_carbon_balance: number;
+        average_area_ha: number;
+    };
+}
 
 const CropYieldScreen = () => {
     const { companyId: paramCompanyId } = useParams<{ companyId: string }>();
@@ -338,16 +391,8 @@ const CropYieldScreen = () => {
     const areaName = cropYieldData?.data.company.area_of_interest?.name || "Crop Production Area";
     const areaCovered = cropYieldData?.data.company.area_of_interest?.area_covered || "N/A";
 
-    // Custom icon for map markers
-    const customIcon = new L.Icon({
-        iconUrl: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${logoGreen}"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>`,
-        iconSize: [32, 32],
-        iconAnchor: [16, 32],
-        popupAnchor: [0, -32],
-        shadowUrl: null,
-        shadowSize: null,
-        shadowAnchor: null
-    });
+    // Cast carbon data to enhanced type
+    const enhancedCarbonData = carbonData as EnhancedCarbonEmissionSummary | null;
 
     // Format number with commas
     const formatNumber = (num: number) => {
@@ -413,6 +458,14 @@ const CropYieldScreen = () => {
             );
         }
 
+        // Create a custom icon
+        const customIcon = L.divIcon({
+            html: `<div style="background-color: ${logoGreen}; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white;"></div>`,
+            className: 'custom-icon',
+            iconSize: [20, 20],
+            iconAnchor: [10, 10],
+        });
+
         return (
             <MapContainer
                 center={mapCenter}
@@ -469,8 +522,6 @@ const CropYieldScreen = () => {
                 <Sidebar
                     isOpen={isSidebarOpen}
                     onClose={() => setIsSidebarOpen(false)}
-                    isDarkMode={isDarkMode}
-                    onDarkModeToggle={toggleDarkMode}
                 />
                 <main className={`flex-1 transition-all duration-300 ${isSidebarOpen ? 'lg:ml-0' : 'lg:ml-0'} ${themeClasses.bg}`}>
                     {/* Header Skeleton */}
@@ -539,8 +590,6 @@ const CropYieldScreen = () => {
                 <Sidebar
                     isOpen={isSidebarOpen}
                     onClose={() => setIsSidebarOpen(false)}
-                    isDarkMode={isDarkMode}
-                    onDarkModeToggle={toggleDarkMode}
                 />
                 <main className={`flex-1 transition-all duration-300 ${isSidebarOpen ? 'lg:ml-0' : 'lg:ml-0'} ${themeClasses.bg}`}>
                     {/* Header */}
@@ -624,13 +673,62 @@ const CropYieldScreen = () => {
         );
     }
 
+    // Helper function to transform chart data
+    const transformChartData = (graphData: any) => {
+        if (!graphData) return null;
+        
+        return {
+            labels: graphData.labels || [],
+            datasets: graphData.datasets.map((dataset: any) => {
+                // Transform ScatterPoint[] to number[] for line charts
+                let data = dataset.data;
+                if (data && data.length > 0 && typeof data[0] === 'object' && 'x' in data[0] && 'y' in data[0]) {
+                    // It's a ScatterPoint array, extract y values for line chart
+                    data = (data as ScatterPoint[]).map(point => point.y);
+                }
+                
+                return {
+                    ...dataset,
+                    data: data as number[],
+                    borderColor: dataset.borderColor || chartColors.border[0],
+                    backgroundColor: dataset.backgroundColor || chartColors.background[0],
+                    tension: 0.4,
+                    fill: true,
+                };
+            })
+        };
+    };
+
+    // Helper function to transform bar chart data
+    const transformBarChartData = (graphData: any) => {
+        if (!graphData) return null;
+        
+        return {
+            labels: graphData.labels || [],
+            datasets: graphData.datasets.map((dataset: any, index: number) => {
+                // Transform ScatterPoint[] to number[] for bar charts
+                let data = dataset.data;
+                if (data && data.length > 0 && typeof data[0] === 'object' && 'x' in data[0] && 'y' in data[0]) {
+                    // It's a ScatterPoint array, extract y values for bar chart
+                    data = (data as ScatterPoint[]).map(point => point.y);
+                }
+                
+                return {
+                    ...dataset,
+                    data: data as number[],
+                    backgroundColor: chartColors.background[index % chartColors.background.length],
+                    borderColor: chartColors.border[index % chartColors.border.length],
+                    borderWidth: 1,
+                };
+            })
+        };
+    };
+
     return (
         <div className={`flex min-h-screen transition-colors duration-300 ${themeClasses.bg} ${themeClasses.text}`}>
             <Sidebar
                 isOpen={isSidebarOpen}
                 onClose={() => setIsSidebarOpen(false)}
-                isDarkMode={isDarkMode}
-                onDarkModeToggle={toggleDarkMode}
             />
 
             {/* Main Content */}
@@ -847,21 +945,21 @@ const CropYieldScreen = () => {
                                             <Activity className="w-6 h-6" style={{ color: accentBlue }} />
                                         </div>
                                         <div className="flex items-center gap-2">
-                                            {carbonData?.summary?.net_carbon_balance && carbonData.summary.net_carbon_balance >= 0 ? (
+                                            {enhancedCarbonData?.totals?.net_carbon_balance && enhancedCarbonData.totals.net_carbon_balance >= 0 ? (
                                                 <TrendingUp className="w-4 h-4" style={{ color: logoGreen }} />
                                             ) : (
                                                 <TrendingDown className="w-4 h-4 text-red-500" />
                                             )}
                                         </div>
                                     </div>
-                                    <h3 className={`text-3xl font-bold mb-2 ${carbonData?.summary?.net_carbon_balance && carbonData.summary.net_carbon_balance >= 0 ? `text-[${logoGreen}]` : 'text-red-500'}`}>
-                                        {carbonData?.summary?.net_carbon_balance ? formatNumber(carbonData.summary.net_carbon_balance) : 'N/A'}
+                                    <h3 className={`text-3xl font-bold mb-2 ${enhancedCarbonData?.totals?.net_carbon_balance && enhancedCarbonData.totals.net_carbon_balance >= 0 ? `text-[${logoGreen}]` : 'text-red-500'}`}>
+                                        {enhancedCarbonData?.totals?.net_carbon_balance ? formatNumber(enhancedCarbonData.totals.net_carbon_balance) : 'N/A'}
                                         <span className="text-lg ml-1">tCO₂</span>
                                     </h3>
                                     <p className={`${themeClasses.textSecondary} mb-2`}>Net Carbon Balance</p>
                                     <div className="flex items-center justify-between">
                                         <span className="text-sm">
-                                            {carbonData?.summary?.totals?.total_sequestration_tco2 ? `${formatNumber(carbonData.summary.totals.total_sequestration_tco2)} tCO₂ sequestered` : 'N/A'}
+                                            {enhancedCarbonData?.totals?.total_sequestration_tco2 ? `${formatNumber(enhancedCarbonData.totals.total_sequestration_tco2)} tCO₂ sequestered` : 'N/A'}
                                         </span>
                                     </div>
                                 </div>
@@ -957,16 +1055,7 @@ const CropYieldScreen = () => {
                                         <div className="h-64">
                                             {graphs && graphs.ndvi_trend ? (
                                                 <Line
-                                                    data={{
-                                                        labels: graphs.ndvi_trend.labels,
-                                                        datasets: graphs.ndvi_trend.datasets.map((dataset, index) => ({
-                                                            ...dataset,
-                                                            borderColor: chartColors.border[index % chartColors.border.length],
-                                                            backgroundColor: chartColors.background[index % chartColors.background.length],
-                                                            tension: 0.4,
-                                                            fill: true,
-                                                        }))
-                                                    }}
+                                                    data={transformChartData(graphs.ndvi_trend) || {}}
                                                     options={{
                                                         responsive: true,
                                                         maintainAspectRatio: false,
@@ -1087,15 +1176,7 @@ const CropYieldScreen = () => {
                                     <div className="h-64">
                                         {graphs && graphs.risk_distribution ? (
                                             <Bar
-                                                data={{
-                                                    labels: graphs.risk_distribution.labels,
-                                                    datasets: graphs.risk_distribution.datasets.map((dataset, index) => ({
-                                                        ...dataset,
-                                                        backgroundColor: chartColors.background[index % chartColors.background.length],
-                                                        borderColor: chartColors.border[index % chartColors.border.length],
-                                                        borderWidth: 1,
-                                                    }))
-                                                }}
+                                                data={transformBarChartData(graphs.risk_distribution) || {}}
                                                 options={{
                                                     responsive: true,
                                                     maintainAspectRatio: false,
@@ -1424,16 +1505,7 @@ const CropYieldScreen = () => {
                                 <div className="h-80">
                                     {graphs && graphs.ndvi_trend ? (
                                         <Line
-                                            data={{
-                                                labels: graphs.ndvi_trend.labels,
-                                                datasets: graphs.ndvi_trend.datasets.map((dataset, index) => ({
-                                                    ...dataset,
-                                                    borderColor: chartColors.border[index % chartColors.border.length],
-                                                    backgroundColor: chartColors.background[index % chartColors.background.length],
-                                                    tension: 0.4,
-                                                    fill: true,
-                                                }))
-                                            }}
+                                            data={transformChartData(graphs.ndvi_trend) || {}}
                                             options={{
                                                 responsive: true,
                                                 maintainAspectRatio: false,
@@ -1623,15 +1695,7 @@ const CropYieldScreen = () => {
                                 <div className="h-80">
                                     {graphs && graphs.risk_distribution ? (
                                         <Bar
-                                            data={{
-                                                labels: graphs.risk_distribution.labels,
-                                                datasets: graphs.risk_distribution.datasets.map((dataset, index) => ({
-                                                    ...dataset,
-                                                    backgroundColor: chartColors.background[index % chartColors.background.length],
-                                                    borderColor: chartColors.border[index % chartColors.border.length],
-                                                    borderWidth: 1,
-                                                }))
-                                            }}
+                                            data={transformBarChartData(graphs.risk_distribution) || {}}
                                             options={{
                                                 responsive: true,
                                                 maintainAspectRatio: false,
@@ -1716,8 +1780,10 @@ const CropYieldScreen = () => {
                                 {/* Category Summaries */}
                                 <div className="space-y-6">
                                     {['water', 'energy', 'emissions', 'waste'].map((category) => {
-                                        const catData = environmentalMetrics[category as keyof typeof environmentalMetrics];
+                                        const catData = environmentalMetrics[category as keyof typeof environmentalMetrics] as ExtendedEnvironmentalMetrics | CategorySummary | undefined;
                                         if (!catData) return null;
+
+                                        const extendedData = catData as ExtendedEnvironmentalMetrics;
 
                                         return (
                                             <div key={category} className={`p-4 rounded-xl border ${themeClasses.border}`}>
@@ -1730,47 +1796,47 @@ const CropYieldScreen = () => {
                                                         {category.charAt(0).toUpperCase() + category.slice(1)}
                                                     </h5>
                                                     <div className="flex items-center gap-2">
-                                                        <span className={`text-sm ${catData.efficiency_trend === 'improving' ? `text-[${logoGreen}]` : catData.efficiency_trend === 'declining' ? 'text-red-500' : 'text-gray-500'}`}>
-                                                            {catData.efficiency_trend}
+                                                        <span className={`text-sm ${extendedData.efficiency_trend === 'improving' ? `text-[${logoGreen}]` : extendedData.efficiency_trend === 'declining' ? 'text-red-500' : 'text-gray-500'}`}>
+                                                            {extendedData.efficiency_trend || 'N/A'}
                                                         </span>
-                                                        {catData.recycling_rate !== undefined && (
-                                                            <span className="text-sm">{catData.recycling_rate}% recycling</span>
+                                                        {extendedData.recycling_rate !== undefined && (
+                                                            <span className="text-sm">{extendedData.recycling_rate}% recycling</span>
                                                         )}
                                                     </div>
                                                 </div>
 
                                                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-3">
-                                                    {catData.total_usage !== undefined && (
+                                                    {extendedData.total_usage !== undefined && (
                                                         <div>
                                                             <p className="text-xs text-gray-500">Total Usage</p>
-                                                            <p className="font-medium">{formatNumber(catData.total_usage)}</p>
+                                                            <p className="font-medium">{formatNumber(extendedData.total_usage)}</p>
                                                         </div>
                                                     )}
-                                                    {catData.total_consumption !== undefined && (
+                                                    {extendedData.total_consumption !== undefined && (
                                                         <div>
                                                             <p className="text-xs text-gray-500">Total Consumption</p>
-                                                            <p className="font-medium">{formatNumber(catData.total_consumption)}</p>
+                                                            <p className="font-medium">{formatNumber(extendedData.total_consumption)}</p>
                                                         </div>
                                                     )}
-                                                    {catData.total_emissions !== undefined && (
+                                                    {extendedData.total_emissions !== undefined && (
                                                         <div>
                                                             <p className="text-xs text-gray-500">Total Emissions</p>
-                                                            <p className="font-medium">{formatNumber(catData.total_emissions)} tCO₂e</p>
+                                                            <p className="font-medium">{formatNumber(extendedData.total_emissions)} tCO₂e</p>
                                                         </div>
                                                     )}
-                                                    {catData.total_waste !== undefined && (
+                                                    {extendedData.total_waste !== undefined && (
                                                         <div>
                                                             <p className="text-xs text-gray-500">Total Waste</p>
-                                                            <p className="font-medium">{formatNumber(catData.total_waste)}</p>
+                                                            <p className="font-medium">{formatNumber(extendedData.total_waste)}</p>
                                                         </div>
                                                     )}
                                                 </div>
 
-                                                {catData.key_metrics && catData.key_metrics.length > 0 && (
+                                                {extendedData.key_metrics && extendedData.key_metrics.length > 0 && (
                                                     <div>
                                                         <p className="text-xs text-gray-500 mb-2">Key Metrics</p>
                                                         <div className="flex flex-wrap gap-2">
-                                                            {catData.key_metrics.slice(0, 3).map((metric, idx) => (
+                                                            {extendedData.key_metrics.slice(0, 3).map((metric, idx) => (
                                                                 <div key={idx} className="text-xs px-3 py-1 rounded-full bg-gray-700/20">
                                                                     {metric.name}: {metric.current_value} {metric.unit}
                                                                 </div>
@@ -1787,7 +1853,7 @@ const CropYieldScreen = () => {
                     )}
 
                     {/* Carbon Tab */}
-                    {activeTab === "carbon" && cropYieldData && carbonData && (
+                    {activeTab === "carbon" && cropYieldData && enhancedCarbonData && (
                         <div className="space-y-8">
                             {/* Carbon Emission Accounting */}
                             <div className={`${themeClasses.cardBg} backdrop-blur-xl rounded-2xl border ${themeClasses.border} p-6 shadow-lg ${isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"}`}>
@@ -1800,29 +1866,29 @@ const CropYieldScreen = () => {
                                 </div>
 
                                 {/* Summary Metrics */}
-                                {carbonData.summary && (
+                                {enhancedCarbonData.summary && (
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                                         <div className={`p-4 rounded-xl border ${themeClasses.border}`}>
                                             <div className="text-2xl font-bold mb-2" style={{ color: logoGreen }}>
-                                                {formatNumber(carbonData.summary.totals.total_sequestration_tco2)}
+                                                {formatNumber(enhancedCarbonData.summary.totals.total_sequestration_tco2)}
                                             </div>
                                             <p className={`text-sm ${themeClasses.textMuted}`}>Total Sequestration (tCO₂)</p>
                                         </div>
                                         <div className={`p-4 rounded-xl border ${themeClasses.border}`}>
                                             <div className="text-2xl font-bold mb-2" style={{ color: '#FF6B6B' }}>
-                                                {formatNumber(carbonData.summary.totals.total_emissions_tco2e)}
+                                                {formatNumber(enhancedCarbonData.summary.totals.total_emissions_tco2e)}
                                             </div>
                                             <p className={`text-sm ${themeClasses.textMuted}`}>Total Emissions (tCO₂e)</p>
                                         </div>
                                         <div className={`p-4 rounded-xl border ${themeClasses.border}`}>
-                                            <div className={`text-2xl font-bold mb-2 ${carbonData.summary.totals.net_carbon_balance >= 0 ? `text-[${logoGreen}]` : 'text-red-500'}`}>
-                                                {carbonData.summary.totals.net_carbon_balance >= 0 ? '+' : ''}{formatNumber(carbonData.summary.totals.net_carbon_balance)}
+                                            <div className={`text-2xl font-bold mb-2 ${enhancedCarbonData.summary.totals.net_carbon_balance >= 0 ? `text-[${logoGreen}]` : 'text-red-500'}`}>
+                                                {enhancedCarbonData.summary.totals.net_carbon_balance >= 0 ? '+' : ''}{formatNumber(enhancedCarbonData.summary.totals.net_carbon_balance)}
                                             </div>
                                             <p className={`text-sm ${themeClasses.textMuted}`}>Net Carbon Balance (tCO₂)</p>
                                         </div>
                                         <div className={`p-4 rounded-xl border ${themeClasses.border}`}>
                                             <div className="text-2xl font-bold mb-2" style={{ color: logoGreen }}>
-                                                {carbonData.summary.averages.carbon_intensity.toFixed(2)}
+                                                {enhancedCarbonData.summary.averages.carbon_intensity.toFixed(2)}
                                             </div>
                                             <p className={`text-sm ${themeClasses.textMuted}`}>Carbon Intensity</p>
                                         </div>
@@ -1906,16 +1972,7 @@ const CropYieldScreen = () => {
                                     <div className="h-64">
                                         {graphs && graphs.soc_trend ? (
                                             <Line
-                                                data={{
-                                                    labels: graphs.soc_trend.labels,
-                                                    datasets: graphs.soc_trend.datasets.map((dataset, index) => ({
-                                                        ...dataset,
-                                                        borderColor: chartColors.border[index % chartColors.border.length],
-                                                        backgroundColor: chartColors.background[index % chartColors.background.length],
-                                                        tension: 0.4,
-                                                        fill: true,
-                                                    }))
-                                                }}
+                                                data={transformChartData(graphs.soc_trend) || {}}
                                                 options={{
                                                     responsive: true,
                                                     maintainAspectRatio: false,
@@ -1965,15 +2022,7 @@ const CropYieldScreen = () => {
                                     <div className="h-64">
                                         {graphs && graphs.biomass_accumulation ? (
                                             <Bar
-                                                data={{
-                                                    labels: graphs.biomass_accumulation.labels,
-                                                    datasets: graphs.biomass_accumulation.datasets.map((dataset, index) => ({
-                                                        ...dataset,
-                                                        backgroundColor: chartColors.background[index % chartColors.background.length],
-                                                        borderColor: chartColors.border[index % chartColors.border.length],
-                                                        borderWidth: 1,
-                                                    }))
-                                                }}
+                                                data={transformBarChartData(graphs.biomass_accumulation) || {}}
                                                 options={{
                                                     responsive: true,
                                                     maintainAspectRatio: false,
@@ -2336,18 +2385,9 @@ const CropYieldScreen = () => {
                                 <div>
                                     <h4 className="font-semibold mb-4">NDVI Trend Analysis</h4>
                                     <div className="h-80">
-                                        {graphs.ndvi_trend ? (
+                                        {graphs && graphs.ndvi_trend ? (
                                             <Line
-                                                data={{
-                                                    labels: graphs.ndvi_trend.labels,
-                                                    datasets: graphs.ndvi_trend.datasets.map((dataset, index) => ({
-                                                        ...dataset,
-                                                        borderColor: chartColors.border[index % chartColors.border.length],
-                                                        backgroundColor: chartColors.background[index % chartColors.background.length],
-                                                        tension: 0.4,
-                                                        fill: true,
-                                                    }))
-                                                }}
+                                                data={transformChartData(graphs.ndvi_trend) || {}}
                                                 options={{
                                                     responsive: true,
                                                     maintainAspectRatio: false,

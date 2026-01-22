@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"; // Add this import
+import { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend, ArcElement, Filler } from 'chart.js';
 import { Line, Bar, Doughnut } from 'react-chartjs-2';
@@ -91,7 +91,7 @@ ChartJS.register(
 );
 
 // Fix Leaflet icon issue
-delete L.Icon.Default.prototype._getIconUrl;
+delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
     iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
     iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
@@ -262,13 +262,13 @@ const SoilHealthCarbonEmissionScreen = () => {
             setEsgYears(sortedEsgYears);
 
             // Set map center
-            if (data.data.company.area_of_interest_metadata?.coordinates?.length > 0) {
-                const coords = data.data.company.area_of_interest_metadata.coordinates;
-                if (coords.length === 1) {
-                    setMapCenter([coords[0].lat, coords[0].lon]);
+            const coordinates = data.data.company.area_of_interest_metadata?.coordinates;
+            if (coordinates && coordinates.length > 0) {
+                if (coordinates.length === 1) {
+                    setMapCenter([coordinates[0].lat, coordinates[0].lon]);
                 } else {
-                    const avgLat = coords.reduce((sum, c) => sum + c.lat, 0) / coords.length;
-                    const avgLon = coords.reduce((sum, c) => sum + c.lon, 0) / coords.length;
+                    const avgLat = coordinates.reduce((sum, c) => sum + c.lat, 0) / coordinates.length;
+                    const avgLon = coordinates.reduce((sum, c) => sum + c.lon, 0) / coordinates.length;
                     setMapCenter([avgLat, avgLon]);
                 }
             }
@@ -359,9 +359,9 @@ const SoilHealthCarbonEmissionScreen = () => {
         iconSize: [32, 32],
         iconAnchor: [16, 32],
         popupAnchor: [0, -32],
-        shadowUrl: null,
-        shadowSize: null,
-        shadowAnchor: null
+        shadowUrl: undefined,
+        shadowSize: undefined,
+        shadowAnchor: undefined
     });
 
     // Format helpers
@@ -419,6 +419,7 @@ const SoilHealthCarbonEmissionScreen = () => {
                 zoom={mapZoom}
                 style={{ height: '100%', width: '100%', borderRadius: '0.5rem' }}
                 className="leaflet-container"
+                key={`${mapCenter[0]}-${mapCenter[1]}-${mapZoom}`}
             >
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -469,8 +470,6 @@ const SoilHealthCarbonEmissionScreen = () => {
                 <Sidebar
                     isOpen={isSidebarOpen}
                     onClose={() => setIsSidebarOpen(false)}
-                    isDarkMode={isDarkMode}
-                    onDarkModeToggle={toggleDarkMode}
                 />
                 <main className={`flex-1 transition-all duration-300 ${isSidebarOpen ? 'lg:ml-0' : 'lg:ml-0'} ${themeClasses.bg}`}>
                     {/* Header Skeleton */}
@@ -539,8 +538,6 @@ const SoilHealthCarbonEmissionScreen = () => {
                 <Sidebar
                     isOpen={isSidebarOpen}
                     onClose={() => setIsSidebarOpen(false)}
-                    isDarkMode={isDarkMode}
-                    onDarkModeToggle={toggleDarkMode}
                 />
                 <main className={`flex-1 transition-all duration-300 ${isSidebarOpen ? 'lg:ml-0' : 'lg:ml-0'} ${themeClasses.bg}`}>
                     {/* Header */}
@@ -629,8 +626,6 @@ const SoilHealthCarbonEmissionScreen = () => {
             <Sidebar
                 isOpen={isSidebarOpen}
                 onClose={() => setIsSidebarOpen(false)}
-                isDarkMode={isDarkMode}
-                onDarkModeToggle={toggleDarkMode}
             />
 
             {/* Main Content */}
@@ -979,7 +974,7 @@ const SoilHealthCarbonEmissionScreen = () => {
                                             {graphs && graphs.soc_trend && (
                                                 <Line
                                                     data={{
-                                                        labels: graphs.soc_trend.labels,
+                                                        labels: graphs.soc_trend.labels as string[],
                                                         datasets: graphs.soc_trend.datasets.map((dataset, index) => ({
                                                             ...dataset,
                                                             borderColor: chartColors.border[index % chartColors.border.length],
@@ -1174,7 +1169,7 @@ const SoilHealthCarbonEmissionScreen = () => {
                                                 <ul className="space-y-2">
                                                     {dataQuality?.gaps_identified?.map((gap, index) => (
                                                         <li key={index} className="flex items-start gap-2">
-                                                            <AlertCircle className="w-4 h-4 text-yellow-500 mt=0.5 flex-shrink-0" />
+                                                            <AlertCircle className="w-4 h-4 text-yellow-500 mt-0.5 flex-shrink-0" />
                                                             <span className={`text-sm ${themeClasses.textMuted}`}>{gap}</span>
                                                         </li>
                                                     ))}
@@ -1188,7 +1183,7 @@ const SoilHealthCarbonEmissionScreen = () => {
                                                 <ul className="space-y-2">
                                                     {dataQuality?.improvement_suggestions?.map((suggestion, index) => (
                                                         <li key={index} className="flex items-start gap-2">
-                                                            <CheckCircle className="w-4 h-4 text-green-500 mt=0.5 flex-shrink-0" />
+                                                            <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
                                                             <span className={`text-sm ${themeClasses.textMuted}`}>{suggestion}</span>
                                                         </li>
                                                     ))}
@@ -1248,7 +1243,7 @@ const SoilHealthCarbonEmissionScreen = () => {
                                                     {regenerativeOutcomes.verification_status}
                                                 </div>
                                                 <p className={`text-sm ${themeClasses.textMuted}`}>
-                                                    {soilHealthData.data.carbon_emission_accounting.yearly_data_summary.some(y =>
+                                                    {soilHealthData.data.carbon_emission_accounting.yearly_data_summary.some((y: any) =>
                                                         y.data_quality.verification_status === "verified"
                                                     ) ? "Third-party verified data available" : "Unverified data"}
                                                 </p>
@@ -1347,7 +1342,7 @@ const SoilHealthCarbonEmissionScreen = () => {
                                         {graphs && graphs.carbon_balance && (
                                             <Bar
                                                 data={{
-                                                    labels: graphs.carbon_balance.labels,
+                                                    labels: graphs.carbon_balance.labels as string[],
                                                     datasets: graphs.carbon_balance.datasets.map((dataset, index) => ({
                                                         ...dataset,
                                                         backgroundColor: chartColors.background[index % chartColors.background.length],
@@ -1486,7 +1481,7 @@ const SoilHealthCarbonEmissionScreen = () => {
                                     {graphs && graphs.emissions_breakdown && (
                                         <Doughnut
                                             data={{
-                                                labels: graphs.emissions_breakdown.labels,
+                                                labels: graphs.emissions_breakdown.labels as string[],
                                                 datasets: graphs.emissions_breakdown.datasets.map((dataset, index) => ({
                                                     ...dataset,
                                                     backgroundColor: chartColors.background.slice(0, 3),
@@ -1592,7 +1587,7 @@ const SoilHealthCarbonEmissionScreen = () => {
                                     {graphs && graphs.ndvi_trend && (
                                         <Line
                                             data={{
-                                                labels: graphs.ndvi_trend.labels,
+                                                labels: graphs.ndvi_trend.labels as string[],
                                                 datasets: graphs.ndvi_trend.datasets.map((dataset, index) => ({
                                                     ...dataset,
                                                     borderColor: chartColors.border[index % chartColors.border.length],
@@ -1848,22 +1843,22 @@ const SoilHealthCarbonEmissionScreen = () => {
                                         </div>
                                         <div className="grid grid-cols-2 gap-4">
                                             <div className="flex items-center gap-2">
-                                                <CheckCircle className={`w-4 h-4 ${carbonCreditPredictions.eligibility_status.minimum_permanence ? 'text-green-500' : 'text-red-500'
+                                                <CheckCircle className={`w-4 h-4 ${carbonCreditPredictions.eligibility_status?.minimum_permanence ? 'text-green-500' : 'text-red-500'
                                                     }`} />
                                                 <span className="text-sm">Minimum Permanence</span>
                                             </div>
                                             <div className="flex items-center gap-2">
-                                                <CheckCircle className={`w-4 h-4 ${carbonCreditPredictions.eligibility_status.minimum_monitoring ? 'text-green-500' : 'text-red-500'
+                                                <CheckCircle className={`w-4 h-4 ${carbonCreditPredictions.eligibility_status?.minimum_monitoring ? 'text-green-500' : 'text-red-500'
                                                     }`} />
                                                 <span className="text-sm">Minimum Monitoring</span>
                                             </div>
                                             <div className="flex items-center gap-2">
-                                                <CheckCircle className={`w-4 h-4 ${carbonCreditPredictions.eligibility_status.verification_status ? 'text-green-500' : 'text-red-500'
+                                                <CheckCircle className={`w-4 h-4 ${carbonCreditPredictions.eligibility_status?.verification_status ? 'text-green-500' : 'text-red-500'
                                                     }`} />
                                                 <span className="text-sm">Verification Status</span>
                                             </div>
                                             <div className="flex items-center gap-2">
-                                                <CheckCircle className={`w-4 h-4 ${carbonCreditPredictions.eligibility_status.positive_sequestration ? 'text-green-500' : 'text-red-500'
+                                                <CheckCircle className={`w-4 h-4 ${carbonCreditPredictions.eligibility_status?.positive_sequestration ? 'text-green-500' : 'text-red-500'
                                                     }`} />
                                                 <span className="text-sm">Positive Sequestration</span>
                                             </div>
@@ -2180,7 +2175,7 @@ const SoilHealthCarbonEmissionScreen = () => {
                                             {graphs && graphs.soc_trend && graphs.ndvi_trend && (
                                                 <Line
                                                     data={{
-                                                        labels: graphs.soc_trend.labels,
+                                                        labels: graphs.soc_trend.labels as string[],
                                                         datasets: [
                                                             {
                                                                 label: 'SOC Trend',
@@ -2245,7 +2240,7 @@ const SoilHealthCarbonEmissionScreen = () => {
                                             {graphs && graphs.monthly_soc && (
                                                 <Line
                                                     data={{
-                                                        labels: graphs.monthly_soc.labels,
+                                                        labels: graphs.monthly_soc.labels as string[],
                                                         datasets: graphs.monthly_soc.datasets.map((dataset, index) => ({
                                                             ...dataset,
                                                             borderColor: chartColors.border[index % chartColors.border.length],
@@ -2299,7 +2294,7 @@ const SoilHealthCarbonEmissionScreen = () => {
                                             <div className="h-64">
                                                 <Line
                                                     data={{
-                                                        labels: graphs.sequestration_rate.labels,
+                                                        labels: graphs.sequestration_rate.labels as string[],
                                                         datasets: graphs.sequestration_rate.datasets.map((dataset, index) => ({
                                                             ...dataset,
                                                             borderColor: chartColors.border[index % chartColors.border.length],

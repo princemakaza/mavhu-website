@@ -1,6 +1,7 @@
+import React, { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend, ArcElement, Filler, ScatterController } from 'chart.js';
-import { Line, Bar, Doughnut } from 'react-chartjs-2';
+import { Line, Doughnut } from 'react-chartjs-2';
 import { MapContainer, TileLayer, Marker, Popup, Polygon } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -24,15 +25,13 @@ import {
     Wind,
     Zap,
     Factory,
-    ChevronRight,
-    FileText,
+
     Scale,
     Target as TargetIcon,
     Award,
     AlertOctagon,
     PieChart,
     LineChart as LineChartIcon,
-  
     MapPin,
     Maximize2,
     Minimize2,
@@ -69,6 +68,7 @@ import {
     getAvailableGhgYears,
     type GhgEmissionResponse,
     type GhgEmissionParams,
+    type DetailedSource,
 } from "../../../../../src/services/ghg_emission_service";
 import { getCompanies, type Company } from "../../../../../src/services/companies_service";
 
@@ -88,7 +88,7 @@ ChartJS.register(
 );
 
 // Fix Leaflet icon issue
-delete L.Icon.Default.prototype._getIconUrl;
+delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
     iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
     iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
@@ -265,8 +265,8 @@ const GhgEmissionScreen = () => {
                     setMapCenter([coords[0].lat, coords[0].lon]);
                 } else {
                     // Calculate center of polygon
-                    const avgLat = coords.reduce((sum, c) => sum + c.lat, 0) / coords.length;
-                    const avgLon = coords.reduce((sum, c) => sum + c.lon, 0) / coords.length;
+                    const avgLat = coords.reduce((sum: number, c: any) => sum + c.lat, 0) / coords.length;
+                    const avgLon = coords.reduce((sum: number, c: any) => sum + c.lon, 0) / coords.length;
                     setMapCenter([avgLat, avgLon]);
                 }
             }
@@ -361,17 +361,6 @@ const GhgEmissionScreen = () => {
     const areaName = ghgData?.data.company.area_of_interest_metadata?.name || "Production Area";
     const areaCovered = ghgData?.data.company.area_of_interest_metadata?.area_covered || "N/A";
 
-    // Custom icon for map markers
-    const customIcon = new L.Icon({
-        iconUrl: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${logoGreen}"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>`,
-        iconSize: [32, 32],
-        iconAnchor: [16, 32],
-        popupAnchor: [0, -32],
-        shadowUrl: null,
-        shadowSize: null,
-        shadowAnchor: null
-    });
-
     // Format number with commas
     const formatNumber = (num: number) => {
         return new Intl.NumberFormat('en-US').format(num);
@@ -444,7 +433,7 @@ const GhgEmissionScreen = () => {
         }
     };
 
-    // Map Component - Same as CropYieldScreen
+    // Map Component - Fixed version
     const MapDisplay = () => {
         if (coordinates.length === 0) {
             return (
@@ -456,6 +445,14 @@ const GhgEmissionScreen = () => {
                 </div>
             );
         }
+
+        // Create a custom div icon for better compatibility
+        const customIcon = L.divIcon({
+            html: `<div style="background-color: ${logoGreen}; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.2);"></div>`,
+            className: 'custom-icon',
+            iconSize: [20, 20],
+            iconAnchor: [10, 10],
+        });
 
         return (
             <MapContainer
@@ -491,7 +488,7 @@ const GhgEmissionScreen = () => {
                             fillOpacity: 0.3,
                             weight: 2
                         }}
-                        positions={coordinates.map(coord => [coord.lat, coord.lon])}
+                        positions={coordinates.map((coord: any) => [coord.lat, coord.lon])}
                     >
                         <Popup>
                             <div className="p-2">
@@ -513,8 +510,6 @@ const GhgEmissionScreen = () => {
                 <Sidebar
                     isOpen={isSidebarOpen}
                     onClose={() => setIsSidebarOpen(false)}
-                    isDarkMode={isDarkMode}
-                    onDarkModeToggle={toggleDarkMode}
                 />
                 <main className={`flex-1 transition-all duration-300 ${isSidebarOpen ? 'lg:ml-0' : 'lg:ml-0'} ${themeClasses.bg}`}>
                     {/* Header Skeleton */}
@@ -583,8 +578,6 @@ const GhgEmissionScreen = () => {
                 <Sidebar
                     isOpen={isSidebarOpen}
                     onClose={() => setIsSidebarOpen(false)}
-                    isDarkMode={isDarkMode}
-                    onDarkModeToggle={toggleDarkMode}
                 />
                 <main className={`flex-1 transition-all duration-300 ${isSidebarOpen ? 'lg:ml-0' : 'lg:ml-0'} ${themeClasses.bg}`}>
                     {/* Header */}
@@ -630,7 +623,7 @@ const GhgEmissionScreen = () => {
                                 </div>
 
                                 <div className="grid md:grid-cols-2 gap-4">
-                                    {companies.map((company) => (
+                                    {companies.map((company: Company) => (
                                         <button
                                             key={company._id}
                                             onClick={() => handleCompanyChange(company._id)}
@@ -673,8 +666,6 @@ const GhgEmissionScreen = () => {
             <Sidebar
                 isOpen={isSidebarOpen}
                 onClose={() => setIsSidebarOpen(false)}
-                isDarkMode={isDarkMode}
-                onDarkModeToggle={toggleDarkMode}
             />
 
             {/* Main Content */}
@@ -718,7 +709,7 @@ const GhgEmissionScreen = () => {
                                         }}
                                     >
                                         <option value="">All Years</option>
-                                        {availableYears.map((year) => (
+                                        {availableYears.map((year: number) => (
                                             <option key={year} value={year}>
                                                 {year}
                                             </option>
@@ -1436,63 +1427,11 @@ const GhgEmissionScreen = () => {
                                     </div>
                                 </div>
 
-                                {/* Breakdown Chart */}
-                                {graphs && graphs.scope1_breakdown && (
-                                    <div className="mb-6">
-                                        <h4 className="font-semibold mb-4">Breakdown by Source Type</h4>
-                                        <div className="h-64">
-                                            <Bar
-                                                data={{
-                                                    labels: graphs.scope1_breakdown.labels,
-                                                    datasets: graphs.scope1_breakdown.datasets.map((dataset, index) => ({
-                                                        ...dataset,
-                                                        backgroundColor: chartColors.background[index % chartColors.background.length],
-                                                        borderColor: chartColors.border[index % chartColors.border.length],
-                                                        borderWidth: 1,
-                                                    }))
-                                                }}
-                                                options={{
-                                                    responsive: true,
-                                                    maintainAspectRatio: false,
-                                                    plugins: {
-                                                        legend: {
-                                                            display: false
-                                                        },
-                                                    },
-                                                    scales: {
-                                                        x: {
-                                                            grid: {
-                                                                color: themeClasses.chartGrid,
-                                                            },
-                                                            ticks: {
-                                                                color: themeClasses.chartText,
-                                                            }
-                                                        },
-                                                        y: {
-                                                            grid: {
-                                                                color: themeClasses.chartGrid,
-                                                            },
-                                                            ticks: {
-                                                                color: themeClasses.chartText,
-                                                            },
-                                                            title: {
-                                                                display: true,
-                                                                text: 'tCO₂e',
-                                                                color: themeClasses.chartText,
-                                                            }
-                                                        }
-                                                    }
-                                                }}
-                                            />
-                                        </div>
-                                    </div>
-                                )}
-
                                 {/* Detailed Sources */}
                                 <div>
                                     <h4 className="font-semibold mb-4">Detailed Sources</h4>
                                     <div className="space-y-4">
-                                        {scope1Sources.map((source, index) => (
+                                        {scope1Sources.map((source: DetailedSource, index) => (
                                             <div key={index} className={`p-4 rounded-xl border ${themeClasses.border}`}>
                                                 <div className="flex items-center justify-between mb-3">
                                                     <h5 className="font-medium">{source.source}</h5>
@@ -1587,7 +1526,7 @@ const GhgEmissionScreen = () => {
                                 <div>
                                     <h4 className="font-semibold mb-4">Detailed Sources</h4>
                                     <div className="space-y-4">
-                                        {scope2Sources.map((source, index) => (
+                                        {scope2Sources.map((source: DetailedSource, index) => (
                                             <div key={index} className={`p-4 rounded-xl border ${themeClasses.border}`}>
                                                 <div className="flex items-center justify-between mb-3">
                                                     <h5 className="font-medium">{source.source}</h5>
@@ -1678,87 +1617,15 @@ const GhgEmissionScreen = () => {
                                     </div>
                                 </div>
 
-                                {/* Categories Chart */}
-                                {graphs && graphs.scope3_categories && (
-                                    <div className="mb-6">
-                                        <h4 className="font-semibold mb-4">Breakdown by Category</h4>
-                                        <div className="h-64">
-                                            <Bar
-                                                data={{
-                                                    labels: graphs.scope3_categories.labels,
-                                                    datasets: graphs.scope3_categories.datasets.map((dataset, index) => ({
-                                                        ...dataset,
-                                                        backgroundColor: chartColors.background[index % chartColors.background.length],
-                                                        borderColor: chartColors.border[index % chartColors.border.length],
-                                                        borderWidth: 1,
-                                                    }))
-                                                }}
-                                                options={{
-                                                    indexAxis: 'y' as const,
-                                                    responsive: true,
-                                                    maintainAspectRatio: false,
-                                                    plugins: {
-                                                        legend: {
-                                                            display: false
-                                                        },
-                                                    },
-                                                    scales: {
-                                                        x: {
-                                                            grid: {
-                                                                color: themeClasses.chartGrid,
-                                                            },
-                                                            ticks: {
-                                                                color: themeClasses.chartText,
-                                                            },
-                                                            title: {
-                                                                display: true,
-                                                                text: 'tCO₂e',
-                                                                color: themeClasses.chartText,
-                                                            }
-                                                        },
-                                                        y: {
-                                                            grid: {
-                                                                color: themeClasses.chartGrid,
-                                                            },
-                                                            ticks: {
-                                                                color: themeClasses.chartText,
-                                                            }
-                                                        }
-                                                    }
-                                                }}
-                                            />
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Categories Breakdown */}
-                                {scopeBreakdown.scope3.categories && (
-                                    <div className="mb-6">
-                                        <h4 className="font-semibold mb-4">Categories Breakdown</h4>
-                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                            {Object.entries(scopeBreakdown.scope3.categories).map(([category, value]) => (
-                                                <div key={category} className={`p-3 rounded-lg border ${themeClasses.border} text-center`}>
-                                                    <p className="text-sm font-medium" style={{ color: scope3Color }}>
-                                                        {value.toFixed(3)}
-                                                    </p>
-                                                    <p className={`text-xs ${themeClasses.textMuted}`}>
-                                                        {category.replace('_', ' ').toUpperCase()}
-                                                    </p>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-
                                 {/* Detailed Categories */}
                                 <div>
                                     <h4 className="font-semibold mb-4">Detailed Categories</h4>
                                     <div className="space-y-4">
-                                        {scope3Categories.map((category, index) => (
+                                        {scope3Categories.map((category: DetailedSource, index) => (
                                             <div key={index} className={`p-4 rounded-xl border ${themeClasses.border}`}>
                                                 <div className="flex items-center justify-between mb-3">
                                                     <div>
-                                                        <h5 className="font-medium">{category.category}</h5>
+                                                        <h5 className="font-medium">{category.source}</h5>
                                                         <p className="text-sm text-gray-500">{category.parameter}</p>
                                                     </div>
                                                     <div className="text-lg font-bold" style={{ color: scope3Color }}>
@@ -1801,27 +1668,6 @@ const GhgEmissionScreen = () => {
                                         <p className={`text-sm ${themeClasses.textMuted}`}>Science-based targets and alignment</p>
                                     </div>
                                     <TargetIcon className="w-5 h-5" style={{ color: logoGreen }} />
-                                </div>
-
-                                {/* Alignment Summary */}
-                                <div className="mb-8">
-                                    <h4 className="font-semibold mb-4">Alignment Summary</h4>
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                                        <div className={`p-4 rounded-xl border ${themeClasses.border}`}>
-                                            <div className={`text-lg font-bold mb-2 ${reductionTargets.alignment.paris_agreement.toLowerCase().includes('aligned') ? `text-[${logoGreen}]` : 'text-red-500'}`}>
-                                                {reductionTargets.alignment.paris_agreement}
-                                            </div>
-                                            <p className={`text-sm ${themeClasses.textMuted}`}>Paris Agreement</p>
-                                        </div>
-                                        <div className={`p-4 rounded-xl border ${themeClasses.border}`}>
-                                            <div className="text-lg font-bold mb-2">{reductionTargets.alignment.national_contributions}</div>
-                                            <p className={`text-sm ${themeClasses.textMuted}`}>National Contributions</p>
-                                        </div>
-                                        <div className={`p-4 rounded-xl border ${themeClasses.border}`}>
-                                            <div className="text-lg font-bold mb-2">{reductionTargets.alignment.corporate_commitments}</div>
-                                            <p className={`text-sm ${themeClasses.textMuted}`}>Corporate Commitments</p>
-                                        </div>
-                                    </div>
                                 </div>
 
                                 {/* Current Performance */}
@@ -1878,25 +1724,6 @@ const GhgEmissionScreen = () => {
                                                         </div>
                                                     </div>
 
-                                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                                                        <div>
-                                                            <p className={`text-xs ${themeClasses.textMuted}`}>Required Annual Reduction</p>
-                                                            <p className="font-medium">{target.required_annual_reduction.toLocaleString()} tCO₂e</p>
-                                                        </div>
-                                                        <div>
-                                                            <p className={`text-xs ${themeClasses.textMuted}`}>Paris Agreement</p>
-                                                            <p className={`font-medium ${target.alignment.paris_agreement.toLowerCase().includes('aligned') ? `text-[${logoGreen}]` : 'text-red-500'}`}>
-                                                                {target.alignment.paris_agreement}
-                                                            </p>
-                                                        </div>
-                                                        <div>
-                                                            <p className={`text-xs ${themeClasses.textMuted}`}>Science Based Targets</p>
-                                                            <p className={`font-medium ${target.alignment.science_based_targets.toLowerCase().includes('eligible') ? `text-[${logoGreen}]` : 'text-yellow-500'}`}>
-                                                                {target.alignment.science_based_targets}
-                                                            </p>
-                                                        </div>
-                                                    </div>
-
                                                     {/* Progress Bar */}
                                                     <div className="mt-4">
                                                         <div className="flex justify-between text-sm mb-1">
@@ -1915,591 +1742,6 @@ const GhgEmissionScreen = () => {
                                                     </div>
                                                 </div>
                                             ))}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Reduction Progress Chart */}
-                            {graphs && graphs.reduction_progress && (
-                                <div className={`${themeClasses.cardBg} backdrop-blur-xl rounded-2xl border ${themeClasses.border} p-6 shadow-lg ${isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"}`}>
-                                    <div className="flex items-center justify-between mb-6">
-                                        <div>
-                                            <h3 className="text-lg font-semibold">Reduction Progress</h3>
-                                            <p className={`text-sm ${themeClasses.textMuted}`}>Progress against reduction targets</p>
-                                        </div>
-                                        <LineChartIcon className="w-5 h-5" style={{ color: logoGreen }} />
-                                    </div>
-                                    <div className="h-80">
-                                        <Line
-                                            data={{
-                                                labels: graphs.reduction_progress.labels,
-                                                datasets: graphs.reduction_progress.datasets.map((dataset, index) => ({
-                                                    ...dataset,
-                                                    borderColor: chartColors.border[index % chartColors.border.length],
-                                                    backgroundColor: chartColors.background[index % chartColors.background.length],
-                                                    tension: 0.4,
-                                                    fill: index === 0,
-                                                    borderDash: dataset.borderDash || undefined,
-                                                }))
-                                            }}
-                                            options={{
-                                                responsive: true,
-                                                maintainAspectRatio: false,
-                                                plugins: {
-                                                    legend: {
-                                                        position: 'top' as const,
-                                                        labels: {
-                                                            color: themeClasses.chartText,
-                                                        }
-                                                    },
-                                                },
-                                                scales: {
-                                                    x: {
-                                                        grid: {
-                                                            color: themeClasses.chartGrid,
-                                                        },
-                                                        ticks: {
-                                                            color: themeClasses.chartText,
-                                                        }
-                                                    },
-                                                    y: {
-                                                        grid: {
-                                                            color: themeClasses.chartGrid,
-                                                        },
-                                                        ticks: {
-                                                            color: themeClasses.chartText,
-                                                        },
-                                                        title: {
-                                                            display: true,
-                                                            text: 'tCO₂e',
-                                                            color: themeClasses.chartText,
-                                                        }
-                                                    }
-                                                }
-                                            }}
-                                        />
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    )}
-
-                    {/* Methodology Tab */}
-                    {activeTab === "methodology" && carbonAccounting && (
-                        <div className="space-y-8">
-                            {/* Methodology Overview */}
-                            <div className={`${themeClasses.cardBg} backdrop-blur-xl rounded-2xl border ${themeClasses.border} p-6 shadow-lg ${isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"}`}>
-                                <div className="flex items-center justify-between mb-6">
-                                    <div>
-                                        <h3 className="text-lg font-semibold">Carbon Accounting Methodology</h3>
-                                        <p className={`text-sm ${themeClasses.textMuted}`}>Calculation methods and frameworks</p>
-                                    </div>
-                                    <FileText className="w-5 h-5" style={{ color: logoGreen }} />
-                                </div>
-
-                                {/* Framework */}
-                                <div className="mb-8">
-                                    <h4 className="font-semibold mb-4">Framework</h4>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <div className={`p-4 rounded-xl border ${themeClasses.border}`}>
-                                            <p className={`text-sm ${themeClasses.textMuted} mb-1`}>Sequestration Methodology</p>
-                                            <p className="font-medium">{carbonAccounting.framework.sequestration_methodology}</p>
-                                        </div>
-                                        <div className={`p-4 rounded-xl border ${themeClasses.border}`}>
-                                            <p className={`text-sm ${themeClasses.textMuted} mb-1`}>Emission Methodology</p>
-                                            <p className="font-medium">{carbonAccounting.framework.emission_methodology}</p>
-                                        </div>
-                                    </div>
-                                    <div className="mt-4">
-                                        <div className={`p-4 rounded-xl border ${themeClasses.border}`}>
-                                            <p className={`text-sm ${themeClasses.textMuted} mb-1`}>Calculation Approach</p>
-                                            <p className="font-medium">{carbonAccounting.framework.calculation_approach}</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Detailed Methodology */}
-                                <div className="mb-8">
-                                    <h4 className="font-semibold mb-4">Detailed Methodology</h4>
-                                    <div className={`p-4 rounded-xl border ${themeClasses.border}`}>
-                                        <p className={`${themeClasses.textMuted}`}>{carbonAccounting.methodology}</p>
-                                    </div>
-                                </div>
-
-                                {/* Emission Factors */}
-                                {emissionFactors.length > 0 && (
-                                    <div className="mb-8">
-                                        <div className="flex items-center justify-between mb-4">
-                                            <h4 className="font-semibold">Emission Factors</h4>
-                                            <button
-                                                onClick={() => setShowDetailedFactors(!showDetailedFactors)}
-                                                className="text-sm flex items-center gap-1"
-                                                style={{ color: logoGreen }}
-                                            >
-                                                {showDetailedFactors ? 'Show Less' : 'Show All'}
-                                                <ChevronRight className={`w-4 h-4 transition-transform ${showDetailedFactors ? 'rotate-90' : ''}`} />
-                                            </button>
-                                        </div>
-                                        <div className={`overflow-hidden transition-all duration-300 ${showDetailedFactors ? 'max-h-[2000px]' : 'max-h-96'}`}>
-                                            <div className="overflow-x-auto">
-                                                <table className="w-full">
-                                                    <thead>
-                                                        <tr className={`border-b ${themeClasses.border}`}>
-                                                            <th className="py-3 px-4 text-left font-medium">Source</th>
-                                                            <th className="py-3 px-4 text-left font-medium">Activity Data</th>
-                                                            <th className="py-3 px-4 text-left font-medium">Emission Factor</th>
-                                                            <th className="py-3 px-4 text-left font-medium">GWP</th>
-                                                            <th className="py-3 px-4 text-left font-medium">Status</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {emissionFactors.slice(0, showDetailedFactors ? undefined : 5).map((factor, index) => (
-                                                            <tr key={index} className={`border-b ${themeClasses.border}`}>
-                                                                <td className="py-3 px-4">
-                                                                    <div className="font-medium">{factor.source}</div>
-                                                                    <div className="text-xs text-gray-500">{factor.emission_factor_code}</div>
-                                                                </td>
-                                                                <td className="py-3 px-4">{factor.activity_data}</td>
-                                                                <td className="py-3 px-4">
-                                                                    <div>{factor.emission_factor_value} {factor.emission_factor_unit}</div>
-                                                                    <div className="text-xs text-gray-500">{factor.default_ef_start}</div>
-                                                                </td>
-                                                                <td className="py-3 px-4">
-                                                                    <div>{factor.gwp_value}</div>
-                                                                    <div className="text-xs text-gray-500">{factor.gwp_source}</div>
-                                                                </td>
-                                                                <td className="py-3 px-4">
-                                                                    <span className={`px-2 py-1 rounded-full text-xs ${factor.is_active ? `bg-[${logoGreen}]/20 text-[${logoGreen}]` : 'bg-gray-500/20 text-gray-500'}`}>
-                                                                        {factor.is_active ? 'Active' : 'Inactive'}
-                                                                    </span>
-                                                                </td>
-                                                            </tr>
-                                                        ))}
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                        {!showDetailedFactors && emissionFactors.length > 5 && (
-                                            <div className="text-center mt-4">
-                                                <span className="text-sm text-gray-500">
-                                                    Showing 5 of {emissionFactors.length} emission factors
-                                                </span>
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
-
-                                {/* Global Warming Potentials */}
-                                {carbonAccounting.global_warming_potentials && (
-                                    <div className="mb-8">
-                                        <h4 className="font-semibold mb-4">Global Warming Potentials</h4>
-                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                            <div className={`p-4 rounded-xl border ${themeClasses.border} text-center`}>
-                                                <div className="text-2xl font-bold mb-2">{carbonAccounting.global_warming_potentials.n2o_gwp}</div>
-                                                <p className={`text-sm ${themeClasses.textMuted}`}>N₂O GWP</p>
-                                            </div>
-                                            <div className={`p-4 rounded-xl border ${themeClasses.border} text-center`}>
-                                                <div className="text-2xl font-bold mb-2">{carbonAccounting.global_warming_potentials.ch4_gwp}</div>
-                                                <p className={`text-sm ${themeClasses.textMuted}`}>CH₄ GWP</p>
-                                            </div>
-                                            <div className={`p-4 rounded-xl border ${themeClasses.border} text-center`}>
-                                                <div className="text-sm font-medium mb-2">{carbonAccounting.global_warming_potentials.source}</div>
-                                                <p className={`text-sm ${themeClasses.textMuted}`}>Source</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Conversion Factors */}
-                                {carbonAccounting.conversion_factors && (
-                                    <div>
-                                        <h4 className="font-semibold mb-4">Conversion Factors</h4>
-                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                            <div className={`p-4 rounded-xl border ${themeClasses.border} text-center`}>
-                                                <div className="text-xl font-bold mb-2">{carbonAccounting.conversion_factors.n2o_n_to_n2o.toFixed(4)}</div>
-                                                <p className={`text-sm ${themeClasses.textMuted}`}>N₂O-N to N₂O</p>
-                                            </div>
-                                            <div className={`p-4 rounded-xl border ${themeClasses.border} text-center`}>
-                                                <div className="text-xl font-bold mb-2">{carbonAccounting.conversion_factors.carbon_to_co2.toFixed(4)}</div>
-                                                <p className={`text-sm ${themeClasses.textMuted}`}>Carbon to CO₂</p>
-                                            </div>
-                                            <div className={`p-4 rounded-xl border ${themeClasses.border} text-center`}>
-                                                <div className="text-xl font-bold mb-2">{carbonAccounting.conversion_factors.carbon_fraction.toFixed(4)}</div>
-                                                <p className={`text-sm ${themeClasses.textMuted}`}>Carbon Fraction</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Compliance Tab */}
-                    {activeTab === "compliance" && (
-                        <div className="space-y-8">
-                            {/* Compliance Overview */}
-                            <div className={`${themeClasses.cardBg} backdrop-blur-xl rounded-2xl border ${themeClasses.border} p-6 shadow-lg ${isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"}`}>
-                                <div className="flex items-center justify-between mb-6">
-                                    <div>
-                                        <h3 className="text-lg font-semibold">Compliance & Reporting</h3>
-                                        <p className={`text-sm ${themeClasses.textMuted}`}>Regulatory requirements and frameworks</p>
-                                    </div>
-                                    <Scale className="w-5 h-5" style={{ color: logoGreen }} />
-                                </div>
-
-                                {/* Compliance Frameworks */}
-                                {complianceFrameworks.length > 0 && (
-                                    <div className="mb-8">
-                                        <h4 className="font-semibold mb-4">Compliance Frameworks</h4>
-                                        <div className="flex flex-wrap gap-2">
-                                            {complianceFrameworks.map((framework, index) => (
-                                                <span key={index} className="px-3 py-2 rounded-lg text-sm" style={{
-                                                    background: `linear-gradient(to right, ${logoGreen}20, ${logoGreen}10)`,
-                                                    border: `1px solid ${logoGreen}30`,
-                                                    color: logoGreen
-                                                }}>
-                                                    {framework}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Reporting Requirements */}
-                                {reportingRequirements && (
-                                    <div className="mb-8">
-                                        <h4 className="font-semibold mb-4">Reporting Requirements</h4>
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            <div>
-                                                <h5 className="font-medium mb-2">Mandatory Reporting</h5>
-                                                <ul className="space-y-1">
-                                                    {reportingRequirements.mandatory.map((item, index) => (
-                                                        <li key={index} className="flex items-start gap-2">
-                                                            <CheckCircle className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#FF6B6B' }} />
-                                                            <span className="text-sm">{item}</span>
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            </div>
-                                            <div>
-                                                <h5 className="font-medium mb-2">Voluntary Reporting</h5>
-                                                <ul className="space-y-1">
-                                                    {reportingRequirements.voluntary.map((item, index) => (
-                                                        <li key={index} className="flex items-start gap-2">
-                                                            <CheckCircle className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: logoGreen }} />
-                                                            <span className="text-sm">{item}</span>
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Deadlines */}
-                                {reportingRequirements && (
-                                    <div className="mb-8">
-                                        <h4 className="font-semibold mb-4">Reporting Deadlines</h4>
-                                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                                            <div className={`p-4 rounded-xl border ${themeClasses.border}`}>
-                                                <p className={`text-sm ${themeClasses.textMuted} mb-1`}>CDP</p>
-                                                <p className="font-medium">{reportingRequirements.deadlines.cdp}</p>
-                                            </div>
-                                            <div className={`p-4 rounded-xl border ${themeClasses.border}`}>
-                                                <p className={`text-sm ${themeClasses.textMuted} mb-1`}>Annual Report</p>
-                                                <p className="font-medium">{reportingRequirements.deadlines.annual_report}</p>
-                                            </div>
-                                            <div className={`p-4 rounded-xl border ${themeClasses.border}`}>
-                                                <p className={`text-sm ${themeClasses.textMuted} mb-1`}>Sustainability Report</p>
-                                                <p className="font-medium">{reportingRequirements.deadlines.sustainability_report}</p>
-                                            </div>
-                                            <div className={`p-4 rounded-xl border ${themeClasses.border}`}>
-                                                <p className={`text-sm ${themeClasses.textMuted} mb-1`}>Regulatory Submissions</p>
-                                                <p className="font-medium">{reportingRequirements.deadlines.regulatory_submissions}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Verification & Penalties */}
-                                {reportingRequirements && (
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <div className={`p-4 rounded-xl border ${themeClasses.border}`}>
-                                            <h5 className="font-medium mb-2">Verification Status</h5>
-                                            <div className="flex items-center gap-2">
-                                                <div className={`w-3 h-3 rounded-full ${reportingRequirements.verification_required ? 'bg-yellow-500' : 'bg-gray-500'}`}></div>
-                                                <span className="text-sm">
-                                                    {reportingRequirements.verification_required ? 'Verification Required' : 'No Verification Required'}
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div className={`p-4 rounded-xl border ${themeClasses.border}`}>
-                                            <h5 className="font-medium mb-2">Non-Compliance Penalties</h5>
-                                            <p className="text-sm">{reportingRequirements.penalties_non_compliance}</p>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Recommendations */}
-                                {complianceRecommendations.length > 0 && (
-                                    <div className="mt-8">
-                                        <h4 className="font-semibold mb-4">Compliance Recommendations</h4>
-                                        <div className="space-y-4">
-                                            {complianceRecommendations.map((rec, index) => (
-                                                <div key={index} className={`p-4 rounded-xl border ${themeClasses.border}`}>
-                                                    <div className="flex items-start justify-between mb-3">
-                                                        <div>
-                                                            <h5 className="font-medium">{rec.category}</h5>
-                                                            <p className="text-sm text-gray-500">{rec.action}</p>
-                                                        </div>
-                                                        <span className={`px-2 py-1 rounded-full text-xs ${rec.priority === 'High' ? 'bg-red-500/20 text-red-500' : rec.priority === 'Medium' ? 'bg-yellow-500/20 text-yellow-500' : 'bg-gray-500/20 text-gray-500'}`}>
-                                                            {rec.priority} Priority
-                                                        </span>
-                                                    </div>
-                                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                                        <div>
-                                                            <p className={`text-xs ${themeClasses.textMuted}`}>Impact</p>
-                                                            <p className="text-sm font-medium">{rec.impact}</p>
-                                                        </div>
-                                                        <div>
-                                                            <p className={`text-xs ${themeClasses.textMuted}`}>Compliance Benefit</p>
-                                                            <p className="text-sm font-medium">{rec.compliance_benefit}</p>
-                                                        </div>
-                                                        <div>
-                                                            <p className={`text-xs ${themeClasses.textMuted}`}>Timeframe</p>
-                                                            <p className="text-sm font-medium">{rec.timeframe}</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Analytics Tab */}
-                    {activeTab === "analytics" && graphs && (
-                        <div className="space-y-8">
-                            <div className={`${themeClasses.cardBg} backdrop-blur-xl rounded-2xl border ${themeClasses.border} p-6 shadow-lg ${isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"}`}>
-                                <h3 className="text-lg font-semibold mb-6">Advanced Analytics</h3>
-
-                                {/* Cumulative Emissions */}
-                                {graphs.cumulative_emissions && (
-                                    <div className="mb-8">
-                                        <h4 className="font-semibold mb-4">Cumulative GHG Emissions</h4>
-                                        <div className="h-80">
-                                            <Line
-                                                data={{
-                                                    labels: graphs.cumulative_emissions.labels,
-                                                    datasets: graphs.cumulative_emissions.datasets.map((dataset, index) => ({
-                                                        ...dataset,
-                                                        borderColor: chartColors.border[index % chartColors.border.length],
-                                                        backgroundColor: chartColors.background[index % chartColors.background.length],
-                                                        tension: 0.4,
-                                                        fill: index === 0,
-                                                        borderDash: dataset.borderDash || undefined,
-                                                    }))
-                                                }}
-                                                options={{
-                                                    responsive: true,
-                                                    maintainAspectRatio: false,
-                                                    plugins: {
-                                                        legend: {
-                                                            position: 'top' as const,
-                                                            labels: {
-                                                                color: themeClasses.chartText,
-                                                            }
-                                                        },
-                                                    },
-                                                    scales: {
-                                                        x: {
-                                                            grid: {
-                                                                color: themeClasses.chartGrid,
-                                                            },
-                                                            ticks: {
-                                                                color: themeClasses.chartText,
-                                                            }
-                                                        },
-                                                        y: {
-                                                            grid: {
-                                                                color: themeClasses.chartGrid,
-                                                            },
-                                                            ticks: {
-                                                                color: themeClasses.chartText,
-                                                            },
-                                                            title: {
-                                                                display: true,
-                                                                text: 'tCO₂e',
-                                                                color: themeClasses.chartText,
-                                                            }
-                                                        }
-                                                    }
-                                                }}
-                                            />
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Scope Trends */}
-                                {graphs.scope_trends && (
-                                    <div className="mb-8">
-                                        <h4 className="font-semibold mb-4">Emissions Trends by Scope</h4>
-                                        <div className="h-80">
-                                            <Line
-                                                data={{
-                                                    labels: graphs.scope_trends.labels,
-                                                    datasets: graphs.scope_trends.datasets.map((dataset, index) => ({
-                                                        ...dataset,
-                                                        borderColor: [scope1Color, scope2Color, scope3Color][index],
-                                                        backgroundColor: chartColors.background[index % chartColors.background.length],
-                                                        tension: 0.4,
-                                                        fill: true,
-                                                    }))
-                                                }}
-                                                options={{
-                                                    responsive: true,
-                                                    maintainAspectRatio: false,
-                                                    plugins: {
-                                                        legend: {
-                                                            position: 'top' as const,
-                                                            labels: {
-                                                                color: themeClasses.chartText,
-                                                            }
-                                                        },
-                                                    },
-                                                    scales: {
-                                                        x: {
-                                                            grid: {
-                                                                color: themeClasses.chartGrid,
-                                                            },
-                                                            ticks: {
-                                                                color: themeClasses.chartText,
-                                                            }
-                                                        },
-                                                        y: {
-                                                            grid: {
-                                                                color: themeClasses.chartGrid,
-                                                            },
-                                                            ticks: {
-                                                                color: themeClasses.chartText,
-                                                            },
-                                                            title: {
-                                                                display: true,
-                                                                text: 'tCO₂e',
-                                                                color: themeClasses.chartText,
-                                                            }
-                                                        }
-                                                    }
-                                                }}
-                                            />
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Scope 1 Breakdown */}
-                                {graphs.scope1_breakdown && (
-                                    <div className="mb-8">
-                                        <h4 className="font-semibold mb-4">Scope 1 Detailed Breakdown</h4>
-                                        <div className="h-80">
-                                            <Bar
-                                                data={{
-                                                    labels: graphs.scope1_breakdown.labels,
-                                                    datasets: graphs.scope1_breakdown.datasets.map((dataset, index) => ({
-                                                        ...dataset,
-                                                        backgroundColor: chartColors.background[index % chartColors.background.length],
-                                                        borderColor: chartColors.border[index % chartColors.border.length],
-                                                        borderWidth: 1,
-                                                    }))
-                                                }}
-                                                options={{
-                                                    responsive: true,
-                                                    maintainAspectRatio: false,
-                                                    plugins: {
-                                                        legend: {
-                                                            display: false
-                                                        },
-                                                    },
-                                                    scales: {
-                                                        x: {
-                                                            grid: {
-                                                                color: themeClasses.chartGrid,
-                                                            },
-                                                            ticks: {
-                                                                color: themeClasses.chartText,
-                                                            }
-                                                        },
-                                                        y: {
-                                                            grid: {
-                                                                color: themeClasses.chartGrid,
-                                                            },
-                                                            ticks: {
-                                                                color: themeClasses.chartText,
-                                                            },
-                                                            title: {
-                                                                display: true,
-                                                                text: 'tCO₂e',
-                                                                color: themeClasses.chartText,
-                                                            }
-                                                        }
-                                                    }
-                                                }}
-                                            />
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Scope 3 Categories */}
-                                {graphs.scope3_categories && (
-                                    <div>
-                                        <h4 className="font-semibold mb-4">Scope 3 Category Analysis</h4>
-                                        <div className="h-80">
-                                            <Bar
-                                                data={{
-                                                    labels: graphs.scope3_categories.labels,
-                                                    datasets: graphs.scope3_categories.datasets.map((dataset, index) => ({
-                                                        ...dataset,
-                                                        backgroundColor: chartColors.background[index % chartColors.background.length],
-                                                        borderColor: chartColors.border[index % chartColors.border.length],
-                                                        borderWidth: 1,
-                                                    }))
-                                                }}
-                                                options={{
-                                                    indexAxis: 'y' as const,
-                                                    responsive: true,
-                                                    maintainAspectRatio: false,
-                                                    plugins: {
-                                                        legend: {
-                                                            display: false
-                                                        },
-                                                    },
-                                                    scales: {
-                                                        x: {
-                                                            grid: {
-                                                                color: themeClasses.chartGrid,
-                                                            },
-                                                            ticks: {
-                                                                color: themeClasses.chartText,
-                                                            },
-                                                            title: {
-                                                                display: true,
-                                                                text: 'tCO₂e',
-                                                                color: themeClasses.chartText,
-                                                            }
-                                                        },
-                                                        y: {
-                                                            grid: {
-                                                                color: themeClasses.chartGrid,
-                                                            },
-                                                            ticks: {
-                                                                color: themeClasses.chartText,
-                                                            }
-                                                        }
-                                                    }
-                                                }}
-                                            />
                                         </div>
                                     </div>
                                 )}
@@ -2561,7 +1803,7 @@ const GhgEmissionScreen = () => {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {coordinates.slice(0, 10).map((coord, index) => (
+                                                    {coordinates.slice(0, 10).map((coord: any, index: number) => (
                                                         <tr key={index} className={`border-b ${themeClasses.border}`}>
                                                             <td className="py-2 px-3">{index + 1}</td>
                                                             <td className="py-2 px-3">{coord.lat.toFixed(6)}</td>
