@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend, ArcElement, Filler } from 'chart.js';
 import { Line, Bar, Doughnut } from 'react-chartjs-2';
@@ -33,7 +34,6 @@ import {
     Minimize2,
     Factory,
     Trees,
-
     Award,
     AlertTriangle,
     Users,
@@ -91,7 +91,7 @@ ChartJS.register(
 );
 
 // Fix Leaflet icon issue
-delete L.Icon.Default.prototype._getIconUrl;
+delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
     iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
     iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
@@ -262,13 +262,13 @@ const SoilHealthCarbonEmissionScreen = () => {
             setEsgYears(sortedEsgYears);
 
             // Set map center
-            if (data.data.company.area_of_interest_metadata?.coordinates?.length > 0) {
-                const coords = data.data.company.area_of_interest_metadata.coordinates;
-                if (coords.length === 1) {
-                    setMapCenter([coords[0].lat, coords[0].lon]);
+            const coordinates = data.data.company.area_of_interest_metadata?.coordinates;
+            if (coordinates && coordinates.length > 0) {
+                if (coordinates.length === 1) {
+                    setMapCenter([coordinates[0].lat, coordinates[0].lon]);
                 } else {
-                    const avgLat = coords.reduce((sum, c) => sum + c.lat, 0) / coords.length;
-                    const avgLon = coords.reduce((sum, c) => sum + c.lon, 0) / coords.length;
+                    const avgLat = coordinates.reduce((sum, c) => sum + c.lat, 0) / coordinates.length;
+                    const avgLon = coordinates.reduce((sum, c) => sum + c.lon, 0) / coordinates.length;
                     setMapCenter([avgLat, avgLon]);
                 }
             }
@@ -359,9 +359,9 @@ const SoilHealthCarbonEmissionScreen = () => {
         iconSize: [32, 32],
         iconAnchor: [16, 32],
         popupAnchor: [0, -32],
-        shadowUrl: null,
-        shadowSize: null,
-        shadowAnchor: null
+        shadowUrl: undefined,
+        shadowSize: undefined,
+        shadowAnchor: undefined
     });
 
     // Format helpers
@@ -419,6 +419,7 @@ const SoilHealthCarbonEmissionScreen = () => {
                 zoom={mapZoom}
                 style={{ height: '100%', width: '100%', borderRadius: '0.5rem' }}
                 className="leaflet-container"
+                key={`${mapCenter[0]}-${mapCenter[1]}-${mapZoom}`}
             >
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -469,8 +470,6 @@ const SoilHealthCarbonEmissionScreen = () => {
                 <Sidebar
                     isOpen={isSidebarOpen}
                     onClose={() => setIsSidebarOpen(false)}
-                    isDarkMode={isDarkMode}
-                    onDarkModeToggle={toggleDarkMode}
                 />
                 <main className={`flex-1 transition-all duration-300 ${isSidebarOpen ? 'lg:ml-0' : 'lg:ml-0'} ${themeClasses.bg}`}>
                     {/* Header Skeleton */}
@@ -539,8 +538,6 @@ const SoilHealthCarbonEmissionScreen = () => {
                 <Sidebar
                     isOpen={isSidebarOpen}
                     onClose={() => setIsSidebarOpen(false)}
-                    isDarkMode={isDarkMode}
-                    onDarkModeToggle={toggleDarkMode}
                 />
                 <main className={`flex-1 transition-all duration-300 ${isSidebarOpen ? 'lg:ml-0' : 'lg:ml-0'} ${themeClasses.bg}`}>
                     {/* Header */}
@@ -629,8 +626,6 @@ const SoilHealthCarbonEmissionScreen = () => {
             <Sidebar
                 isOpen={isSidebarOpen}
                 onClose={() => setIsSidebarOpen(false)}
-                isDarkMode={isDarkMode}
-                onDarkModeToggle={toggleDarkMode}
             />
 
             {/* Main Content */}
@@ -979,7 +974,7 @@ const SoilHealthCarbonEmissionScreen = () => {
                                             {graphs && graphs.soc_trend && (
                                                 <Line
                                                     data={{
-                                                        labels: graphs.soc_trend.labels,
+                                                        labels: graphs.soc_trend.labels as string[],
                                                         datasets: graphs.soc_trend.datasets.map((dataset, index) => ({
                                                             ...dataset,
                                                             borderColor: chartColors.border[index % chartColors.border.length],
@@ -1044,7 +1039,7 @@ const SoilHealthCarbonEmissionScreen = () => {
                                                     <span className={`${themeClasses.textSecondary}`}>{trend.label}</span>
                                                 </div>
                                                 <span className={`text-sm font-medium ${trend.value.includes('improving') ? `text-[${logoGreen}]` :
-                                                        trend.value.includes('declining') ? 'text-red-500' : 'text-yellow-500'
+                                                    trend.value.includes('declining') ? 'text-red-500' : 'text-yellow-500'
                                                     }`}>
                                                     {trend.value.charAt(0).toUpperCase() + trend.value.slice(1)}
                                                 </span>
@@ -1098,7 +1093,7 @@ const SoilHealthCarbonEmissionScreen = () => {
                                             <div className="p-3 rounded-lg border border-gray-700/30">
                                                 <p className={`text-xs ${themeClasses.textMuted}`}>Trend</p>
                                                 <p className={`text-lg font-semibold ${soilHealthData.data.carbon_permanence_assessment.trend.includes('improving') ? `text-[${logoGreen}]` :
-                                                        soilHealthData.data.carbon_permanence_assessment.trend.includes('declining') ? 'text-red-500' : 'text-yellow-500'
+                                                    soilHealthData.data.carbon_permanence_assessment.trend.includes('declining') ? 'text-red-500' : 'text-yellow-500'
                                                     }`}>
                                                     {soilHealthData.data.carbon_permanence_assessment.trend}
                                                 </p>
@@ -1162,7 +1157,7 @@ const SoilHealthCarbonEmissionScreen = () => {
                                         <div className="flex items-center justify-between">
                                             <span className={`text-sm ${themeClasses.textSecondary}`}>Confidence Level</span>
                                             <span className={`px-3 py-1 rounded-full text-sm font-medium ${dataQuality?.confidence_level === 'High' ? `bg-[${logoGreen}]/20 text-[${logoGreen}]` :
-                                                    dataQuality?.confidence_level === 'Medium' ? 'bg-yellow-500/20 text-yellow-500' : 'bg-red-500/20 text-red-500'
+                                                dataQuality?.confidence_level === 'Medium' ? 'bg-yellow-500/20 text-yellow-500' : 'bg-red-500/20 text-red-500'
                                                 }`}>
                                                 {dataQuality?.confidence_level || 'N/A'}
                                             </span>
@@ -1248,7 +1243,7 @@ const SoilHealthCarbonEmissionScreen = () => {
                                                     {regenerativeOutcomes.verification_status}
                                                 </div>
                                                 <p className={`text-sm ${themeClasses.textMuted}`}>
-                                                    {soilHealthData.data.carbon_emission_accounting.yearly_data_summary.some(y =>
+                                                    {soilHealthData.data.carbon_emission_accounting.yearly_data_summary.some((y: any) =>
                                                         y.data_quality.verification_status === "verified"
                                                     ) ? "Third-party verified data available" : "Unverified data"}
                                                 </p>
@@ -1347,7 +1342,7 @@ const SoilHealthCarbonEmissionScreen = () => {
                                         {graphs && graphs.carbon_balance && (
                                             <Bar
                                                 data={{
-                                                    labels: graphs.carbon_balance.labels,
+                                                    labels: graphs.carbon_balance.labels as string[],
                                                     datasets: graphs.carbon_balance.datasets.map((dataset, index) => ({
                                                         ...dataset,
                                                         backgroundColor: chartColors.background[index % chartColors.background.length],
@@ -1424,8 +1419,8 @@ const SoilHealthCarbonEmissionScreen = () => {
                                                             <td className="py-3 px-4">{yearData.soc?.toFixed(2) || "N/A"}</td>
                                                             <td className="py-3 px-4">
                                                                 <span className={`text-xs px-2 py-1 rounded-full ${yearData.verificationStatus === 'verified' ? `bg-[${logoGreen}]/20 text-[${logoGreen}]` :
-                                                                        yearData.verificationStatus === 'audited' ? 'bg-blue-500/20 text-blue-500' :
-                                                                            'bg-gray-500/20 text-gray-500'
+                                                                    yearData.verificationStatus === 'audited' ? 'bg-blue-500/20 text-blue-500' :
+                                                                        'bg-gray-500/20 text-gray-500'
                                                                     }`}>
                                                                     {yearData.verificationStatus || 'unverified'}
                                                                 </span>
@@ -1486,7 +1481,7 @@ const SoilHealthCarbonEmissionScreen = () => {
                                     {graphs && graphs.emissions_breakdown && (
                                         <Doughnut
                                             data={{
-                                                labels: graphs.emissions_breakdown.labels,
+                                                labels: graphs.emissions_breakdown.labels as string[],
                                                 datasets: graphs.emissions_breakdown.datasets.map((dataset, index) => ({
                                                     ...dataset,
                                                     backgroundColor: chartColors.background.slice(0, 3),
@@ -1592,7 +1587,7 @@ const SoilHealthCarbonEmissionScreen = () => {
                                     {graphs && graphs.ndvi_trend && (
                                         <Line
                                             data={{
-                                                labels: graphs.ndvi_trend.labels,
+                                                labels: graphs.ndvi_trend.labels as string[],
                                                 datasets: graphs.ndvi_trend.datasets.map((dataset, index) => ({
                                                     ...dataset,
                                                     borderColor: chartColors.border[index % chartColors.border.length],
@@ -1818,7 +1813,7 @@ const SoilHealthCarbonEmissionScreen = () => {
 
                                 {/* Eligibility Status */}
                                 <div className={`p-6 rounded-xl border ${themeClasses.border} mb-6 ${carbonCreditPredictions.eligibilityStatus.statusColor === 'success' ? 'bg-green-900/20' :
-                                        carbonCreditPredictions.eligibilityStatus.statusColor === 'error' ? 'bg-red-900/20' : 'bg-yellow-900/20'
+                                    carbonCreditPredictions.eligibilityStatus.statusColor === 'error' ? 'bg-red-900/20' : 'bg-yellow-900/20'
                                     }`}>
                                     <div className="flex items-center justify-between mb-4">
                                         <div>
@@ -1848,22 +1843,22 @@ const SoilHealthCarbonEmissionScreen = () => {
                                         </div>
                                         <div className="grid grid-cols-2 gap-4">
                                             <div className="flex items-center gap-2">
-                                                <CheckCircle className={`w-4 h-4 ${carbonCreditPredictions.eligibility_status.minimum_permanence ? 'text-green-500' : 'text-red-500'
+                                                <CheckCircle className={`w-4 h-4 ${carbonCreditPredictions.eligibility_status?.minimum_permanence ? 'text-green-500' : 'text-red-500'
                                                     }`} />
                                                 <span className="text-sm">Minimum Permanence</span>
                                             </div>
                                             <div className="flex items-center gap-2">
-                                                <CheckCircle className={`w-4 h-4 ${carbonCreditPredictions.eligibility_status.minimum_monitoring ? 'text-green-500' : 'text-red-500'
+                                                <CheckCircle className={`w-4 h-4 ${carbonCreditPredictions.eligibility_status?.minimum_monitoring ? 'text-green-500' : 'text-red-500'
                                                     }`} />
                                                 <span className="text-sm">Minimum Monitoring</span>
                                             </div>
                                             <div className="flex items-center gap-2">
-                                                <CheckCircle className={`w-4 h-4 ${carbonCreditPredictions.eligibility_status.verification_status ? 'text-green-500' : 'text-red-500'
+                                                <CheckCircle className={`w-4 h-4 ${carbonCreditPredictions.eligibility_status?.verification_status ? 'text-green-500' : 'text-red-500'
                                                     }`} />
                                                 <span className="text-sm">Verification Status</span>
                                             </div>
                                             <div className="flex items-center gap-2">
-                                                <CheckCircle className={`w-4 h-4 ${carbonCreditPredictions.eligibility_status.positive_sequestration ? 'text-green-500' : 'text-red-500'
+                                                <CheckCircle className={`w-4 h-4 ${carbonCreditPredictions.eligibility_status?.positive_sequestration ? 'text-green-500' : 'text-red-500'
                                                     }`} />
                                                 <span className="text-sm">Positive Sequestration</span>
                                             </div>
@@ -1918,8 +1913,8 @@ const SoilHealthCarbonEmissionScreen = () => {
                                                         <td className="py-3 px-4" style={{ color: logoYellow }}>{prediction.creditValueFormatted}</td>
                                                         <td className="py-3 px-4">
                                                             <span className={`text-xs px-2 py-1 rounded-full ${prediction.confidenceColor === 'success' ? `bg-[${logoGreen}]/20 text-[${logoGreen}]` :
-                                                                    prediction.confidenceColor === 'warning' ? 'bg-yellow-500/20 text-yellow-500' :
-                                                                        'bg-red-500/20 text-red-500'
+                                                                prediction.confidenceColor === 'warning' ? 'bg-yellow-500/20 text-yellow-500' :
+                                                                    'bg-red-500/20 text-red-500'
                                                                 }`}>
                                                                 {prediction.confidence}
                                                             </span>
@@ -2180,7 +2175,7 @@ const SoilHealthCarbonEmissionScreen = () => {
                                             {graphs && graphs.soc_trend && graphs.ndvi_trend && (
                                                 <Line
                                                     data={{
-                                                        labels: graphs.soc_trend.labels,
+                                                        labels: graphs.soc_trend.labels as string[],
                                                         datasets: [
                                                             {
                                                                 label: 'SOC Trend',
@@ -2245,7 +2240,7 @@ const SoilHealthCarbonEmissionScreen = () => {
                                             {graphs && graphs.monthly_soc && (
                                                 <Line
                                                     data={{
-                                                        labels: graphs.monthly_soc.labels,
+                                                        labels: graphs.monthly_soc.labels as string[],
                                                         datasets: graphs.monthly_soc.datasets.map((dataset, index) => ({
                                                             ...dataset,
                                                             borderColor: chartColors.border[index % chartColors.border.length],
@@ -2299,7 +2294,7 @@ const SoilHealthCarbonEmissionScreen = () => {
                                             <div className="h-64">
                                                 <Line
                                                     data={{
-                                                        labels: graphs.sequestration_rate.labels,
+                                                        labels: graphs.sequestration_rate.labels as string[],
                                                         datasets: graphs.sequestration_rate.datasets.map((dataset, index) => ({
                                                             ...dataset,
                                                             borderColor: chartColors.border[index % chartColors.border.length],
