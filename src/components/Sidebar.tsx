@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   LayoutDashboard,
   Users,
@@ -17,8 +17,6 @@ import {
   Globe,
   ChevronRight,
   X,
-  Sun,
-  Moon,
 } from "lucide-react";
 import { useNavigate, useLocation, type To } from "react-router-dom";
 import Logo from "../assets/logo.png";
@@ -26,11 +24,10 @@ import Logo from "../assets/logo.png";
 const Sidebar = ({ isOpen = true, onClose = () => {} }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isDarkMode, setIsDarkMode] = useState(false);
 
-  // Colors for both modes
-  const logoGreen = isDarkMode ? "#00FF00" : "#008000";
-  const logoYellow = isDarkMode ? "#FFD700" : "#B8860B";
+  // Light mode colors only
+  const logoGreen = "#008000";
+  const logoYellow = "#B8860B";
 
   // Dashboard navigation items - simplified
   const dashboardItems = [
@@ -79,15 +76,6 @@ const Sidebar = ({ isOpen = true, onClose = () => {} }) => {
     }
   };
 
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-    if (!isDarkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  };
-
   return (
     <>
       {/* Mobile backdrop */}
@@ -102,28 +90,14 @@ const Sidebar = ({ isOpen = true, onClose = () => {} }) => {
       <aside
         className={`fixed inset-y-0 left-0 z-50 w-72 transform ${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-all duration-300 ease-out lg:translate-x-0 lg:static lg:inset-0 overflow-hidden flex flex-col ${
-          isDarkMode
-            ? "bg-gray-900 border-gray-800"
-            : "bg-white border-gray-200"
-        } border-r`}
+        } transition-all duration-300 ease-out lg:translate-x-0 lg:static lg:inset-0 overflow-hidden flex flex-col bg-white border-r border-gray-200`}
       >
         {/* Header */}
-        <div
-          className={`relative flex items-center justify-between h-20 px-4 border-b ${
-            isDarkMode
-              ? "border-gray-800 bg-gray-900"
-              : "border-gray-200 bg-white"
-          } flex-shrink-0`}
-        >
+        <div className="relative flex items-center justify-between h-20 px-4 border-b border-gray-200 bg-white flex-shrink-0">
           <div className="flex items-center space-x-3">
             <img src={Logo} alt="MAVHU ESG Dashboard" className="h-10 w-auto" />
             <div>
-              <h1
-                className={`text-lg font-bold ${
-                  isDarkMode ? "text-white" : "text-gray-900"
-                }`}
-              >
+              <h1 className="text-lg font-bold text-gray-900">
                 ESG Dashboard
               </h1>
               <p
@@ -136,29 +110,10 @@ const Sidebar = ({ isOpen = true, onClose = () => {} }) => {
           </div>
           <div className="flex items-center space-x-2">
             <button
-              onClick={toggleDarkMode}
-              className={`p-2 rounded-lg transition-all duration-200 ${
-                isDarkMode
-                  ? "bg-gray-800 hover:bg-gray-700 text-yellow-400"
-                  : "bg-gray-100 hover:bg-gray-200 text-gray-700"
-              }`}
-              title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
-            >
-              {isDarkMode ? (
-                <Sun className="w-5 h-5" />
-              ) : (
-                <Moon className="w-5 h-5" />
-              )}
-            </button>
-            <button
               onClick={onClose}
-              className="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200"
+              className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-all duration-200"
             >
-              <X
-                className={`w-5 h-5 ${
-                  isDarkMode ? "text-gray-400" : "text-gray-600"
-                }`}
-              />
+              <X className="w-5 h-5 text-gray-600" />
             </button>
           </div>
         </div>
@@ -167,11 +122,7 @@ const Sidebar = ({ isOpen = true, onClose = () => {} }) => {
         <nav className="flex-1 overflow-y-auto px-4 py-6 space-y-6 scrollbar-hide">
           {/* Dashboard Section */}
           <div>
-            <h2
-              className={`text-xs font-semibold uppercase tracking-wider mb-3 ${
-                isDarkMode ? "text-gray-400" : "text-gray-500"
-              }`}
-            >
+            <h2 className="text-xs font-semibold uppercase tracking-wider mb-3 text-gray-500">
               Dashboard
             </h2>
             {dashboardItems.map((item, index) => {
@@ -184,35 +135,27 @@ const Sidebar = ({ isOpen = true, onClose = () => {} }) => {
                   className={`group flex items-center px-4 py-3 rounded-xl transition-all duration-300 cursor-pointer mb-2 ${
                     isActive
                       ? "text-white"
-                      : isDarkMode
-                      ? "text-gray-300 hover:bg-gray-800"
                       : "text-gray-700 hover:bg-gray-50"
                   }`}
                   onClick={() => handleNavigation(item.path)}
                   style={
                     isActive
                       ? {
-                          background: `linear-gradient(to right, ${logoGreen}, ${
-                            isDarkMode ? "#00CC00" : "#006400"
-                          })`,
-                          boxShadow: `0 10px 20px ${
-                            isDarkMode ? "rgba(0, 255, 0, 0.15)" : "rgba(0, 128, 0, 0.15)"
-                          }`,
+                          background: `linear-gradient(to right, ${logoGreen}, #006400)`,
+                          boxShadow: "0 10px 20px rgba(0, 128, 0, 0.15)",
                         }
                       : {}
                   }
                 >
                   <div
                     className={`p-2 rounded-lg mr-3 transition-all duration-300 ${
-                      isActive ? "bg-white/20" : isDarkMode ? "bg-gray-800" : "bg-gray-100"
+                      isActive ? "bg-white/20" : "bg-gray-100"
                     }`}
                   >
                     <IconComponent
                       className={`w-5 h-5 transition-all duration-300 ${
                         isActive
                           ? "text-white"
-                          : isDarkMode
-                          ? "text-gray-400 group-hover:text-gray-300"
                           : "text-gray-600 group-hover:text-gray-800"
                       }`}
                     />
@@ -222,9 +165,7 @@ const Sidebar = ({ isOpen = true, onClose = () => {} }) => {
                     className={`w-4 h-4 transition-all duration-300 ${
                       isActive
                         ? "text-white opacity-100 translate-x-0.5"
-                        : `${
-                            isDarkMode ? "text-gray-600" : "text-gray-400"
-                          } opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5`
+                        : "text-gray-400 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5"
                     }`}
                   />
                 </div>
@@ -235,18 +176,10 @@ const Sidebar = ({ isOpen = true, onClose = () => {} }) => {
           {/* APIs Section */}
           <div>
             <div className="flex items-center justify-between mb-3">
-              <h2
-                className={`text-xs font-semibold uppercase tracking-wider ${
-                  isDarkMode ? "text-gray-400" : "text-gray-500"
-                }`}
-              >
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-500">
                 ESG APIs
               </h2>
-              <span
-                className={`text-xs font-medium px-2 py-1 rounded-full ${
-                  isDarkMode ? "bg-green-900/30 text-green-400" : "bg-green-100 text-green-800"
-                }`}
-              >
+              <span className="text-xs font-medium px-2 py-1 rounded-full bg-green-100 text-green-800">
                 13
               </span>
             </div>
@@ -261,35 +194,27 @@ const Sidebar = ({ isOpen = true, onClose = () => {} }) => {
                     className={`group flex items-center px-4 py-3 rounded-xl transition-all duration-300 cursor-pointer ${
                       isActive
                         ? "text-white"
-                        : isDarkMode
-                        ? "text-gray-300 hover:bg-gray-800"
                         : "text-gray-700 hover:bg-gray-50"
                     }`}
                     onClick={() => handleNavigation(item.path)}
                     style={
                       isActive
                         ? {
-                            background: `linear-gradient(to right, ${logoGreen}, ${
-                              isDarkMode ? "#00CC00" : "#006400"
-                            })`,
-                            boxShadow: `0 10px 20px ${
-                              isDarkMode ? "rgba(0, 255, 0, 0.15)" : "rgba(0, 128, 0, 0.15)"
-                            }`,
+                            background: `linear-gradient(to right, ${logoGreen}, #006400)`,
+                            boxShadow: "0 10px 20px rgba(0, 128, 0, 0.15)",
                           }
                         : {}
                     }
                   >
                     <div
                       className={`p-2 rounded-lg mr-3 transition-all duration-300 ${
-                        isActive ? "bg-white/20" : isDarkMode ? "bg-gray-800" : "bg-gray-100"
+                        isActive ? "bg-white/20" : "bg-gray-100"
                       }`}
                     >
                       <IconComponent
                         className={`w-4 h-4 transition-all duration-300 ${
                           isActive
                             ? "text-white"
-                            : isDarkMode
-                            ? "text-gray-400 group-hover:text-gray-300"
                             : "text-gray-600 group-hover:text-gray-800"
                         }`}
                       />
@@ -299,9 +224,7 @@ const Sidebar = ({ isOpen = true, onClose = () => {} }) => {
                       className={`w-3 h-3 transition-all duration-300 ${
                         isActive
                           ? "text-white opacity-100 translate-x-0.5"
-                          : `${
-                              isDarkMode ? "text-gray-600" : "text-gray-400"
-                            } opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5`
+                          : "text-gray-400 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5"
                       }`}
                     />
                   </div>
@@ -313,61 +236,37 @@ const Sidebar = ({ isOpen = true, onClose = () => {} }) => {
           {/* API Documentation Link */}
           <div className="mt-8">
             <div
-              className={`group flex items-center justify-center px-4 py-3 rounded-xl transition-all duration-300 cursor-pointer border ${
-                isDarkMode
-                  ? "border-gray-700 hover:bg-gray-800 text-gray-300"
-                  : "border-gray-200 hover:bg-gray-50 text-gray-700"
-              }`}
+              className="group flex items-center justify-center px-4 py-3 rounded-xl transition-all duration-300 cursor-pointer border border-gray-200 hover:bg-gray-50 text-gray-700"
               onClick={() => handleNavigation("/api-documentation")}
             >
-              <Database
-                className={`w-5 h-5 mr-2 ${
-                  isDarkMode ? "text-gray-400" : "text-gray-600"
-                }`}
-              />
+              <Database className="w-5 h-5 mr-2 text-gray-600" />
               <span className="font-medium text-sm">View API Docs</span>
             </div>
           </div>
         </nav>
 
         {/* Footer */}
-        <div
-          className={`px-4 pb-6 pt-4 border-t ${
-            isDarkMode ? "border-gray-800" : "border-gray-200"
-          } flex-shrink-0`}
-        >
+        <div className="px-4 pb-6 pt-4 border-t border-gray-200 flex-shrink-0">
           {/* Logout Button */}
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div
                 className="px-3 py-1.5 rounded-lg text-xs font-medium"
                 style={{
-                  background: isDarkMode
-                    ? `linear-gradient(to right, ${logoGreen}20, ${logoYellow}20)`
-                    : `linear-gradient(to right, ${logoGreen}10, ${logoYellow}10)`,
-                  border: isDarkMode
-                    ? `1px solid ${logoGreen}30`
-                    : `1px solid ${logoGreen}20`,
+                  background: `linear-gradient(to right, ${logoGreen}10, ${logoYellow}10)`,
+                  border: `1px solid ${logoGreen}20`,
                   color: logoGreen,
                 }}
               >
                 MAVHU Platform
               </div>
-              <span
-                className={`text-xs ${
-                  isDarkMode ? "text-gray-500" : "text-gray-400"
-                }`}
-              >
+              <span className="text-xs text-gray-400">
                 v1.0.0
               </span>
             </div>
             <button
               onClick={() => handleNavigation("/admin-logout")}
-              className={`text-xs font-medium px-3 py-1.5 rounded-full transition-colors ${
-                isDarkMode
-                  ? "text-red-400 hover:text-red-300 hover:bg-red-400/10"
-                  : "text-red-600 hover:text-red-700 hover:bg-red-50"
-              }`}
+              className="text-xs font-medium px-3 py-1.5 rounded-full transition-colors text-red-600 hover:text-red-700 hover:bg-red-50"
             >
               Logout
             </button>
@@ -383,11 +282,6 @@ const Sidebar = ({ isOpen = true, onClose = () => {} }) => {
         }
         .scrollbar-hide::-webkit-scrollbar {
           display: none;
-        }
-        
-        /* Dark mode global styles */
-        .dark {
-          color-scheme: dark;
         }
       `}</style>
     </>
