@@ -17,11 +17,51 @@ import {
   Users,
   ArrowRight,
 } from "lucide-react";
+import { motion } from "framer-motion";
 import Navbar from "../../components/navbar";
 import Footer from "../../components/Footer";
 
+// Color palette (light mode only, based on brand)
+const colors = {
+  primaryDark: "#123E56",
+  secondaryBlue: "#1F5C73",
+  goldAccent: "#B89A2F",
+  lightBackground: "#F4FAFA",
+  softGrey: "#DCE7E8",
+  white: "#FFFFFF",
+};
+
+// Animation variants (consistent with landing page)
+const fadeInUp = {
+  hidden: { opacity: 0, y: 60 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" },
+  },
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: "easeOut" },
+  },
+};
+
 const Contact = () => {
-  const [isDarkMode, setIsDarkMode] = React.useState(true);
   const [mousePosition, setMousePosition] = React.useState({ x: 0, y: 0 });
   const [formData, setFormData] = React.useState({
     name: "",
@@ -42,39 +82,6 @@ const Contact = () => {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
-  // Colors adjusted for both modes - darker in light mode
-  const logoGreen = isDarkMode ? "#00FF00" : "#008000";
-  const logoYellow = isDarkMode ? "#FFD700" : "#B8860B";
-  const darkBg = "#0A0A0A";
-  const lightBg = "#F5F5F5";
-  const lightCardBg = "#FFFFFF";
-  // Updated theme-aware classes with MAVHU color scheme
-// Updated themeClasses object in Contact_Page.tsx
-const themeClasses = {
-  bg: isDarkMode ? darkBg : lightBg,
-  text: isDarkMode ? "text-white" : "text-gray-900",
-  textSecondary: isDarkMode ? "text-gray-300" : "text-gray-700",
-  textMuted: isDarkMode ? "text-gray-400" : "text-gray-600",
-  navBg: isDarkMode ? `${darkBg}/95` : `${lightBg}/95`,
-  cardBg: isDarkMode ? `${darkBg}/30` : `${lightCardBg}/95`,
-  cardBgAlt: isDarkMode ? `${darkBg}/40` : `${lightCardBg}/90`,
-  border: isDarkMode ? "border-white/10" : "border-gray-300/70",
-  borderHover: isDarkMode ? "border-white/20" : "border-gray-400",
-  backgroundGradient: isDarkMode
-    ? `bg-gradient-to-br from-gray-900 via-${darkBg.replace('#', '')} to-black`
-    : `bg-gradient-to-br from-gray-50 via-${lightBg.replace('#', '')} to-gray-100`,
-  hoverBg: isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100",
-  input: isDarkMode
-    ? "bg-black/20 border-white/10"
-    : "bg-white/50 border-gray-200",
-  inputFocus: isDarkMode
-    ? `border-[${logoGreen}]/50 bg-black/30`
-    : `border-[${logoGreen}]/50 bg-white/70`,
-  // ADD THIS LINE
-  glowEffect: isDarkMode 
-    ? "shadow-[0_0_20px_rgba(0,255,0,0.3)]" 
-    : "shadow-[0_0_20px_rgba(0,128,0,0.1)]",
-};
   const handleInputChange = (e: { target: { name: any; value: any } }) => {
     setFormData({
       ...formData,
@@ -107,7 +114,7 @@ const themeClasses = {
       title: "Email Us",
       details: ["info@mavhu.com"],
       description: "Get detailed responses within 2 business hours",
-      color: logoGreen,
+      color: colors.secondaryBlue,
       available: "24/7 Response",
     },
     {
@@ -115,7 +122,7 @@ const themeClasses = {
       title: "Call Us",
       details: ["+263 78 969 3725", "+263 71 506 3418"],
       description: "Speak directly with our climate data specialists",
-      color: logoGreen,
+      color: colors.secondaryBlue,
       available: "Mon-Fri: 8AM-6PM, Sat: 9AM-2PM",
     },
     {
@@ -123,7 +130,7 @@ const themeClasses = {
       title: "Our Office",
       details: ["Harare, Zimbabwe", "Africa Headquarters"],
       description: "Schedule a meeting with our team for personalized solutions",
-      color: logoYellow,
+      color: colors.goldAccent,
       available: "Mon-Fri: 8AM-5PM",
     },
     {
@@ -131,7 +138,7 @@ const themeClasses = {
       title: "Technical Support",
       details: ["API Support", "Platform Assistance"],
       description: "Get help with our climate data platforms and APIs",
-      color: logoGreen,
+      color: colors.secondaryBlue,
       available: "Mon-Fri: 8AM-6PM",
     },
   ];
@@ -147,284 +154,231 @@ const themeClasses = {
     "Sales & Demo Request",
   ];
 
+  // Success screen (submitted)
   if (isSubmitted) {
     return (
       <div
-        className={`min-h-screen ${themeClasses.bg} ${themeClasses.text} flex items-center justify-center`}
-        style={{
-          '--logo-green': logoGreen,
-          '--logo-yellow': logoYellow,
-        } as React.CSSProperties}
+        className="min-h-screen flex items-center justify-center"
+        style={{ backgroundColor: colors.lightBackground }}
       >
-        {/* Animated Background */}
-        <div
-          className={`fixed inset-0 ${themeClasses.backgroundGradient} transition-all duration-300`}
-        >
+        <div className="fixed inset-0 bg-gradient-to-br from-[#F4FAFA] via-white to-[#DCE7E8]/20">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(31,92,115,0.08),transparent_50%)]"></div>
           <div
-            className={`absolute inset-0 ${
-              isDarkMode
-                ? "bg-[radial-gradient(circle_at_50%_50%,rgba(0,255,0,0.1),transparent_50%)]"
-                : "bg-[radial-gradient(circle_at_50%_50%,rgba(0,128,0,0.05),transparent_50%)]"
-            }`}
-          ></div>
-          <div
-            className={`absolute w-96 h-96 rounded-full blur-3xl transition-all duration-1000 ease-out`}
+            className="absolute w-96 h-96 rounded-full blur-3xl transition-all duration-1000 ease-out"
             style={{
               left: mousePosition.x - 192,
               top: mousePosition.y - 192,
-              background: isDarkMode
-                ? `radial-gradient(circle, ${logoGreen}20, transparent 70%)`
-                : `radial-gradient(circle, ${logoGreen}10, transparent 70%)`,
+              background: `radial-gradient(circle, ${colors.secondaryBlue}15, transparent 70%)`,
             }}
           ></div>
         </div>
 
-        <div className="text-center max-w-md mx-auto px-6 relative z-10">
-          <div 
+        <motion.div
+          className="text-center max-w-md mx-auto px-6 relative z-10"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div
             className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6"
-            style={{ 
-              backgroundColor: `${logoGreen}${isDarkMode ? '30' : '20'}`,
-              border: `2px solid ${logoGreen}${isDarkMode ? '50' : '30'}`
+            style={{
+              backgroundColor: `${colors.secondaryBlue}10`,
+              border: `2px solid ${colors.secondaryBlue}30`,
             }}
           >
-            <CheckCircle className="w-10 h-10" style={{ color: logoGreen }} />
+            <CheckCircle className="w-10 h-10" style={{ color: colors.secondaryBlue }} />
           </div>
-          <h2 className={`text-3xl font-bold ${themeClasses.text} mb-4`}>
+          <h2 className="text-3xl font-bold text-[#123E56] mb-4">
             Message Sent Successfully!
           </h2>
-          <p className={`${themeClasses.textSecondary} mb-6`}>
-            Thank you for contacting MAVHU AFRICA. We'll get back to you within 
+          <p className="text-[#123E56]/80 mb-6">
+            Thank you for contacting MAVHU AFRICA. We'll get back to you within
             2 business hours during our working hours.
           </p>
-          <p className={`${themeClasses.textMuted} text-sm mb-8`}>
+          <p className="text-[#123E56]/60 text-sm mb-8">
             For urgent inquiries, please call +263 78 969 3725
           </p>
           <button
             onClick={() => setIsSubmitted(false)}
             className="relative py-3 px-6 rounded-xl font-bold transition-all transform hover:scale-105 shadow-lg overflow-hidden group"
             style={{
-              background: `linear-gradient(to right, ${logoYellow}, ${isDarkMode ? '#FFC107' : '#DAA520'})`,
-              color: isDarkMode ? '#000000' : '#000000',
-              boxShadow: isDarkMode 
-                ? `0 10px 30px ${logoYellow}30` 
-                : `0 10px 30px ${logoYellow}20`
+              background: `linear-gradient(to right, ${colors.goldAccent}, #D4A82E)`,
+              color: "#FFFFFF",
+              boxShadow: `0 10px 30px ${colors.goldAccent}30`,
             }}
           >
             <span className="relative z-10">Send Another Message</span>
-            <div 
+            <div
               className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
               style={{
-                background: `linear-gradient(to right, ${logoYellow}CC, ${isDarkMode ? '#FFC107CC' : '#DAA520CC'})`
+                background: `linear-gradient(to right, ${colors.goldAccent}CC, #C49F2A)`,
               }}
             ></div>
           </button>
-        </div>
+        </motion.div>
       </div>
     );
   }
 
   return (
     <div
-      className={`min-h-screen ${themeClasses.bg} ${themeClasses.text} overflow-hidden transition-colors duration-300`}
-      style={{
-        '--logo-green': logoGreen,
-        '--logo-yellow': logoYellow,
-      } as React.CSSProperties}
+      className="min-h-screen overflow-hidden transition-colors duration-300 font-['Inter',system-ui,sans-serif]"
+      style={{ backgroundColor: colors.lightBackground, color: colors.primaryDark }}
     >
       {/* Animated Background */}
-      <div
-        className={`fixed inset-0 ${themeClasses.backgroundGradient} transition-all duration-300`}
-      >
+      <div className="fixed inset-0 bg-gradient-to-br from-[#F4FAFA] via-white to-[#DCE7E8]/20">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(31,92,115,0.08),transparent_50%)]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(184,154,47,0.06),transparent_50%)]"></div>
         <div
-          className={`absolute inset-0 ${
-            isDarkMode
-              ? "bg-[radial-gradient(circle_at_50%_50%,rgba(0,255,0,0.1),transparent_50%)]"
-              : "bg-[radial-gradient(circle_at_50%_50%,rgba(0,128,0,0.05),transparent_50%)]"
-          }`}
-        ></div>
-        <div
-          className={`absolute inset-0 ${
-            isDarkMode
-              ? "bg-[radial-gradient(circle_at_80%_20%,rgba(255,215,0,0.1),transparent_50%)]"
-              : "bg-[radial-gradient(circle_at_80%_20%,rgba(184,134,11,0.05),transparent_50%)]"
-          }`}
-        ></div>
-        <div
-          className={`absolute w-96 h-96 rounded-full blur-3xl transition-all duration-1000 ease-out`}
+          className="absolute w-96 h-96 rounded-full blur-3xl transition-all duration-1000 ease-out"
           style={{
             left: mousePosition.x - 192,
             top: mousePosition.y - 192,
-            background: isDarkMode
-              ? `radial-gradient(circle, ${logoGreen}20, transparent 70%)`
-              : `radial-gradient(circle, ${logoGreen}10, transparent 70%)`,
+            background: `radial-gradient(circle, ${colors.secondaryBlue}15, transparent 70%)`,
           }}
         ></div>
       </div>
 
-      {/* Navigation */}
-      <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+      {/* Navigation (light mode only) */}
+      <Navbar />
 
       {/* Hero Section */}
-      <section className="relative pt-24">
+      <motion.section
+        className="relative pt-32 pb-16"
+        initial="hidden"
+        animate="visible"
+        variants={fadeInUp}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1
-              className={`text-6xl lg:text-7xl font-bold leading-tight mb-8 ${themeClasses.text}`}
-            >
+            <h1 className="text-6xl lg:text-7xl font-bold leading-tight mb-8 text-[#123E56]">
               Contact
-              <span style={{ color: logoGreen }}> MAVHU</span>
+              <span style={{ color: colors.goldAccent }}> MΛVHU</span>
             </h1>
-            <p
-              className={`text-xl ${themeClasses.textSecondary} mb-10 leading-relaxed max-w-4xl mx-auto`}
-            >
-              Let's work together to transform African climate action. Whether you're exploring 
+            <p className="text-xl text-[#123E56]/80 leading-relaxed max-w-4xl mx-auto">
+              Let's work together to transform African climate action. Whether you're exploring
               partnerships, data solutions, or future platform access, we'd love to hear from you.
             </p>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Contact Methods Grid */}
-      <section className="py-16 relative">
+      <motion.section
+        className="py-16 relative"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-50px" }}
+        variants={fadeInUp}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className={`text-4xl font-bold ${themeClasses.text} mb-6`}>
+            <h2 className="text-4xl font-bold text-[#123E56] mb-6">
               How to Reach
-              <span style={{ color: logoGreen }}> Us</span>
+              <span style={{ color: colors.goldAccent }}> Us</span>
             </h2>
-            <p
-              className={`text-lg ${themeClasses.textMuted} max-w-2xl mx-auto`}
-            >
+            <p className="text-lg text-[#123E56]/60 max-w-2xl mx-auto">
               Choose the contact method that works best for your needs
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <motion.div
+            className="grid md:grid-cols-2 lg:grid-cols-4 gap-8"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
             {contactMethods.map((method, index) => (
-              <div
+              <motion.div
                 key={index}
-                className={`${themeClasses.cardBg} backdrop-blur-xl rounded-2xl p-8 border ${themeClasses.border} hover:${themeClasses.borderHover} transition-all duration-300 hover:transform hover:scale-105 text-center shadow-lg ${
-                  isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
-                }`}
+                variants={cardVariants}
+                whileHover={{ y: -8, transition: { duration: 0.2 } }}
+                className="bg-white backdrop-blur-xl rounded-2xl p-8 border border-[#DCE7E8] hover:border-[#1F5C73]/40 transition-all duration-300 text-center shadow-lg shadow-gray-200/50"
               >
-                <div 
+                <div
                   className="w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-6"
-                  style={{ 
-                    backgroundColor: `${method.color}${isDarkMode ? '30' : '20'}`,
-                    border: `1px solid ${method.color}${isDarkMode ? '40' : '30'}`
+                  style={{
+                    backgroundColor: `${method.color}10`,
+                    border: `1px solid ${method.color}20`,
                   }}
                 >
                   <div style={{ color: method.color }}>{method.icon}</div>
                 </div>
-                <h3 className={`text-xl font-bold ${themeClasses.text} mb-3`}>
-                  {method.title}
-                </h3>
+                <h3 className="text-xl font-bold text-[#123E56] mb-3">{method.title}</h3>
                 <div className="space-y-1 mb-4">
                   {method.details.map((detail, idx) => (
-                    <p
-                      key={idx}
-                      className={`${themeClasses.textSecondary} font-semibold`}
-                    >
+                    <p key={idx} className="text-[#123E56]/80 font-semibold">
                       {detail}
                     </p>
                   ))}
                 </div>
-                <p className={`${themeClasses.textMuted} text-sm mb-3`}>
-                  {method.description}
-                </p>
-                <p className="text-sm font-medium" style={{ color: logoYellow }}>
+                <p className="text-[#123E56]/60 text-sm mb-3">{method.description}</p>
+                <p className="text-sm font-medium" style={{ color: colors.goldAccent }}>
                   {method.available}
                 </p>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
-      </section>
+      </motion.section>
 
-      {/* Main Content Section */}
-      <section className="py-16 relative">
+      {/* Main Content Section - Form + Sidebar */}
+      <motion.section
+        className="py-16 relative"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-50px" }}
+        variants={fadeInUp}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-3 gap-12">
             {/* Left Column - Contact Form */}
             <div className="lg:col-span-2">
               <div className="text-center mb-12 lg:text-left">
-                <h2 className={`text-4xl font-bold ${themeClasses.text} mb-6`}>
+                <h2 className="text-4xl font-bold text-[#123E56] mb-6">
                   Send Us A
-                  <span style={{ color: logoGreen }}> Message</span>
+                  <span style={{ color: colors.goldAccent }}> Message</span>
                 </h2>
-                <p
-                  className={`text-lg ${themeClasses.textMuted}`}
-                >
+                <p className="text-lg text-[#123E56]/60">
                   Fill out the form below and we'll get back to you within 2 business hours
                 </p>
               </div>
 
-              <div
-                className={`${themeClasses.cardBg} backdrop-blur-xl rounded-2xl p-8 border ${themeClasses.border} shadow-xl ${
-                  isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
-                }`}
-              >
+              <div className="bg-white backdrop-blur-xl rounded-2xl p-8 border border-[#DCE7E8] shadow-xl shadow-gray-200/50">
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <label
-                        className={`block text-sm font-medium ${themeClasses.text} mb-2`}
-                      >
+                      <label className="block text-sm font-medium text-[#123E56] mb-2">
                         Full Name *
                       </label>
                       <div className="relative">
-                        <User
-                          className={`absolute left-3 top-3 w-5 h-5 ${themeClasses.textMuted}`}
-                        />
+                        <User className="absolute left-3 top-3 w-5 h-5 text-[#123E56]/50" />
                         <input
                           type="text"
                           name="name"
                           value={formData.name}
                           onChange={handleInputChange}
                           required
-                          className={`w-full pl-12 pr-4 py-3 ${themeClasses.input} ${themeClasses.text} rounded-xl border focus:outline-none transition-all duration-300 backdrop-blur-sm`}
-                          style={{
-                            borderColor: 'transparent',
-                            border: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
-                          }}
-                          onFocus={(e) => {
-                            e.target.style.borderColor = `${logoGreen}80`;
-                          }}
-                          onBlur={(e) => {
-                            e.target.style.borderColor = isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
-                          }}
+                          className="w-full pl-12 pr-4 py-3 bg-white/50 border border-[#DCE7E8] text-[#123E56] rounded-xl focus:outline-none focus:border-[#1F5C73]/50 transition-all duration-300 backdrop-blur-sm"
                           placeholder="Your full name"
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label
-                        className={`block text-sm font-medium ${themeClasses.text} mb-2`}
-                      >
+                      <label className="block text-sm font-medium text-[#123E56] mb-2">
                         Email Address *
                       </label>
                       <div className="relative">
-                        <Mail
-                          className={`absolute left-3 top-3 w-5 h-5 ${themeClasses.textMuted}`}
-                        />
+                        <Mail className="absolute left-3 top-3 w-5 h-5 text-[#123E56]/50" />
                         <input
                           type="email"
                           name="email"
                           value={formData.email}
                           onChange={handleInputChange}
                           required
-                          className={`w-full pl-12 pr-4 py-3 ${themeClasses.input} ${themeClasses.text} rounded-xl border focus:outline-none transition-all duration-300 backdrop-blur-sm`}
-                          style={{
-                            borderColor: 'transparent',
-                            border: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
-                          }}
-                          onFocus={(e) => {
-                            e.target.style.borderColor = `${logoGreen}80`;
-                          }}
-                          onBlur={(e) => {
-                            e.target.style.borderColor = isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
-                          }}
+                          className="w-full pl-12 pr-4 py-3 bg-white/50 border border-[#DCE7E8] text-[#123E56] rounded-xl focus:outline-none focus:border-[#1F5C73]/50 transition-all duration-300 backdrop-blur-sm"
                           placeholder="your@email.com"
                         />
                       </div>
@@ -433,62 +387,34 @@ const themeClasses = {
 
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <label
-                        className={`block text-sm font-medium ${themeClasses.text} mb-2`}
-                      >
+                      <label className="block text-sm font-medium text-[#123E56] mb-2">
                         Phone Number
                       </label>
                       <div className="relative">
-                        <Phone
-                          className={`absolute left-3 top-3 w-5 h-5 ${themeClasses.textMuted}`}
-                        />
+                        <Phone className="absolute left-3 top-3 w-5 h-5 text-[#123E56]/50" />
                         <input
                           type="tel"
                           name="phone"
                           value={formData.phone}
                           onChange={handleInputChange}
-                          className={`w-full pl-12 pr-4 py-3 ${themeClasses.input} ${themeClasses.text} rounded-xl border focus:outline-none transition-all duration-300 backdrop-blur-sm`}
-                          style={{
-                            borderColor: 'transparent',
-                            border: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
-                          }}
-                          onFocus={(e) => {
-                            e.target.style.borderColor = `${logoGreen}80`;
-                          }}
-                          onBlur={(e) => {
-                            e.target.style.borderColor = isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
-                          }}
+                          className="w-full pl-12 pr-4 py-3 bg-white/50 border border-[#DCE7E8] text-[#123E56] rounded-xl focus:outline-none focus:border-[#1F5C73]/50 transition-all duration-300 backdrop-blur-sm"
                           placeholder="+263 xx xxx xxxx"
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label
-                        className={`block text-sm font-medium ${themeClasses.text} mb-2`}
-                      >
+                      <label className="block text-sm font-medium text-[#123E56] mb-2">
                         Organization
                       </label>
                       <div className="relative">
-                        <Building
-                          className={`absolute left-3 top-3 w-5 h-5 ${themeClasses.textMuted}`}
-                        />
+                        <Building className="absolute left-3 top-3 w-5 h-5 text-[#123E56]/50" />
                         <input
                           type="text"
                           name="organization"
                           value={formData.organization}
                           onChange={handleInputChange}
-                          className={`w-full pl-12 pr-4 py-3 ${themeClasses.input} ${themeClasses.text} rounded-xl border focus:outline-none transition-all duration-300 backdrop-blur-sm`}
-                          style={{
-                            borderColor: 'transparent',
-                            border: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
-                          }}
-                          onFocus={(e) => {
-                            e.target.style.borderColor = `${logoGreen}80`;
-                          }}
-                          onBlur={(e) => {
-                            e.target.style.borderColor = isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
-                          }}
+                          className="w-full pl-12 pr-4 py-3 bg-white/50 border border-[#DCE7E8] text-[#123E56] rounded-xl focus:outline-none focus:border-[#1F5C73]/50 transition-all duration-300 backdrop-blur-sm"
                           placeholder="Your company or organization"
                         />
                       </div>
@@ -496,31 +422,17 @@ const themeClasses = {
                   </div>
 
                   <div>
-                    <label
-                      className={`block text-sm font-medium ${themeClasses.text} mb-2`}
-                    >
+                    <label className="block text-sm font-medium text-[#123E56] mb-2">
                       Inquiry Type *
                     </label>
                     <div className="relative">
-                      <Database
-                        className={`absolute left-3 top-3 w-5 h-5 ${themeClasses.textMuted}`}
-                      />
+                      <Database className="absolute left-3 top-3 w-5 h-5 text-[#123E56]/50" />
                       <select
                         name="inquiryType"
                         value={formData.inquiryType}
                         onChange={handleInputChange}
                         required
-                        className={`w-full pl-12 pr-4 py-3 ${themeClasses.input} ${themeClasses.text} rounded-xl border focus:outline-none transition-all duration-300 backdrop-blur-sm appearance-none`}
-                        style={{
-                          borderColor: 'transparent',
-                          border: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
-                        }}
-                        onFocus={(e) => {
-                          e.target.style.borderColor = `${logoGreen}80`;
-                        }}
-                        onBlur={(e) => {
-                          e.target.style.borderColor = isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
-                        }}
+                        className="w-full pl-12 pr-4 py-3 bg-white/50 border border-[#DCE7E8] text-[#123E56] rounded-xl focus:outline-none focus:border-[#1F5C73]/50 transition-all duration-300 backdrop-blur-sm appearance-none"
                       >
                         <option value="">Select inquiry type</option>
                         {inquiryTypes.map((type, index) => (
@@ -533,32 +445,18 @@ const themeClasses = {
                   </div>
 
                   <div>
-                    <label
-                      className={`block text-sm font-medium ${themeClasses.text} mb-2`}
-                    >
+                    <label className="block text-sm font-medium text-[#123E56] mb-2">
                       Your Message *
                     </label>
                     <div className="relative">
-                      <MessageCircle
-                        className={`absolute left-3 top-3 w-5 h-5 ${themeClasses.textMuted}`}
-                      />
+                      <MessageCircle className="absolute left-3 top-3 w-5 h-5 text-[#123E56]/50" />
                       <textarea
                         name="message"
                         value={formData.message}
                         onChange={handleInputChange}
                         required
                         rows={6}
-                        className={`w-full pl-12 pr-4 py-3 ${themeClasses.input} ${themeClasses.text} rounded-xl border focus:outline-none transition-all duration-300 backdrop-blur-sm resize-none`}
-                        style={{
-                          borderColor: 'transparent',
-                          border: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
-                        }}
-                        onFocus={(e) => {
-                          e.target.style.borderColor = `${logoGreen}80`;
-                        }}
-                        onBlur={(e) => {
-                          e.target.style.borderColor = isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
-                        }}
+                        className="w-full pl-12 pr-4 py-3 bg-white/50 border border-[#DCE7E8] text-[#123E56] rounded-xl focus:outline-none focus:border-[#1F5C73]/50 transition-all duration-300 backdrop-blur-sm resize-none"
                         placeholder="Tell us about your climate data needs, partnership interests, or any questions you have..."
                       />
                     </div>
@@ -570,16 +468,14 @@ const themeClasses = {
                       disabled={isSubmitting}
                       className="relative py-4 px-12 rounded-2xl font-bold shadow-xl transition-all transform hover:scale-105 overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed"
                       style={{
-                        background: `linear-gradient(to right, ${logoYellow}, ${isDarkMode ? '#FFC107' : '#DAA520'})`,
-                        color: isDarkMode ? '#000000' : '#000000',
-                        boxShadow: isDarkMode 
-                          ? `0 20px 40px ${logoYellow}30` 
-                          : `0 20px 40px ${logoYellow}20`
+                        background: `linear-gradient(to right, ${colors.goldAccent}, #D4A82E)`,
+                        color: "#FFFFFF",
+                        boxShadow: `0 20px 40px ${colors.goldAccent}30`,
                       }}
                     >
                       {isSubmitting ? (
                         <>
-                          <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                          <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin inline-block mr-2"></div>
                           Sending...
                         </>
                       ) : (
@@ -588,10 +484,10 @@ const themeClasses = {
                             Send Message
                             <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
                           </span>
-                          <div 
+                          <div
                             className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                             style={{
-                              background: `linear-gradient(to right, ${logoYellow}CC, ${isDarkMode ? '#FFC107CC' : '#DAA520CC'})`
+                              background: `linear-gradient(to right, ${colors.goldAccent}CC, #C49F2A)`,
                             }}
                           ></div>
                         </>
@@ -605,111 +501,87 @@ const themeClasses = {
             {/* Right Column - Additional Info */}
             <div className="space-y-8">
               {/* Quick Contact */}
-              <div
-                className={`${themeClasses.cardBg} backdrop-blur-xl rounded-2xl p-8 border ${themeClasses.border} shadow-lg ${
-                  isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
-                }`}
+              <motion.div
+                variants={cardVariants}
+                className="bg-white backdrop-blur-xl rounded-2xl p-8 border border-[#DCE7E8] shadow-lg shadow-gray-200/50"
               >
-                <h3 className={`text-2xl font-bold ${themeClasses.text} mb-6`}>
-                  Quick Contact
-                </h3>
+                <h3 className="text-2xl font-bold text-[#123E56] mb-6">Quick Contact</h3>
                 <div className="space-y-6">
                   <div className="flex items-start">
-                    <div 
+                    <div
                       className="p-2 rounded-lg mr-4 flex-shrink-0"
-                      style={{ 
-                        backgroundColor: `${logoGreen}${isDarkMode ? '20' : '10'}`,
-                        border: `1px solid ${logoGreen}${isDarkMode ? '30' : '20'}`
+                      style={{
+                        backgroundColor: `${colors.secondaryBlue}10`,
+                        border: `1px solid ${colors.secondaryBlue}20`,
                       }}
                     >
-                      <Mail className="w-5 h-5" style={{ color: logoGreen }} />
+                      <Mail className="w-5 h-5" style={{ color: colors.secondaryBlue }} />
                     </div>
                     <div>
-                      <h4 className={`font-semibold ${themeClasses.text} mb-1`}>
-                        Email
-                      </h4>
-                      <a 
-                        href="mailto:info@mavhu.com" 
-                        className={`${themeClasses.textSecondary} hover:underline`}
-                        style={{ color: logoGreen }}
+                      <h4 className="font-semibold text-[#123E56] mb-1">Email</h4>
+                      <a
+                        href="mailto:info@mavhu.com"
+                        className="text-[#123E56]/80 hover:underline"
+                        style={{ color: colors.secondaryBlue }}
                       >
                         info@mavhu.com
                       </a>
                     </div>
                   </div>
                   <div className="flex items-start">
-                    <div 
+                    <div
                       className="p-2 rounded-lg mr-4 flex-shrink-0"
-                      style={{ 
-                        backgroundColor: `${logoGreen}${isDarkMode ? '20' : '10'}`,
-                        border: `1px solid ${logoGreen}${isDarkMode ? '30' : '20'}`
+                      style={{
+                        backgroundColor: `${colors.secondaryBlue}10`,
+                        border: `1px solid ${colors.secondaryBlue}20`,
                       }}
                     >
-                      <Phone className="w-5 h-5" style={{ color: logoGreen }} />
+                      <Phone className="w-5 h-5" style={{ color: colors.secondaryBlue }} />
                     </div>
                     <div>
-                      <h4 className={`font-semibold ${themeClasses.text} mb-1`}>
-                        Phone
-                      </h4>
-                      <p className={`${themeClasses.textSecondary}`}>
-                        +263 78 969 3725
-                      </p>
-                      <p className={`${themeClasses.textMuted} text-sm`}>
-                        +263 71 506 3418
-                      </p>
+                      <h4 className="font-semibold text-[#123E56] mb-1">Phone</h4>
+                      <p className="text-[#123E56]/80">+263 78 969 3725</p>
+                      <p className="text-[#123E56]/60 text-sm">+263 71 506 3418</p>
                     </div>
                   </div>
                   <div className="flex items-start">
-                    <div 
+                    <div
                       className="p-2 rounded-lg mr-4 flex-shrink-0"
-                      style={{ 
-                        backgroundColor: `${logoYellow}${isDarkMode ? '20' : '10'}`,
-                        border: `1px solid ${logoYellow}${isDarkMode ? '30' : '20'}`
+                      style={{
+                        backgroundColor: `${colors.goldAccent}10`,
+                        border: `1px solid ${colors.goldAccent}20`,
                       }}
                     >
-                      <MapPin className="w-5 h-5" style={{ color: logoYellow }} />
+                      <MapPin className="w-5 h-5" style={{ color: colors.goldAccent }} />
                     </div>
                     <div>
-                      <h4 className={`font-semibold ${themeClasses.text} mb-1`}>
-                        Location
-                      </h4>
-                      <p className={`${themeClasses.textSecondary}`}>
-                        Harare, Zimbabwe
-                      </p>
-                      <p className={`${themeClasses.textMuted} text-sm`}>
-                        Africa Headquarters
-                      </p>
+                      <h4 className="font-semibold text-[#123E56] mb-1">Location</h4>
+                      <p className="text-[#123E56]/80">Harare, Zimbabwe</p>
+                      <p className="text-[#123E56]/60 text-sm">Africa Headquarters</p>
                     </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
 
               {/* Request Demo CTA */}
-              <div
-                className={`${themeClasses.cardBg} backdrop-blur-xl rounded-2xl p-8 border ${themeClasses.border} shadow-lg ${
-                  isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
-                }`}
+              <motion.div
+                variants={cardVariants}
+                className="bg-white backdrop-blur-xl rounded-2xl p-8 border border-[#DCE7E8] shadow-lg shadow-gray-200/50"
                 style={{
-                  background: isDarkMode
-                    ? `linear-gradient(to bottom right, ${logoGreen}10, ${logoYellow}10)`
-                    : `linear-gradient(to bottom right, ${logoGreen}05, ${logoYellow}05)`,
+                  background: `linear-gradient(to bottom right, ${colors.secondaryBlue}05, ${colors.goldAccent}05)`,
                 }}
               >
-                <h3 className={`text-2xl font-bold ${themeClasses.text} mb-4`}>
-                  Ready for a Demo?
-                </h3>
-                <p className={`${themeClasses.textSecondary} mb-6`}>
+                <h3 className="text-2xl font-bold text-[#123E56] mb-4">Ready for a Demo?</h3>
+                <p className="text-[#123E56]/80 mb-6">
                   See our climate data platforms in action. Schedule a personalized demo.
                 </p>
                 <a
                   href="/request-demo"
                   className="block text-center py-3 px-6 rounded-xl font-bold transition-all transform hover:scale-105 shadow-md group"
                   style={{
-                    background: `linear-gradient(to right, ${logoYellow}, ${isDarkMode ? '#FFC107' : '#DAA520'})`,
-                    color: isDarkMode ? '#000000' : '#000000',
-                    boxShadow: isDarkMode 
-                      ? `0 10px 25px ${logoYellow}30` 
-                      : `0 10px 25px ${logoYellow}20`
+                    background: `linear-gradient(to right, ${colors.goldAccent}, #D4A82E)`,
+                    color: "#FFFFFF",
+                    boxShadow: `0 10px 25px ${colors.goldAccent}20`,
                   }}
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
@@ -717,17 +589,14 @@ const themeClasses = {
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </span>
                 </a>
-              </div>
+              </motion.div>
 
-              {/* What We Serve */}
-              <div
-                className={`${themeClasses.cardBg} backdrop-blur-xl rounded-2xl p-8 border ${themeClasses.border} shadow-lg ${
-                  isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
-                }`}
+              {/* Who We Serve */}
+              <motion.div
+                variants={cardVariants}
+                className="bg-white backdrop-blur-xl rounded-2xl p-8 border border-[#DCE7E8] shadow-lg shadow-gray-200/50"
               >
-                <h3 className={`text-2xl font-bold ${themeClasses.text} mb-6`}>
-                  Who We Serve
-                </h3>
+                <h3 className="text-2xl font-bold text-[#123E56] mb-6">Who We Serve</h3>
                 <div className="space-y-4">
                   {[
                     { icon: <Globe className="w-4 h-4" />, label: "Governments & Public Agencies" },
@@ -737,44 +606,44 @@ const themeClasses = {
                     { icon: <Cloud className="w-4 h-4" />, label: "Climate Project Developers" },
                   ].map((item, index) => (
                     <div key={index} className="flex items-center">
-                      <div 
+                      <div
                         className="p-1 rounded mr-3"
-                        style={{ 
-                          backgroundColor: `${logoGreen}${isDarkMode ? '20' : '10'}`,
-                        }}
+                        style={{ backgroundColor: `${colors.secondaryBlue}10` }}
                       >
-                        <div style={{ color: logoGreen }}>{item.icon}</div>
+                        <div style={{ color: colors.secondaryBlue }}>{item.icon}</div>
                       </div>
-                      <span className={`${themeClasses.textSecondary} text-sm`}>
-                        {item.label}
-                      </span>
+                      <span className="text-[#123E56]/70 text-sm">{item.label}</span>
                     </div>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* CTA Section */}
-      <section className="py-32 relative">
+      <motion.section
+        className="py-32 relative"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-50px" }}
+        variants={fadeInUp}
+      >
         <div
           className="absolute inset-0"
           style={{
-            background: isDarkMode
-              ? `linear-gradient(to right, ${logoGreen}20, ${logoYellow}20)`
-              : `linear-gradient(to right, ${logoGreen}10, ${logoYellow}10)`,
+            background: `linear-gradient(to right, ${colors.secondaryBlue}08, ${colors.goldAccent}08)`,
           }}
         ></div>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <h2 className={`text-5xl font-bold ${themeClasses.text} mb-8`}>
+          <h2 className="text-5xl font-bold text-[#123E56] mb-8">
             Transform Climate Action
             <br />
-            <span style={{ color: logoGreen }}>With Verified Data</span>
+            <span style={{ color: colors.goldAccent }}>With Verified Data</span>
           </h2>
-          <p className={`text-xl ${themeClasses.textSecondary} mb-12 leading-relaxed`}>
-            Join organizations across Africa who trust MAVHU for accurate, verified climate intelligence 
+          <p className="text-xl text-[#123E56]/80 mb-12 leading-relaxed">
+            Join organizations across Africa who trust MΛVHU for accurate, verified climate intelligence
             that drives meaningful impact.
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
@@ -782,72 +651,49 @@ const themeClasses = {
               href="/request-demo"
               className="relative py-5 px-12 rounded-2xl text-lg font-bold transition-all transform hover:scale-105 shadow-xl overflow-hidden group"
               style={{
-                background: `linear-gradient(to right, ${logoYellow}, ${isDarkMode ? '#FFC107' : '#DAA520'})`,
-                color: isDarkMode ? '#000000' : '#000000',
-                boxShadow: isDarkMode 
-                  ? `0 20px 40px ${logoYellow}30` 
-                  : `0 20px 40px ${logoYellow}20`
+                background: `linear-gradient(to right, ${colors.goldAccent}, #D4A82E)`,
+                color: "#FFFFFF",
+                boxShadow: `0 20px 40px ${colors.goldAccent}30`,
               }}
             >
               <span className="relative z-10 flex items-center justify-center gap-3">
                 Request a Demo
                 <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
               </span>
-              <div 
+              <div
                 className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                 style={{
-                  background: `linear-gradient(to right, ${logoYellow}CC, ${isDarkMode ? '#FFC107CC' : '#DAA520CC'})`
+                  background: `linear-gradient(to right, ${colors.goldAccent}CC, #C49F2A)`,
                 }}
               ></div>
             </a>
             <a
               href="/partner"
-              className={`border-2 ${
-                isDarkMode
-                  ? "border-white/30 hover:border-white/50 text-white hover:bg-white/10"
-                  : "border-gray-300 hover:border-gray-500 text-gray-900 hover:bg-gray-100/50"
-              } py-5 px-12 rounded-2xl text-lg font-semibold transition-all backdrop-blur-sm shadow-lg ${
-                isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
-              }`}
+              className="border-2 border-[#DCE7E8] hover:border-[#1F5C73]/40 text-[#123E56] hover:bg-[#1F5C73]/5 px-12 py-5 rounded-2xl text-lg font-semibold transition-all backdrop-blur-sm shadow-lg shadow-gray-200/50"
             >
               Partner With Us
             </a>
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      {/* Footer */}
-      <Footer isDarkMode={isDarkMode} themeClasses={themeClasses} />
+      {/* Footer (light mode only) */}
+      <Footer />
 
-      {/* Add custom style tag for dynamic colors */}
+      {/* Global styles */}
       <style>{`
-        :root {
-          --logo-green: ${logoGreen};
-          --logo-yellow: ${logoYellow};
+        @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&display=swap');
+        
+        * {
+          font-family: 'Inter', system-ui, -apple-system, sans-serif;
         }
         
         button:hover, a:hover {
           transition: all 0.3s ease;
         }
         
-        .bg-logo-green {
-          background-color: ${logoGreen};
-        }
-        
-        .bg-logo-yellow {
-          background-color: ${logoYellow};
-        }
-        
-        .text-logo-green {
-          color: ${logoGreen};
-        }
-        
-        .text-logo-yellow {
-          color: ${logoYellow};
-        }
-        
         select {
-          background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='${encodeURIComponent(isDarkMode ? '#ffffff' : '#000000')}' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+          background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23123E56' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
           background-position: right 0.5rem center;
           background-repeat: no-repeat;
           background-size: 1.5em 1.5em;
