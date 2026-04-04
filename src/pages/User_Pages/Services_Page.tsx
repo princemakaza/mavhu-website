@@ -1,5 +1,5 @@
-import React, { useRef, useEffect, useState } from "react";
-import { motion, useAnimation, useInView, AnimatePresence } from "framer-motion";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Database,
   Smartphone,
@@ -20,8 +20,6 @@ import {
   Satellite,
   HardDrive,
   ChevronRight,
-  ArrowDown,
-  ArrowDownRight,
 } from "lucide-react";
 import Navbar from "../../components/navbar";
 import Footer from "../../components/Footer";
@@ -29,7 +27,7 @@ import skyImage from "../../assets/sky.png";
 import earthImage from "../../assets/earth.png";
 import aiImage from "../../assets/automa.png";
 
-// Color palette
+// Color palette (same as AboutPage)
 const colors = {
   primaryDark: "#123E56",
   secondaryBlue: "#1F5C73",
@@ -39,10 +37,10 @@ const colors = {
   white: "#FFFFFF",
 };
 
-// Animation variants
+// Animation variants (same as AboutPage)
 const fadeInUp = {
   hidden: { opacity: 0, y: 60 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
 };
 
 const staggerContainer = {
@@ -58,7 +56,7 @@ const cardVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
 };
 
-// Breathing / floating animation for images
+// Breathing animation for approach images
 const breathingFloat = {
   animate: {
     y: [0, -12, 0],
@@ -70,291 +68,6 @@ const breathingFloat = {
       repeatType: "loop" as const,
     },
   },
-};
-
-const breathingFloatDelayed = {
-  animate: {
-    y: [0, -10, 0],
-    scale: [1, 1.03, 1],
-    transition: {
-      duration: 4.5,
-      ease: "easeInOut",
-      repeat: Infinity,
-      repeatType: "loop" as const,
-      delay: 0.8,
-    },
-  },
-};
-
-const breathingFloatDelayed2 = {
-  animate: {
-    y: [0, -14, 0],
-    scale: [1, 1.05, 1],
-    transition: {
-      duration: 3.8,
-      ease: "easeInOut",
-      repeat: Infinity,
-      repeatType: "loop" as const,
-      delay: 1.6,
-    },
-  },
-};
-
-// SVG Arrow component for the flow
-const FlowArrow = ({
-  direction = "right",
-  color = colors.secondaryBlue,
-  delay = 0,
-}: {
-  direction?: "right" | "down" | "down-right";
-  color?: string;
-  delay?: number;
-}) => {
-  if (direction === "right") {
-    return (
-      <div className="flex items-center justify-center">
-        <motion.div
-          initial={{ opacity: 0, scaleX: 0 }}
-          whileInView={{ opacity: 1, scaleX: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay, ease: "easeOut" }}
-          style={{ originX: 0 }}
-          className="flex items-center"
-        >
-          <svg width="80" height="24" viewBox="0 0 80 24" fill="none">
-            <motion.path
-              d="M0 12 L64 12"
-              stroke={color}
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeDasharray="6 4"
-              initial={{ pathLength: 0 }}
-              whileInView={{ pathLength: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: delay + 0.2 }}
-            />
-            <motion.path
-              d="M60 6 L72 12 L60 18"
-              stroke={color}
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              fill="none"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.3, delay: delay + 0.9 }}
-            />
-            {/* Animated dot */}
-            <motion.circle
-              cx="0"
-              cy="12"
-              r="3"
-              fill={color}
-              animate={{ cx: [0, 72, 0] }}
-              transition={{
-                duration: 2.5,
-                repeat: Infinity,
-                ease: "linear",
-                delay: delay + 1,
-              }}
-            />
-          </svg>
-        </motion.div>
-      </div>
-    );
-  }
-
-  if (direction === "down") {
-    return (
-      <div className="flex flex-col items-center justify-center py-2">
-        <motion.div
-          initial={{ opacity: 0, scaleY: 0 }}
-          whileInView={{ opacity: 1, scaleY: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay, ease: "easeOut" }}
-          style={{ originY: 0 }}
-        >
-          <svg width="24" height="80" viewBox="0 0 24 80" fill="none">
-            <motion.path
-              d="M12 0 L12 64"
-              stroke={color}
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeDasharray="6 4"
-              initial={{ pathLength: 0 }}
-              whileInView={{ pathLength: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: delay + 0.2 }}
-            />
-            <motion.path
-              d="M6 60 L12 72 L18 60"
-              stroke={color}
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              fill="none"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.3, delay: delay + 0.9 }}
-            />
-            <motion.circle
-              cx="12"
-              cy="0"
-              r="3"
-              fill={color}
-              animate={{ cy: [0, 72, 0] }}
-              transition={{
-                duration: 2.5,
-                repeat: Infinity,
-                ease: "linear",
-                delay: delay + 1,
-              }}
-            />
-          </svg>
-        </motion.div>
-      </div>
-    );
-  }
-
-  // down-right diagonal
-  return (
-    <div className="flex items-center justify-center py-2">
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6, delay }}
-      >
-        <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
-          <motion.path
-            d="M8 8 L48 48"
-            stroke={color}
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeDasharray="6 4"
-            initial={{ pathLength: 0 }}
-            whileInView={{ pathLength: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: delay + 0.2 }}
-          />
-          <motion.path
-            d="M36 48 L52 48 L52 36"
-            stroke={color}
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            fill="none"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.3, delay: delay + 0.9 }}
-          />
-        </svg>
-      </motion.div>
-    </div>
-  );
-};
-
-// Individual Step Card in the 2x2 grid
-const StepCard = ({
-  step,
-  index,
-  floatVariant,
-}: {
-  step: any;
-  index: number;
-  floatVariant: any;
-}) => {
-  return (
-    <motion.div
-      variants={cardVariants}
-      whileHover={{ y: -6, boxShadow: "0 24px 48px rgba(18,62,86,0.12)" }}
-      transition={{ duration: 0.25 }}
-      className="relative rounded-3xl overflow-hidden"
-      style={{
-        background: step.bgColor,
-        border: `1.5px solid ${step.borderColor}30`,
-        boxShadow: "0 4px 24px rgba(18,62,86,0.06)",
-      }}
-    >
-      {/* Top accent bar */}
-      <div
-        className="h-1 w-full"
-        style={{ background: `linear-gradient(90deg, ${step.color}, ${step.color}60)` }}
-      />
-
-      <div className="p-7">
-        {/* Step number badge */}
-        <div className="flex items-start justify-between mb-5">
-          <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold text-white"
-            style={{ background: step.color }}
-          >
-            {String(index + 1).padStart(2, "0")}
-          </div>
-          <div
-            className="px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest"
-            style={{
-              background: `${step.color}12`,
-              color: step.color,
-            }}
-          >
-            {step.label}
-          </div>
-        </div>
-
-        {/* Breathing image */}
-        <div className="flex justify-center mb-6">
-          <motion.div
-            {...floatVariant}
-            className="relative"
-          >
-            <div
-              className="absolute inset-0 rounded-full blur-2xl opacity-20"
-              style={{ background: step.color, transform: "scale(0.8) translateY(10px)" }}
-            />
-            <img
-              src={step.image}
-              alt={step.title}
-              className="relative w-28 h-28 object-contain drop-shadow-lg"
-              style={{ filter: `drop-shadow(0 8px 24px ${step.color}40)` }}
-            />
-          </motion.div>
-        </div>
-
-        {/* Content */}
-        <div className="text-center mb-5">
-          <h3
-            className="text-xl font-bold mb-1"
-            style={{ color: step.color, fontFamily: "'DM Serif Display', Georgia, serif" }}
-          >
-            {step.title}
-          </h3>
-          <p
-            className="text-xs uppercase font-semibold tracking-widest"
-            style={{ color: `${colors.primaryDark}60` }}
-          >
-            {step.description}
-          </p>
-        </div>
-
-        {/* Details list */}
-        <ul className="space-y-2">
-          {step.details.map((detail: string, idx: number) => (
-            <li key={idx} className="flex items-start gap-2 text-sm" style={{ color: `${colors.primaryDark}70` }}>
-              <div
-                className="w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0"
-                style={{ background: step.color }}
-              />
-              {detail}
-            </li>
-          ))}
-        </ul>
-      </div>
-    </motion.div>
-  );
 };
 
 const ServicesPage = () => {
@@ -373,7 +86,7 @@ const ServicesPage = () => {
     setExpandedService(expandedService === index ? null : index);
   };
 
-  // Service data
+  // Service data (same content, but now full width cards)
   const services = [
     {
       id: "esg-dashboard",
@@ -498,7 +211,7 @@ const ServicesPage = () => {
     },
   ];
 
-  // MAVHU Approach Steps - 4 steps in 2x2
+  // Approach steps (for the MAVHU Model section)
   const approachSteps = [
     {
       id: "sky",
@@ -513,7 +226,7 @@ const ServicesPage = () => {
       ],
       image: skyImage,
       color: colors.secondaryBlue,
-      bgColor: "#F0F7FA",
+      bgColor: "#EAF4F8",
       borderColor: "#1F5C73",
     },
     {
@@ -529,7 +242,7 @@ const ServicesPage = () => {
       ],
       image: earthImage,
       color: colors.goldAccent,
-      bgColor: "#FAF7EE",
+      bgColor: "#F9F4E6",
       borderColor: "#B89A2F",
     },
     {
@@ -545,7 +258,7 @@ const ServicesPage = () => {
       ],
       image: aiImage,
       color: "#2E7D6B",
-      bgColor: "#EEF7F4",
+      bgColor: "#EAF6F2",
       borderColor: "#2E7D6B",
     },
     {
@@ -553,13 +266,7 @@ const ServicesPage = () => {
       label: "Distribution",
       title: "Stakeholders",
       description: "Delivering intelligence to key stakeholders",
-      details: [
-        "Government agencies & policy makers",
-        "Financial institutions & ESG analysts",
-        "Enterprises & corporate sustainability teams",
-        "Farmers, cooperatives & carbon developers",
-      ],
-      image: null, // Distribution uses icons
+      image: null,
       color: colors.primaryDark,
       bgColor: "#F4FAFA",
       borderColor: "#123E56",
@@ -575,78 +282,61 @@ const ServicesPage = () => {
     { name: "Carbon Developers", icon: <Cloud className="w-5 h-5" />, color: "#123E56" },
   ];
 
-  const floatVariants = [breathingFloat, breathingFloatDelayed, breathingFloatDelayed2, breathingFloat];
-
   return (
     <div
-      className="min-h-screen overflow-hidden"
-      style={{
-        backgroundColor: colors.white,
-        color: colors.primaryDark,
-        fontFamily: "'DM Sans', system-ui, sans-serif",
-      }}
+      className="min-h-screen overflow-hidden font-['Inter',system-ui,sans-serif] bg-[#F4FAFA] text-[#123E56]"
+      style={
+        {
+          "--primary-dark": colors.primaryDark,
+          "--secondary-blue": colors.secondaryBlue,
+          "--gold-accent": colors.goldAccent,
+          "--light-bg": colors.lightBackground,
+          "--soft-grey": colors.softGrey,
+          "--white": colors.white,
+        } as React.CSSProperties
+      }
     >
-      {/* Subtle background */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0" style={{ background: "linear-gradient(160deg, #F4FAFA 0%, #FFFFFF 50%, #F8FAFB 100%)" }} />
-        <div className="absolute top-0 right-0 w-96 h-96 rounded-full" style={{ background: "radial-gradient(circle, rgba(31,92,115,0.05) 0%, transparent 70%)" }} />
-        <div className="absolute bottom-1/3 left-0 w-80 h-80 rounded-full" style={{ background: "radial-gradient(circle, rgba(184,154,47,0.04) 0%, transparent 70%)" }} />
-        {/* Subtle moving gradient following mouse */}
+      {/* Animated Background (same as AboutPage) */}
+      <div className="fixed inset-0 -z-10">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#F4FAFA] via-white to-[#DCE7E8]/20" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(31,92,115,0.06),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(184,154,47,0.04),transparent_50%)]" />
         <div
-          className="absolute w-[600px] h-[600px] rounded-full pointer-events-none transition-all duration-[2000ms] ease-out"
+          className="absolute w-96 h-96 rounded-full blur-3xl transition-all duration-1000 ease-out"
           style={{
-            left: mousePosition.x - 300,
-            top: mousePosition.y - 300,
-            background: "radial-gradient(circle, rgba(31,92,115,0.04) 0%, transparent 60%)",
+            left: mousePosition.x - 192,
+            top: mousePosition.y - 192,
+            background: `radial-gradient(circle, ${colors.secondaryBlue}15, transparent 70%)`,
           }}
         />
       </div>
 
+      {/* Navbar (light mode only) */}
       <Navbar />
 
       {/* Hero Section */}
       <motion.section
-        className="relative pt-32 pb-12"
+        className="relative pt-32 pb-16"
         initial="hidden"
         animate="visible"
         variants={fadeInUp}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            {/* Eyebrow */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8"
-              style={{
-                background: `${colors.secondaryBlue}10`,
-                border: `1px solid ${colors.secondaryBlue}20`,
-              }}
-            >
-              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-sm font-medium tracking-wide" style={{ color: colors.secondaryBlue }}>
-                Pan-African Climate Intelligence
-              </span>
-            </motion.div>
-
-            <h1
-              className="text-6xl lg:text-7xl font-bold leading-tight mb-6"
-              style={{ fontFamily: "'DM Serif Display', Georgia, serif", color: colors.primaryDark }}
-            >
+            <h1 className="text-6xl lg:text-7xl font-bold leading-tight mb-8 text-[#123E56]">
               Our{" "}
               <span style={{ color: colors.goldAccent }}>Integrated</span>
               <br />
               <span style={{ color: colors.secondaryBlue }}>Climate Solutions</span>
             </h1>
-            <p className="text-xl leading-relaxed max-w-3xl mx-auto" style={{ color: `${colors.primaryDark}70` }}>
+            <p className="text-xl text-[#123E56]/80 leading-relaxed max-w-3xl mx-auto">
               Combining Earth observation, ground verification, and AI analytics to deliver trusted climate intelligence across Africa's skies, earth, and communities.
             </p>
           </div>
         </div>
       </motion.section>
 
-      {/* ── MAVHU Approach Section ──────────────────────────────────── */}
+      {/* MAVHU Model Architecture (2x2 grid with arrows) */}
       <motion.section
         className="py-20 relative"
         initial="hidden"
@@ -655,151 +345,248 @@ const ServicesPage = () => {
         variants={fadeInUp}
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Section header */}
           <div className="text-center mb-16">
-            <h2
-              className="text-4xl lg:text-5xl font-bold mb-4"
-              style={{ fontFamily: "'DM Serif Display', Georgia, serif", color: colors.primaryDark }}
-            >
+            <h2 className="text-4xl lg:text-5xl font-bold mb-4 text-[#123E56]">
               The{" "}
               <span style={{ color: colors.goldAccent }}>MAvHU</span>{" "}
               <span style={{ color: colors.secondaryBlue }}>Model Architecture</span>
             </h2>
-            <p className="text-lg max-w-2xl mx-auto" style={{ color: `${colors.primaryDark}60` }}>
+            <p className="text-lg max-w-2xl mx-auto text-[#123E56]/60">
               A four-stage integrated pipeline — from sky to stakeholder — powered by intelligent automation.
             </p>
           </div>
 
-          {/* 2×2 Grid with arrows */}
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid grid-cols-1 lg:grid-cols-[1fr_80px_1fr] gap-0 items-center"
-          >
-            {/* ── Row 1 ── */}
-            {/* Card 1: Sky */}
-            <StepCard step={approachSteps[0]} index={0} floatVariant={breathingFloat} />
+          {/* 2x2 Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_80px_1fr] gap-0 items-center">
+            {/* Row 1 - Sky */}
+            <div className="bg-white rounded-3xl p-8 border border-[#DCE7E8] hover:shadow-xl transition-all duration-300">
+              <div className="flex items-center justify-between mb-4">
+                <div
+                  className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold text-white"
+                  style={{ background: approachSteps[0].color }}
+                >
+                  01
+                </div>
+                <div
+                  className="px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest"
+                  style={{ background: `${approachSteps[0].color}12`, color: approachSteps[0].color }}
+                >
+                  Process
+                </div>
+              </div>
+              <div className="flex justify-center mb-6">
+                <motion.img
+                  {...breathingFloat}
+                  src={approachSteps[0].image}
+                  alt="MAvHU Sky"
+                  className="w-28 h-28 object-contain"
+                  style={{ filter: `drop-shadow(0 8px 24px ${approachSteps[0].color}40)` }}
+                />
+              </div>
+              <h3 className="text-xl font-bold text-center mb-1" style={{ color: approachSteps[0].color }}>
+                {approachSteps[0].title}
+              </h3>
+              <p className="text-xs uppercase font-semibold tracking-widest text-center mb-4 text-[#123E56]/60">
+                {approachSteps[0].description}
+              </p>
+              <ul className="space-y-2">
+                {approachSteps[0].details.map((detail, idx) => (
+                  <li key={idx} className="flex items-start gap-2 text-sm text-[#123E56]/70">
+                    <div className="w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0" style={{ background: approachSteps[0].color }} />
+                    {detail}
+                  </li>
+                ))}
+              </ul>
+            </div>
 
             {/* Right arrow (row 1) */}
             <div className="hidden lg:flex justify-center items-center">
-              <FlowArrow direction="right" color={colors.secondaryBlue} delay={0.3} />
+              <div className="flex items-center">
+                <svg width="80" height="24" viewBox="0 0 80 24" fill="none">
+                  <path d="M0 12 L64 12" stroke={colors.secondaryBlue} strokeWidth="2.5" strokeLinecap="round" strokeDasharray="6 4" />
+                  <path d="M60 6 L72 12 L60 18" stroke={colors.secondaryBlue} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                </svg>
+              </div>
             </div>
 
-            {/* Card 2: Earth */}
-            <StepCard step={approachSteps[1]} index={1} floatVariant={breathingFloatDelayed} />
-
-            {/* ── Between rows: down arrows on left and right columns ── */}
-            {/* Left column down arrow (under card 1) */}
-            <div className="hidden lg:flex justify-center items-center">
-              <FlowArrow direction="down" color={colors.goldAccent} delay={0.6} />
+            {/* Row 1 - Earth */}
+            <div className="bg-white rounded-3xl p-8 border border-[#DCE7E8] hover:shadow-xl transition-all duration-300">
+              <div className="flex items-center justify-between mb-4">
+                <div
+                  className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold text-white"
+                  style={{ background: approachSteps[1].color }}
+                >
+                  02
+                </div>
+                <div
+                  className="px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest"
+                  style={{ background: `${approachSteps[1].color}12`, color: approachSteps[1].color }}
+                >
+                  Validation
+                </div>
+              </div>
+              <div className="flex justify-center mb-6">
+                <motion.img
+                  {...breathingFloat}
+                  src={approachSteps[1].image}
+                  alt="MAvHU Earth"
+                  className="w-28 h-28 object-contain"
+                  style={{ filter: `drop-shadow(0 8px 24px ${approachSteps[1].color}40)` }}
+                />
+              </div>
+              <h3 className="text-xl font-bold text-center mb-1" style={{ color: approachSteps[1].color }}>
+                {approachSteps[1].title}
+              </h3>
+              <p className="text-xs uppercase font-semibold tracking-widest text-center mb-4 text-[#123E56]/60">
+                {approachSteps[1].description}
+              </p>
+              <ul className="space-y-2">
+                {approachSteps[1].details.map((detail, idx) => (
+                  <li key={idx} className="flex items-start gap-2 text-sm text-[#123E56]/70">
+                    <div className="w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0" style={{ background: approachSteps[1].color }} />
+                    {detail}
+                  </li>
+                ))}
+              </ul>
             </div>
 
-            {/* Center spacer with diagonal arrow */}
-            <div className="hidden lg:flex justify-center items-center">
-              <FlowArrow direction="down-right" color={`${colors.primaryDark}30`} delay={0.7} />
+            {/* Down arrows between rows */}
+            <div className="hidden lg:flex justify-center items-center py-4">
+              <svg width="24" height="60" viewBox="0 0 24 60" fill="none">
+                <path d="M12 0 L12 44" stroke={colors.goldAccent} strokeWidth="2.5" strokeLinecap="round" strokeDasharray="6 4" />
+                <path d="M6 40 L12 52 L18 40" stroke={colors.goldAccent} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+              </svg>
             </div>
 
-            {/* Right column down arrow (under card 2) */}
-            <div className="hidden lg:flex justify-center items-center">
-              <FlowArrow direction="down" color="#2E7D6B" delay={0.6} />
+            <div className="hidden lg:flex justify-center items-center py-4">
+              <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+                <path d="M8 8 L48 48" stroke={`${colors.primaryDark}30`} strokeWidth="2.5" strokeLinecap="round" strokeDasharray="6 4" />
+                <path d="M36 48 L52 48 L52 36" stroke={`${colors.primaryDark}30`} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+              </svg>
             </div>
 
-            {/* Mobile arrow between row 1 and row 2 */}
-            <div className="lg:hidden flex justify-center py-2">
-              <FlowArrow direction="down" color={colors.secondaryBlue} delay={0.3} />
+            <div className="hidden lg:flex justify-center items-center py-4">
+              <svg width="24" height="60" viewBox="0 0 24 60" fill="none">
+                <path d="M12 0 L12 44" stroke="#2E7D6B" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="6 4" />
+                <path d="M6 40 L12 52 L18 40" stroke="#2E7D6B" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+              </svg>
             </div>
 
-            {/* ── Row 2 ── */}
-            {/* Card 3: AI */}
-            <StepCard step={approachSteps[2]} index={2} floatVariant={breathingFloatDelayed2} />
+            {/* Row 2 - AI */}
+            <div className="bg-white rounded-3xl p-8 border border-[#DCE7E8] hover:shadow-xl transition-all duration-300">
+              <div className="flex items-center justify-between mb-4">
+                <div
+                  className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold text-white"
+                  style={{ background: approachSteps[2].color }}
+                >
+                  03
+                </div>
+                <div
+                  className="px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest"
+                  style={{ background: `${approachSteps[2].color}12`, color: approachSteps[2].color }}
+                >
+                  Automation
+                </div>
+              </div>
+              <div className="flex justify-center mb-6">
+                <motion.img
+                  {...breathingFloat}
+                  src={approachSteps[2].image}
+                  alt="MAvHU AI"
+                  className="w-28 h-28 object-contain"
+                  style={{ filter: `drop-shadow(0 8px 24px ${approachSteps[2].color}40)` }}
+                />
+              </div>
+              <h3 className="text-xl font-bold text-center mb-1" style={{ color: approachSteps[2].color }}>
+                {approachSteps[2].title}
+              </h3>
+              <p className="text-xs uppercase font-semibold tracking-widest text-center mb-4 text-[#123E56]/60">
+                {approachSteps[2].description}
+              </p>
+              <ul className="space-y-2">
+                {approachSteps[2].details.map((detail, idx) => (
+                  <li key={idx} className="flex items-start gap-2 text-sm text-[#123E56]/70">
+                    <div className="w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0" style={{ background: approachSteps[2].color }} />
+                    {detail}
+                  </li>
+                ))}
+              </ul>
+            </div>
 
             {/* Right arrow (row 2) */}
             <div className="hidden lg:flex justify-center items-center">
-              <FlowArrow direction="right" color="#2E7D6B" delay={0.9} />
+              <div className="flex items-center">
+                <svg width="80" height="24" viewBox="0 0 80 24" fill="none">
+                  <path d="M0 12 L64 12" stroke="#2E7D6B" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="6 4" />
+                  <path d="M60 6 L72 12 L60 18" stroke="#2E7D6B" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                </svg>
+              </div>
             </div>
 
-            {/* Card 4: Distribution */}
-            <motion.div
-              variants={cardVariants}
-              whileHover={{ y: -6, boxShadow: "0 24px 48px rgba(18,62,86,0.12)" }}
-              transition={{ duration: 0.25 }}
-              className="relative rounded-3xl overflow-hidden"
-              style={{
-                background: approachSteps[3].bgColor,
-                border: `1.5px solid ${approachSteps[3].borderColor}25`,
-                boxShadow: "0 4px 24px rgba(18,62,86,0.06)",
-              }}
-            >
-              <div
-                className="h-1 w-full"
-                style={{ background: `linear-gradient(90deg, ${colors.primaryDark}, ${colors.secondaryBlue})` }}
-              />
-              <div className="p-7">
-                {/* Step badge */}
-                <div className="flex items-start justify-between mb-5">
-                  <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold text-white"
-                    style={{ background: colors.primaryDark }}
-                  >
-                    04
-                  </div>
-                  <div
-                    className="px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest"
-                    style={{ background: `${colors.primaryDark}10`, color: colors.primaryDark }}
-                  >
-                    Distribution
-                  </div>
+            {/* Distribution card */}
+            <div className="bg-white rounded-3xl p-8 border border-[#DCE7E8] hover:shadow-xl transition-all duration-300">
+              <div className="flex items-center justify-between mb-4">
+                <div
+                  className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold text-white"
+                  style={{ background: colors.primaryDark }}
+                >
+                  04
                 </div>
-
-                {/* Channel icons in a breathing grid */}
-                <div className="grid grid-cols-3 gap-3 mb-5">
-                  {distributionChannels.map((ch, i) => (
-                    <motion.div
-                      key={i}
-                      animate={{
-                        y: [0, i % 2 === 0 ? -8 : -6, 0],
-                        scale: [1, 1.04, 1],
-                      }}
-                      transition={{
-                        duration: 3.5 + i * 0.4,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                        delay: i * 0.3,
-                      }}
-                      className="flex flex-col items-center gap-1.5 p-2.5 rounded-xl"
-                      style={{ background: `${ch.color}10` }}
-                    >
-                      <div style={{ color: ch.color }}>{ch.icon}</div>
-                      <span className="text-xs font-medium text-center leading-tight" style={{ color: ch.color }}>
-                        {ch.name}
-                      </span>
-                    </motion.div>
-                  ))}
-                </div>
-
-                <div className="text-center">
-                  <h3
-                    className="text-xl font-bold mb-1"
-                    style={{ color: colors.primaryDark, fontFamily: "'DM Serif Display', Georgia, serif" }}
-                  >
-                    Stakeholders
-                  </h3>
-                  <p className="text-xs uppercase font-semibold tracking-widest" style={{ color: `${colors.primaryDark}60` }}>
-                    Delivering intelligence to key stakeholders
-                  </p>
+                <div
+                  className="px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest"
+                  style={{ background: `${colors.primaryDark}10`, color: colors.primaryDark }}
+                >
+                  Distribution
                 </div>
               </div>
-            </motion.div>
-          </motion.div>
+              <div className="grid grid-cols-3 gap-3 mb-5">
+                {distributionChannels.map((ch, i) => (
+                  <motion.div
+                    key={i}
+                    animate={{ y: [0, -8, 0], scale: [1, 1.04, 1] }}
+                    transition={{ duration: 3.5 + i * 0.4, repeat: Infinity, ease: "easeInOut", delay: i * 0.3 }}
+                    className="flex flex-col items-center gap-1.5 p-2.5 rounded-xl"
+                    style={{ background: `${ch.color}10` }}
+                  >
+                    <div style={{ color: ch.color }}>{ch.icon}</div>
+                    <span className="text-xs font-medium text-center leading-tight" style={{ color: ch.color }}>
+                      {ch.name}
+                    </span>
+                  </motion.div>
+                ))}
+              </div>
+              <h3 className="text-xl font-bold text-center mb-1" style={{ color: colors.primaryDark }}>
+                Stakeholders
+              </h3>
+              <p className="text-xs uppercase font-semibold tracking-widest text-center text-[#123E56]/60">
+                Delivering intelligence to key stakeholders
+              </p>
+            </div>
+          </div>
 
-          {/* Mobile: simple arrow between each card */}
-          {/* (handled via lg:hidden arrows above) */}
+          {/* Mobile arrows (simple separators) */}
+          <div className="lg:hidden flex justify-center py-4">
+            <svg width="24" height="40" viewBox="0 0 24 40" fill="none">
+              <path d="M12 0 L12 24" stroke={colors.secondaryBlue} strokeWidth="2.5" strokeLinecap="round" strokeDasharray="6 4" />
+              <path d="M6 20 L12 32 L18 20" stroke={colors.secondaryBlue} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+            </svg>
+          </div>
+          <div className="lg:hidden flex justify-center py-4">
+            <svg width="24" height="40" viewBox="0 0 24 40" fill="none">
+              <path d="M12 0 L12 24" stroke={colors.goldAccent} strokeWidth="2.5" strokeLinecap="round" strokeDasharray="6 4" />
+              <path d="M6 20 L12 32 L18 20" stroke={colors.goldAccent} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+            </svg>
+          </div>
+          <div className="lg:hidden flex justify-center py-4">
+            <svg width="24" height="40" viewBox="0 0 24 40" fill="none">
+              <path d="M12 0 L12 24" stroke="#2E7D6B" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="6 4" />
+              <path d="M6 20 L12 32 L18 20" stroke="#2E7D6B" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+            </svg>
+          </div>
         </div>
       </motion.section>
 
-      {/* ── Services Section ──────────────────────────────────────── */}
+      {/* Services Section (full width cards) */}
       <motion.section
         className="py-16 relative"
         initial="hidden"
@@ -809,14 +596,11 @@ const ServicesPage = () => {
       >
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
-            <h2
-              className="text-4xl font-bold mb-4"
-              style={{ fontFamily: "'DM Serif Display', Georgia, serif", color: colors.primaryDark }}
-            >
+            <h2 className="text-4xl font-bold mb-4 text-[#123E56]">
               <span style={{ color: colors.secondaryBlue }}>Our</span>{" "}
               <span style={{ color: colors.goldAccent }}>Services</span>
             </h2>
-            <p className="text-base" style={{ color: `${colors.primaryDark}60` }}>
+            <p className="text-base text-[#123E56]/60">
               Click on any service card to explore detailed information
             </p>
           </div>
@@ -826,14 +610,9 @@ const ServicesPage = () => {
               <motion.div
                 key={service.id}
                 variants={cardVariants}
-                className="rounded-2xl overflow-hidden"
-                style={{
-                  background: colors.white,
-                  border: `1px solid ${colors.softGrey}`,
-                  boxShadow: "0 2px 16px rgba(18,62,86,0.05)",
-                }}
+                className="rounded-2xl overflow-hidden bg-white border border-[#DCE7E8] shadow-sm hover:shadow-md transition-all duration-300"
               >
-                {/* Header */}
+                {/* Header (always visible) */}
                 <div
                   className="p-6 cursor-pointer hover:bg-[#F4FAFA] transition-colors duration-200"
                   onClick={() => toggleService(index)}
@@ -847,12 +626,8 @@ const ServicesPage = () => {
                         {service.icon}
                       </div>
                       <div>
-                        <h3 className="text-xl font-bold mb-1" style={{ color: colors.primaryDark }}>
-                          {service.title}
-                        </h3>
-                        <p className="text-sm leading-relaxed" style={{ color: `${colors.primaryDark}65` }}>
-                          {service.shortDescription}
-                        </p>
+                        <h3 className="text-xl font-bold mb-1 text-[#123E56]">{service.title}</h3>
+                        <p className="text-sm leading-relaxed text-[#123E56]/65">{service.shortDescription}</p>
                       </div>
                     </div>
                     <div
@@ -867,36 +642,32 @@ const ServicesPage = () => {
                   </div>
                 </div>
 
-                {/* Expanded */}
+                {/* Expanded content */}
                 <AnimatePresence>
                   {expandedService === index && (
                     <motion.div
-                      key="expanded"
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: "auto" }}
                       exit={{ opacity: 0, height: 0 }}
                       transition={{ duration: 0.35, ease: "easeInOut" }}
                       className="overflow-hidden"
                     >
-                      <div
-                        className="border-t p-6"
-                        style={{ borderColor: colors.softGrey, background: "#FAFCFC" }}
-                      >
+                      <div className="border-t p-6 bg-[#FAFCFC]" style={{ borderColor: colors.softGrey }}>
                         <div className="grid md:grid-cols-2 gap-8">
                           <div>
-                            <p className="text-sm leading-relaxed mb-6" style={{ color: `${colors.primaryDark}70` }}>
+                            <p className="text-sm leading-relaxed mb-6 text-[#123E56]/70">
                               {service.fullDescription}
                             </p>
 
                             {service.features && (
                               <div className="mb-6">
-                                <h5 className="text-base font-semibold mb-3 flex items-center gap-2" style={{ color: colors.primaryDark }}>
+                                <h5 className="text-base font-semibold mb-3 flex items-center gap-2 text-[#123E56]">
                                   <CheckCircle className="w-4 h-4" style={{ color: colors.secondaryBlue }} />
                                   Key Features
                                 </h5>
                                 <div className="space-y-1.5">
                                   {service.features.map((f, i) => (
-                                    <div key={i} className="flex items-start gap-2 text-sm" style={{ color: `${colors.primaryDark}65` }}>
+                                    <div key={i} className="flex items-start gap-2 text-sm text-[#123E56]/65">
                                       <div className="w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0" style={{ background: colors.secondaryBlue }} />
                                       {f}
                                     </div>
@@ -907,13 +678,13 @@ const ServicesPage = () => {
 
                             {service.trainingModules && (
                               <div>
-                                <h5 className="text-base font-semibold mb-3 flex items-center gap-2" style={{ color: colors.primaryDark }}>
+                                <h5 className="text-base font-semibold mb-3 flex items-center gap-2 text-[#123E56]">
                                   <BookOpen className="w-4 h-4" style={{ color: colors.secondaryBlue }} />
                                   Training Modules
                                 </h5>
                                 <div className="space-y-1.5">
                                   {service.trainingModules.map((m, i) => (
-                                    <div key={i} className="flex items-start gap-2 text-sm" style={{ color: `${colors.primaryDark}65` }}>
+                                    <div key={i} className="flex items-start gap-2 text-sm text-[#123E56]/65">
                                       <div className="w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0" style={{ background: colors.goldAccent }} />
                                       {m}
                                     </div>
@@ -926,13 +697,13 @@ const ServicesPage = () => {
                           <div>
                             {service.useCases && (
                               <div className="mb-6">
-                                <h5 className="text-base font-semibold mb-3 flex items-center gap-2" style={{ color: colors.primaryDark }}>
+                                <h5 className="text-base font-semibold mb-3 flex items-center gap-2 text-[#123E56]">
                                   <Target className="w-4 h-4" style={{ color: colors.secondaryBlue }} />
                                   Use Cases
                                 </h5>
                                 <div className="space-y-1.5">
                                   {service.useCases.map((u, i) => (
-                                    <div key={i} className="flex items-start gap-2 text-sm" style={{ color: `${colors.primaryDark}65` }}>
+                                    <div key={i} className="flex items-start gap-2 text-sm text-[#123E56]/65">
                                       <div className="w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0" style={{ background: colors.goldAccent }} />
                                       {u}
                                     </div>
@@ -943,7 +714,7 @@ const ServicesPage = () => {
 
                             {service.capabilities && (
                               <div className="mb-6">
-                                <h5 className="text-base font-semibold mb-3 flex items-center gap-2" style={{ color: colors.primaryDark }}>
+                                <h5 className="text-base font-semibold mb-3 flex items-center gap-2 text-[#123E56]">
                                   <Zap className="w-4 h-4" style={{ color: colors.secondaryBlue }} />
                                   Capabilities
                                 </h5>
@@ -963,7 +734,7 @@ const ServicesPage = () => {
 
                             {service.dataSources && (
                               <div className="mb-6">
-                                <h5 className="text-base font-semibold mb-3 flex items-center gap-2" style={{ color: colors.primaryDark }}>
+                                <h5 className="text-base font-semibold mb-3 flex items-center gap-2 text-[#123E56]">
                                   <Database className="w-4 h-4" style={{ color: colors.secondaryBlue }} />
                                   Data Sources
                                 </h5>
@@ -983,13 +754,13 @@ const ServicesPage = () => {
 
                             {service.deliveryMethods && (
                               <div>
-                                <h5 className="text-base font-semibold mb-3 flex items-center gap-2" style={{ color: colors.primaryDark }}>
+                                <h5 className="text-base font-semibold mb-3 flex items-center gap-2 text-[#123E56]">
                                   <ArrowRight className="w-4 h-4" style={{ color: colors.secondaryBlue }} />
                                   Delivery Methods
                                 </h5>
                                 <div className="space-y-1.5">
                                   {service.deliveryMethods.map((m, i) => (
-                                    <div key={i} className="flex items-start gap-2 text-sm" style={{ color: `${colors.primaryDark}65` }}>
+                                    <div key={i} className="flex items-start gap-2 text-sm text-[#123E56]/65">
                                       <div className="w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0" style={{ background: colors.goldAccent }} />
                                       {m}
                                     </div>
@@ -1000,22 +771,18 @@ const ServicesPage = () => {
 
                             {service.apiCategories && (
                               <div>
-                                <h5 className="text-base font-semibold mb-4 flex items-center gap-2" style={{ color: colors.primaryDark }}>
+                                <h5 className="text-base font-semibold mb-4 flex items-center gap-2 text-[#123E56]">
                                   <Database className="w-4 h-4" style={{ color: colors.secondaryBlue }} />
                                   API Categories
                                 </h5>
                                 <div className="space-y-3">
                                   {service.apiCategories.map((cat, i) => (
-                                    <div
-                                      key={i}
-                                      className="rounded-xl p-4"
-                                      style={{ background: colors.lightBackground }}
-                                    >
+                                    <div key={i} className="rounded-xl p-4" style={{ background: colors.lightBackground }}>
                                       <div className="flex items-center gap-2 mb-1">
                                         <div style={{ color: colors.secondaryBlue }}>{cat.icon}</div>
-                                        <span className="font-semibold text-sm" style={{ color: colors.primaryDark }}>{cat.name}</span>
+                                        <span className="font-semibold text-sm text-[#123E56]">{cat.name}</span>
                                       </div>
-                                      <p className="text-xs" style={{ color: `${colors.primaryDark}60` }}>{cat.description}</p>
+                                      <p className="text-xs text-[#123E56]/60">{cat.description}</p>
                                     </div>
                                   ))}
                                 </div>
@@ -1033,7 +800,7 @@ const ServicesPage = () => {
         </div>
       </motion.section>
 
-      {/* ── Integrated Ecosystem ─────────────────────────────────── */}
+      {/* Integrated Ecosystem Section */}
       <motion.section
         className="py-20 relative"
         initial="hidden"
@@ -1043,39 +810,22 @@ const ServicesPage = () => {
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2
-              className="text-4xl font-bold mb-4"
-              style={{ fontFamily: "'DM Serif Display', Georgia, serif", color: colors.primaryDark }}
-            >
+            <h2 className="text-4xl font-bold mb-4 text-[#123E56]">
               <span style={{ color: colors.secondaryBlue }}>Integrated</span>{" "}
-              <span style={{ color: colors.goldAccent }}>Climate Intelligence</span>
-              {" "}Ecosystem
+              <span style={{ color: colors.goldAccent }}>Climate Intelligence</span> Ecosystem
             </h2>
           </div>
 
-          <motion.div
-            className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
               { icon: <CloudRain className="w-7 h-7" />, title: "Atmospheric Data", description: "Real-time weather, climate patterns, and atmospheric conditions", color: colors.secondaryBlue },
               { icon: <Layers className="w-7 h-7" />, title: "Earth Surface Intelligence", description: "Land use, vegetation, soil health, and surface temperature", color: colors.goldAccent },
               { icon: <Navigation className="w-7 h-7" />, title: "Automated Data Collection", description: "Satellite, drone, and IoT networks for continuous monitoring", color: "#2E7D6B" },
               { icon: <Activity className="w-7 h-7" />, title: "Historical Analysis", description: "Decades of historical climate data for trend analysis and prediction", color: colors.primaryDark },
             ].map((item, i) => (
-              <motion.div
+              <div
                 key={i}
-                variants={cardVariants}
-                whileHover={{ y: -8 }}
-                className="rounded-2xl p-6 text-center"
-                style={{
-                  background: colors.white,
-                  border: `1px solid ${colors.softGrey}`,
-                  boxShadow: "0 2px 16px rgba(18,62,86,0.04)",
-                }}
+                className="bg-white rounded-2xl p-6 text-center border border-[#DCE7E8] hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
               >
                 <div
                   className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4"
@@ -1083,15 +833,15 @@ const ServicesPage = () => {
                 >
                   <div style={{ color: item.color }}>{item.icon}</div>
                 </div>
-                <h3 className="font-bold mb-2" style={{ color: colors.primaryDark }}>{item.title}</h3>
-                <p className="text-sm" style={{ color: `${colors.primaryDark}60` }}>{item.description}</p>
-              </motion.div>
+                <h3 className="font-bold mb-2 text-[#123E56]">{item.title}</h3>
+                <p className="text-sm text-[#123E56]/60">{item.description}</p>
+              </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </motion.section>
 
-      {/* ── CTA ───────────────────────────────────────────────────── */}
+      {/* CTA Section */}
       <motion.section
         className="py-24 relative"
         initial="hidden"
@@ -1100,22 +850,18 @@ const ServicesPage = () => {
         variants={fadeInUp}
       >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2
-            className="text-5xl font-bold mb-6"
-            style={{ fontFamily: "'DM Serif Display', Georgia, serif", color: colors.primaryDark }}
-          >
+          <h2 className="text-5xl font-bold mb-6 text-[#123E56]">
             Transform Climate Action
             <br />
             <span style={{ color: colors.secondaryBlue }}>With Integrated</span>{" "}
             <span style={{ color: colors.goldAccent }}>Intelligence</span>
           </h2>
-          <p className="text-xl mb-10 leading-relaxed" style={{ color: `${colors.primaryDark}70` }}>
+          <p className="text-xl mb-10 leading-relaxed text-[#123E56]/70">
             Join governments, financial institutions, and organizations across Africa who trust MAVHU for comprehensive climate intelligence.
           </p>
-          <motion.button
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.97 }}
-            className="inline-flex items-center gap-3 py-4 px-10 rounded-2xl text-lg font-bold text-white"
+          <button
+            onClick={() => (window.location.href = "/request-demo")}
+            className="inline-flex items-center gap-3 py-4 px-10 rounded-2xl text-lg font-bold text-white transition-all hover:scale-105 shadow-xl"
             style={{
               background: `linear-gradient(135deg, ${colors.goldAccent}, #D4A82E)`,
               boxShadow: `0 16px 40px ${colors.goldAccent}35`,
@@ -1123,11 +869,18 @@ const ServicesPage = () => {
           >
             Request Full Demo
             <ArrowRight className="w-5 h-5" />
-          </motion.button>
+          </button>
         </div>
       </motion.section>
 
       <Footer />
+
+      {/* Global styles for Inter font */}
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&display=swap');
+        * { font-family: 'Inter', system-ui, sans-serif; }
+        button { transition: all 0.3s ease; }
+      `}</style>
     </div>
   );
 };
