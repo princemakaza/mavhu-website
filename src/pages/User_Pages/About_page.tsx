@@ -11,18 +11,57 @@ import {
   Eye,
   Database,
   TrendingUp,
-
   Satellite,
   HardDrive,
   MapPin,
   Phone,
   Mail,
 } from "lucide-react";
+import { motion } from "framer-motion";
 import Navbar from "../../components/navbar";
 import Footer from "../../components/Footer";
 
+// Color palette (light mode only, based on provided brand colors)
+const colors = {
+  primaryDark: "#123E56",
+  secondaryBlue: "#1F5C73",
+  goldAccent: "#B89A2F",
+  lightBackground: "#F4FAFA",
+  softGrey: "#DCE7E8",
+  white: "#FFFFFF",
+};
+
+// Animation variants (consistent with landing page)
+const fadeInUp = {
+  hidden: { opacity: 0, y: 60 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" },
+  },
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: "easeOut" },
+  },
+};
+
 const AboutPage = () => {
-  const [isDarkMode, setIsDarkMode] = React.useState(true);
   const [mousePosition, setMousePosition] = React.useState({ x: 0, y: 0 });
 
   React.useEffect(() => {
@@ -33,276 +72,223 @@ const AboutPage = () => {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
-  // Colors adjusted for both modes - darker in light mode
-  const logoGreen = isDarkMode ? "#00FF00" : "#008000"; // Brighter green for dark, forest green for light
-  const logoYellow = isDarkMode ? "#FFD700" : "#B8860B"; // Gold for dark, dark goldenrod for light
-  const darkBg = "#0A0A0A"; // Not pure black
-  const lightBg = "#F5F5F5"; // Light but not pure white
-  const lightCardBg = "#FFFFFF"; // Pure white for cards in light mode
-
-  // Updated theme-aware classes with MAVHU color scheme
-  // In About_page.tsx, update themeClasses to include glowEffect:
-  const themeClasses = {
-    bg: isDarkMode ? darkBg : lightBg,
-    text: isDarkMode ? "text-white" : "text-gray-900",
-    textSecondary: isDarkMode ? "text-gray-300" : "text-gray-700",
-    textMuted: isDarkMode ? "text-gray-400" : "text-gray-600",
-    navBg: isDarkMode ? `${darkBg}/95` : `${lightBg}/95`,
-    cardBg: isDarkMode ? `${darkBg}/30` : `${lightCardBg}/95`,
-    cardBgAlt: isDarkMode ? `${darkBg}/40` : `${lightCardBg}/90`,
-    border: isDarkMode ? "border-white/10" : "border-gray-300/70",
-    borderHover: isDarkMode ? "border-white/20" : "border-gray-400",
-    backgroundGradient: isDarkMode
-      ? `bg-gradient-to-br from-gray-900 via-${darkBg.replace('#', '')} to-black`
-      : `bg-gradient-to-br from-gray-50 via-${lightBg.replace('#', '')} to-gray-100`,
-    hoverBg: isDarkMode ? "hover:bg-white/10" : "hover:bg-gray-100",
-    // ADD THIS LINE
-    glowEffect: isDarkMode
-      ? "shadow-[0_0_20px_rgba(0,255,0,0.3)]"
-      : "shadow-[0_0_20px_rgba(0,128,0,0.1)]",
-  };
-
+  // Values (Measured, Verified, Sovereign, Local)
   const values = [
     {
       icon: <CheckCircle className="w-8 h-8" />,
       title: "Measured",
       description: "Precise data collection from multiple high-tech sources",
-      color: "from-green-500 to-emerald-500",
+      color: colors.secondaryBlue,
     },
     {
       icon: <Shield className="w-8 h-8" />,
       title: "Verified",
       description: "Rigorous validation to ensure data integrity",
-      color: "from-green-600 to-emerald-600",
+      color: colors.secondaryBlue,
     },
     {
       icon: <Globe className="w-8 h-8" />,
       title: "Sovereign",
       description: "Locally governed and contextually relevant data",
-      color: "from-yellow-500 to-amber-500",
+      color: colors.goldAccent,
     },
     {
       icon: <Map className="w-8 h-8" />,
       title: "Local",
       description: "Grounded in African realities for impactful solutions",
-      color: "from-green-700 to-emerald-700",
+      color: colors.secondaryBlue,
     },
   ];
 
+  // Approach data with specific styling
   const approach = [
     {
       title: "MAVHU Sky",
-      description: "Harnessing drones, satellites, and geospatial technology for comprehensive data collection",
+      description:
+        "Satellite, drone, and geospatial intelligence for continuous land-use, vegetation, and climate monitoring across estates and supply chains.",
       icon: <Satellite className="w-8 h-8" />,
-      color: logoGreen,
+      bgColor: "#EAF4F8",
+      borderColor: "#2F6F8F",
+      textColor: colors.secondaryBlue,
     },
     {
       title: "MAVHU Earth",
-      description: "Ground-truthing through field verification, ensuring data is accurate and locally relevant",
+      description:
+        "Field-based verification and soil intelligence workflows that ground-truth remote sensing data and ensure locally accurate baselines.",
       icon: <Map className="w-8 h-8" />,
-      color: logoGreen,
+      bgColor: "#F9F4E6",
+      borderColor: "#B58E2D",
+      textColor: colors.goldAccent,
     },
     {
       title: "MAVHU AI",
-      description: "Utilizing machine learning and automated MRV to process and report data efficiently",
+      description:
+        "Machine learning and automated MRV pipelines that transform raw environmental data into auditable climate reports, risk signals, and decision-ready insights.",
       icon: <HardDrive className="w-8 h-8" />,
-      color: logoYellow,
-    },
-  ];
-
-  const teamMembers = [
-    {
-      name: "Dr. Tariro Makoni",
-      role: "Chief Executive Officer",
-      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300&h=300&fit=crop&crop=face",
-      bio: "15+ years in climate science, former Director at African Climate Research Institute, PhD in Environmental Science.",
-    },
-    {
-      name: "Kwame Osei",
-      role: "Chief Technology Officer",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face",
-      bio: "AI/ML expert with experience at Google and NASA, specializing in geospatial data analysis and climate modeling.",
-    },
-    {
-      name: "Amina Bello",
-      role: "Head of Field Operations",
-      image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=300&h=300&fit=crop&crop=face",
-      bio: "10+ years in agricultural development and field verification across 15 African countries.",
-    },
-    {
-      name: "Dr. Samuel Ndlovu",
-      role: "Chief Data Scientist",
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face",
-      bio: "PhD in Data Science, former lead data analyst at World Bank Climate Group, specializing in climate data verification.",
+      bgColor: "#EAF6F2",
+      borderColor: "#2E7D6B",
+      textColor: "#2E7D6B",
     },
   ];
 
   return (
     <div
-      className={`min-h-screen ${themeClasses.bg} ${themeClasses.text} overflow-hidden transition-colors duration-300`}
-      style={{
-        '--logo-green': logoGreen,
-        '--logo-yellow': logoYellow,
-      } as React.CSSProperties}
+      className={`min-h-screen bg-[${colors.lightBackground}] text-[${colors.primaryDark}] overflow-hidden transition-colors duration-300 font-['Inter',system-ui,sans-serif]`}
+      style={
+        {
+          "--primary-dark": colors.primaryDark,
+          "--secondary-blue": colors.secondaryBlue,
+          "--gold-accent": colors.goldAccent,
+          "--light-bg": colors.lightBackground,
+          "--soft-grey": colors.softGrey,
+          "--white": colors.white,
+        } as React.CSSProperties
+      }
     >
       {/* Animated Background */}
-      <div
-        className={`fixed inset-0 ${themeClasses.backgroundGradient} transition-all duration-300`}
-      >
+      <div className="fixed inset-0 bg-gradient-to-br from-[#F4FAFA] via-white to-[#DCE7E8]/20 transition-all duration-300">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(31,92,115,0.08),transparent_50%)]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(184,154,47,0.06),transparent_50%)]"></div>
         <div
-          className={`absolute inset-0 ${isDarkMode
-              ? "bg-[radial-gradient(circle_at_50%_50%,rgba(0,255,0,0.1),transparent_50%)]"
-              : "bg-[radial-gradient(circle_at_50%_50%,rgba(0,128,0,0.05),transparent_50%)]"
-            }`}
-        ></div>
-        <div
-          className={`absolute inset-0 ${isDarkMode
-              ? "bg-[radial-gradient(circle_at_80%_20%,rgba(255,215,0,0.1),transparent_50%)]"
-              : "bg-[radial-gradient(circle_at_80%_20%,rgba(184,134,11,0.05),transparent_50%)]"
-            }`}
-        ></div>
-        <div
-          className={`absolute w-96 h-96 rounded-full blur-3xl transition-all duration-1000 ease-out`}
+          className="absolute w-96 h-96 rounded-full blur-3xl transition-all duration-1000 ease-out"
           style={{
             left: mousePosition.x - 192,
             top: mousePosition.y - 192,
-            background: isDarkMode
-              ? `radial-gradient(circle, ${logoGreen}20, transparent 70%)`
-              : `radial-gradient(circle, ${logoGreen}10, transparent 70%)`,
+            background: `radial-gradient(circle, ${colors.secondaryBlue}15, transparent 70%)`,
           }}
         ></div>
       </div>
 
-      {/* Navigation */}
-      <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+      {/* Navigation (updated without dark mode props) */}
+      <Navbar />
 
       {/* Hero Section */}
-      <section className="relative pt-24">
+      <motion.section
+        className="relative pt-32 pb-16"
+        initial="hidden"
+        animate="visible"
+        variants={fadeInUp}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1
-              className={`text-6xl lg:text-7xl font-bold leading-tight mb-8 ${themeClasses.text}`}
-            >
+            <h1 className="text-6xl lg:text-7xl font-bold leading-tight mb-8 text-[#123E56]">
               About
-              <span style={{ color: logoGreen }}> MAVHU</span>
+              <span style={{ color: colors.goldAccent }}> MAVHU</span>
             </h1>
-            <p
-              className={`text-xl ${themeClasses.textSecondary} mb-10 leading-relaxed max-w-4xl mx-auto`}
-            >
-              MAVHU is an Africa-focused climate data and verification company building
-              the foundational data infrastructure required for credible climate action.
+            <p className="text-xl text-[#123E56]/80 leading-relaxed max-w-4xl mx-auto">
+              MAVHU is Africa's climate data infrastructure company, building verified, sovereign,
+              and locally grounded environmental intelligence systems for agriculture, carbon markets,
+              and supply chains.
             </p>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Mission & Vision Section */}
-      <section className="py-16 relative">
+      <motion.section
+        className="py-16 relative"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-50px" }}
+        variants={staggerContainer}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12">
             {/* Mission */}
-            <div
-              className={`${themeClasses.cardBg} backdrop-blur-xl rounded-3xl p-8 border ${themeClasses.border} hover:${themeClasses.borderHover} transition-all duration-300 shadow-xl ${isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
-                }`}
+            <motion.div
+              variants={cardVariants}
+              className="bg-white backdrop-blur-xl rounded-3xl p-8 border border-[#DCE7E8] hover:border-[#1F5C73]/40 transition-all duration-300 shadow-xl shadow-gray-200/50"
             >
               <div className="flex items-center mb-6">
                 <div
                   className="w-16 h-16 rounded-xl flex items-center justify-center mr-6"
                   style={{
-                    backgroundColor: `${logoGreen}${isDarkMode ? '30' : '20'}`,
-                    border: `1px solid ${logoGreen}${isDarkMode ? '40' : '30'}`
+                    backgroundColor: `${colors.secondaryBlue}10`,
+                    border: `1px solid ${colors.secondaryBlue}20`,
                   }}
                 >
-                  <Target className="w-8 h-8" style={{ color: logoGreen }} />
+                  <Target className="w-8 h-8" style={{ color: colors.secondaryBlue }} />
                 </div>
-                <h2 className={`text-3xl font-bold ${themeClasses.text}`}>
-                  Our Mission
-                </h2>
+                <h2 className="text-3xl font-bold text-[#123E56]">Our Mission</h2>
               </div>
-              <p
-                className={`${themeClasses.textSecondary} leading-relaxed mb-6 text-lg`}
-              >
-                To make African climate action measurable, verifiable, and investible.
+              <p className="text-[#123E56]/80 leading-relaxed mb-6 text-lg">
+                To make climate action across Africa measurable, verifiable, and sovereign
+                through infrastructure-grade data systems rooted in local ecosystems,
+                institutions, and commodity value chains.
               </p>
-              <p className={`${themeClasses.textMuted} leading-relaxed`}>
-                We're building the data infrastructure that transforms climate initiatives
-                from fragmented efforts into credible, investible opportunities that drive
-                real impact across the continent.
-              </p>
-            </div>
+            </motion.div>
 
             {/* Vision */}
-            <div
-              className={`${themeClasses.cardBg} backdrop-blur-xl rounded-3xl p-8 border ${themeClasses.border} hover:${themeClasses.borderHover} transition-all duration-300 shadow-xl ${isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
-                }`}
+            <motion.div
+              variants={cardVariants}
+              className="bg-white backdrop-blur-xl rounded-3xl p-8 border border-[#DCE7E8] hover:border-[#1F5C73]/40 transition-all duration-300 shadow-xl shadow-gray-200/50"
             >
               <div className="flex items-center mb-6">
                 <div
                   className="w-16 h-16 rounded-xl flex items-center justify-center mr-6"
                   style={{
-                    backgroundColor: `${logoYellow}${isDarkMode ? '30' : '20'}`,
-                    border: `1px solid ${logoYellow}${isDarkMode ? '40' : '30'}`
+                    backgroundColor: `${colors.goldAccent}10`,
+                    border: `1px solid ${colors.goldAccent}20`,
                   }}
                 >
-                  <Globe className="w-8 h-8" style={{ color: logoYellow }} />
+                  <Globe className="w-8 h-8" style={{ color: colors.goldAccent }} />
                 </div>
-                <h2 className={`text-3xl font-bold ${themeClasses.text}`}>
-                  Our Vision
-                </h2>
+                <h2 className="text-3xl font-bold text-[#123E56]">Our Vision</h2>
               </div>
-              <p
-                className={`${themeClasses.textSecondary} leading-relaxed mb-6 text-lg`}
-              >
+              <p className="text-[#123E56]/80 leading-relaxed mb-6 text-lg">
                 To become Africa's trusted climate data partner, enabling transparent,
                 data-driven climate action across the continent.
               </p>
-              <p className={`${themeClasses.textMuted} leading-relaxed`}>
+              <p className="text-[#123E56]/60 leading-relaxed">
                 We envision a future where every climate initiative in Africa is backed by
                 verified, localized data that builds trust, attracts investment, and ensures
                 sustainable impact for generations to come.
               </p>
-            </div>
+            </motion.div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      {/* The Problem Section */}
-      <section className="py-16 relative">
+      {/* The Challenge Section (updated text) */}
+      <motion.section
+        className="py-16 relative"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-50px" }}
+        variants={fadeInUp}
+      >
         <div
           className="absolute inset-0"
           style={{
-            background: isDarkMode
-              ? `linear-gradient(to right, ${logoGreen}10, ${logoYellow}10)`
-              : `linear-gradient(to right, ${logoGreen}05, ${logoYellow}05)`,
+            background: `linear-gradient(to right, ${colors.secondaryBlue}05, ${colors.goldAccent}05)`,
           }}
         ></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-16">
-            <h2 className={`text-5xl font-bold ${themeClasses.text} mb-6`}>
+            <h2 className="text-5xl font-bold text-[#123E56] mb-6">
               The
-              <span style={{ color: logoGreen }}> Challenge</span>
+              <span style={{ color: colors.goldAccent }}> Challenge</span>
             </h2>
           </div>
 
-          <div className={`${themeClasses.cardBg} backdrop-blur-xl rounded-3xl p-8 border ${themeClasses.border} shadow-xl ${isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
-            }`}>
+          <div className="bg-white backdrop-blur-xl rounded-3xl p-8 border border-[#DCE7E8] shadow-xl shadow-gray-200/50">
             <div className="flex items-start mb-8">
               <div
                 className="w-12 h-12 rounded-lg flex items-center justify-center mr-6 flex-shrink-0"
                 style={{
-                  backgroundColor: `${logoGreen}${isDarkMode ? '30' : '20'}`,
-                  border: `1px solid ${logoGreen}${isDarkMode ? '40' : '30'}`
+                  backgroundColor: `${colors.secondaryBlue}10`,
+                  border: `1px solid ${colors.secondaryBlue}20`,
                 }}
               >
-                <Eye className="w-6 h-6" style={{ color: logoGreen }} />
+                <Eye className="w-6 h-6" style={{ color: colors.secondaryBlue }} />
               </div>
               <div>
-                <h3 className={`text-3xl font-bold ${themeClasses.text} mb-4`}>
-                  The Problem
-                </h3>
-                <p className={`${themeClasses.textSecondary} leading-relaxed text-lg`}>
-                  Across Africa, climate initiatives are constrained by fragmented, inconsistent,
-                  or unverifiable data — limiting confidence, decision-making, and long-term impact.
+                <h3 className="text-3xl font-bold text-[#123E56] mb-4">The Problem</h3>
+                <p className="text-[#123E56]/80 leading-relaxed text-lg">
+                  Across Africa, climate action is often constrained by fragmented, unverifiable,
+                  and externally sourced datasets that do not adequately reflect local land realities.
+                  This weakens climate finance integrity, slows adaptation planning, and limits
+                  enterprise decision-making.
                 </p>
               </div>
             </div>
@@ -327,41 +313,43 @@ const AboutPage = () => {
               ].map((item, index) => (
                 <div
                   key={index}
-                  className={`${themeClasses.cardBgAlt} backdrop-blur-xl rounded-xl p-6 border ${themeClasses.border} transition-all duration-300`}
+                  className="bg-white/80 backdrop-blur-xl rounded-xl p-6 border border-[#DCE7E8] transition-all duration-300 hover:border-[#1F5C73]/40"
                 >
                   <div className="flex items-center mb-4">
                     <div
                       className="p-2 rounded-lg mr-3"
                       style={{
-                        backgroundColor: `${logoGreen}${isDarkMode ? '20' : '10'}`,
-                        border: `1px solid ${logoGreen}${isDarkMode ? '30' : '20'}`
+                        backgroundColor: `${colors.secondaryBlue}10`,
+                        border: `1px solid ${colors.secondaryBlue}20`,
                       }}
                     >
-                      <div style={{ color: logoGreen }}>{item.icon}</div>
+                      <div style={{ color: colors.secondaryBlue }}>{item.icon}</div>
                     </div>
-                    <h4 className={`text-lg font-semibold ${themeClasses.text}`}>
-                      {item.title}
-                    </h4>
+                    <h4 className="text-lg font-semibold text-[#123E56]">{item.title}</h4>
                   </div>
-                  <p className={`${themeClasses.textMuted} text-sm`}>
-                    {item.description}
-                  </p>
+                  <p className="text-[#123E56]/60 text-sm">{item.description}</p>
                 </div>
               ))}
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      {/* Our Approach Section */}
-      <section className="py-24 relative">
+      {/* Our Approach Section (with specific card backgrounds and left borders) */}
+      <motion.section
+        className="py-24 relative"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-50px" }}
+        variants={fadeInUp}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-20">
-            <h2 className={`text-5xl font-bold ${themeClasses.text} mb-6`}>
+            <h2 className="text-5xl font-bold text-[#123E56] mb-6">
               Our
-              <span style={{ color: logoGreen }}> Approach</span>
+              <span style={{ color: colors.goldAccent }}> Approach</span>
             </h2>
-            <p className={`text-xl ${themeClasses.textSecondary} max-w-3xl mx-auto`}>
+            <p className="text-xl text-[#123E56]/80 max-w-3xl mx-auto">
               We combine multiple technologies and methodologies to deliver climate data
               that is accurate, transparent, and usable.
             </p>
@@ -369,281 +357,201 @@ const AboutPage = () => {
 
           <div className="space-y-8">
             {approach.map((item, index) => (
-              <div
+              <motion.div
                 key={index}
-                className={`${themeClasses.cardBg} backdrop-blur-xl rounded-3xl p-8 border ${themeClasses.border} hover:${themeClasses.borderHover} transition-all duration-300 shadow-lg ${isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
-                  }`}
+                variants={cardVariants}
+                whileHover={{ x: 8, transition: { duration: 0.2 } }}
+                className="rounded-2xl p-8 transition-all duration-300 shadow-md"
+                style={{
+                  background: item.bgColor,
+                  borderLeft: `4px solid ${item.borderColor}`,
+                }}
               >
                 <div className="flex flex-col md:flex-row items-start md:items-center">
                   <div
                     className="w-20 h-20 rounded-xl flex items-center justify-center mr-8 mb-6 md:mb-0"
                     style={{
-                      backgroundColor: `${item.color}${isDarkMode ? '30' : '20'}`,
-                      border: `1px solid ${item.color}${isDarkMode ? '40' : '30'}`
+                      backgroundColor: `${item.textColor}15`,
+                      border: `1px solid ${item.textColor}30`,
                     }}
                   >
-                    <div style={{ color: item.color }}>{item.icon}</div>
+                    <div style={{ color: item.textColor }}>{item.icon}</div>
                   </div>
                   <div className="flex-1">
-                    <h3 className={`text-3xl font-bold ${themeClasses.text} mb-4`}>
+                    <h3
+                      className="text-3xl font-bold mb-4"
+                      style={{ color: item.textColor }}
+                    >
                       {item.title}
                     </h3>
-                    <p className={`${themeClasses.textSecondary} leading-relaxed`}>
+                    <p className="text-[#123E56]/80 leading-relaxed">
                       {item.description}
                     </p>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
-
-          {/* Our Methodology Grid */}
-          <div className="mt-20">
-            <h3 className={`text-4xl font-bold ${themeClasses.text} mb-12 text-center`}>
-              Our Integrated
-              <span style={{ color: logoGreen }}> Methodology</span>
-            </h3>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[
-                {
-                  title: "Geospatial Data",
-                  description: "Satellite imagery and remote sensing for comprehensive coverage",
-                  icon: <Satellite className="w-6 h-6" />,
-                },
-                {
-                  title: "Automated MRV",
-                  description: "Machine learning-powered measurement, reporting and verification",
-                  icon: <Cpu className="w-6 h-6" />,
-                },
-                {
-                  title: "Field Validation",
-                  description: "On-ground verification ensuring data accuracy and relevance",
-                  icon: <Map className="w-6 h-6" />,
-                },
-                {
-                  title: "Global Standards",
-                  description: "Alignment with international climate reporting frameworks",
-                  icon: <BarChart3 className="w-6 h-6" />,
-                },
-              ].map((item, index) => (
-                <div
-                  key={index}
-                  className={`${themeClasses.cardBgAlt} backdrop-blur-xl rounded-xl p-6 border ${themeClasses.border} transition-all duration-300 hover:${themeClasses.borderHover} shadow-md ${isDarkMode ? "shadow-black/10" : "shadow-gray-200/30"
-                    }`}
-                >
-                  <div className="flex items-center mb-4">
-                    <div
-                      className="p-2 rounded-lg mr-3"
-                      style={{
-                        backgroundColor: `${logoGreen}${isDarkMode ? '20' : '10'}`,
-                        border: `1px solid ${logoGreen}${isDarkMode ? '30' : '20'}`
-                      }}
-                    >
-                      <div style={{ color: logoGreen }}>{item.icon}</div>
-                    </div>
-                    <h4 className={`text-lg font-semibold ${themeClasses.text}`}>
-                      {item.title}
-                    </h4>
-                  </div>
-                  <p className={`${themeClasses.textMuted} text-sm`}>
-                    {item.description}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Our Values Section */}
-      <section className="py-24 relative">
+      <motion.section
+        className="py-24 relative"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-50px" }}
+        variants={fadeInUp}
+      >
         <div
           className="absolute inset-0"
           style={{
-            background: isDarkMode
-              ? `linear-gradient(to bottom, transparent, ${logoGreen}05)`
-              : `linear-gradient(to bottom, transparent, ${logoGreen}02)`,
+            background: `linear-gradient(to bottom, transparent, ${colors.secondaryBlue}05)`,
           }}
         ></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-20">
-            <h2 className={`text-5xl font-bold ${themeClasses.text} mb-6`}>
+            <h2 className="text-5xl font-bold text-[#123E56] mb-6">
               Our
-              <span style={{ color: logoGreen }}> Values</span>
+              <span style={{ color: colors.goldAccent }}> Values</span>
             </h2>
-            <p className={`text-xl ${themeClasses.textSecondary} max-w-3xl mx-auto`}>
+            <p className="text-xl text-[#123E56]/80 max-w-3xl mx-auto">
               The principles that define how we work and what we stand for
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <motion.div
+            className="grid md:grid-cols-2 lg:grid-cols-4 gap-8"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
             {values.map((value, index) => (
-              <div
+              <motion.div
                 key={index}
-                className={`${themeClasses.cardBg} backdrop-blur-xl rounded-2xl p-8 border ${themeClasses.border} hover:${themeClasses.borderHover} transition-all duration-300 hover:transform hover:scale-105 text-center shadow-lg ${isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
-                  }`}
+                variants={cardVariants}
+                whileHover={{ y: -8, transition: { duration: 0.2 } }}
+                className="bg-white backdrop-blur-xl rounded-2xl p-8 border border-[#DCE7E8] hover:border-[#1F5C73]/40 transition-all duration-300 text-center shadow-lg shadow-gray-200/50"
               >
                 <div
                   className="w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-6"
                   style={{
-                    backgroundColor: `${index === 2 ? logoYellow : logoGreen}${isDarkMode ? '30' : '20'}`,
-                    border: `1px solid ${index === 2 ? logoYellow : logoGreen}${isDarkMode ? '40' : '30'}`
+                    backgroundColor: `${value.color}10`,
+                    border: `1px solid ${value.color}20`,
                   }}
                 >
-                  <div style={{ color: index === 2 ? logoYellow : logoGreen }}>{value.icon}</div>
+                  <div style={{ color: value.color }}>{value.icon}</div>
                 </div>
-                <h3 className={`text-2xl font-bold ${themeClasses.text} mb-4`}>
-                  {value.title}
-                </h3>
-                <p className={`${themeClasses.textSecondary} leading-relaxed`}>
-                  {value.description}
-                </p>
-              </div>
+                <h3 className="text-2xl font-bold text-[#123E56] mb-4">{value.title}</h3>
+                <p className="text-[#123E56]/70 leading-relaxed">{value.description}</p>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
-      </section>
-
-      {/* Team Section */}
-      <section className="py-24 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <h2 className={`text-5xl font-bold ${themeClasses.text} mb-6`}>
-              Meet Our
-              <span style={{ color: logoGreen }}> Leadership</span>
-            </h2>
-            <p className={`text-xl ${themeClasses.textSecondary} max-w-3xl mx-auto`}>
-              The experts driving MAVHU's mission to transform African climate data
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {teamMembers.map((member, index) => (
-              <div
-                key={index}
-                className={`${themeClasses.cardBg} backdrop-blur-xl rounded-2xl overflow-hidden border ${themeClasses.border} hover:${themeClasses.borderHover} transition-all duration-300 hover:transform hover:scale-105 group shadow-lg ${isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
-                  }`}
-              >
-                <div className="relative h-64 overflow-hidden">
-                  <img
-                    src={member.image}
-                    alt={member.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  <div
-                    className="absolute inset-0"
-                    style={{
-                      background: `linear-gradient(to top, ${isDarkMode ? 'rgba(0,0,0,0.7)' : 'rgba(255,255,255,0.7)'}, transparent 50%)`
-                    }}
-                  ></div>
-                </div>
-                <div className="p-6">
-                  <h3 className={`text-xl font-bold ${themeClasses.text} mb-2`}>
-                    {member.name}
-                  </h3>
-                  <p className="font-semibold mb-3" style={{ color: logoGreen }}>
-                    {member.role}
-                  </p>
-                  <p className={`${themeClasses.textMuted} text-sm leading-relaxed`}>
-                    {member.bio}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      </motion.section>
 
       {/* Contact Information */}
-      <section className="py-16 relative">
+      <motion.section
+        className="py-16 relative"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-50px" }}
+        variants={fadeInUp}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className={`text-5xl font-bold ${themeClasses.text} mb-6`}>
+            <h2 className="text-5xl font-bold text-[#123E56] mb-6">
               Get In
-              <span style={{ color: logoGreen }}> Touch</span>
+              <span style={{ color: colors.goldAccent }}> Touch</span>
             </h2>
-            <p className={`text-xl ${themeClasses.textSecondary} max-w-3xl mx-auto`}>
+            <p className="text-xl text-[#123E56]/80 max-w-3xl mx-auto">
               Ready to transform your climate initiatives with verified data? We're here to help.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 mb-12">
+          <motion.div
+            className="grid md:grid-cols-3 gap-8 mb-12"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
             {[
               {
                 icon: <MapPin className="w-8 h-8" />,
                 title: "Visit Us",
                 detail: "123 Innovation Drive, Harare, Zimbabwe",
-                color: logoGreen,
+                color: colors.secondaryBlue,
               },
               {
                 icon: <Phone className="w-8 h-8" />,
                 title: "Call Us",
                 detail: "+263 78 969 3725",
-                color: logoGreen,
+                color: colors.secondaryBlue,
               },
               {
                 icon: <Mail className="w-8 h-8" />,
                 title: "Email Us",
                 detail: "info@mavhu.com",
-                color: logoYellow,
+                color: colors.goldAccent,
               },
             ].map((contact, index) => (
-              <div
+              <motion.div
                 key={index}
-                className={`${themeClasses.cardBg} backdrop-blur-xl rounded-2xl p-8 border ${themeClasses.border} hover:${themeClasses.borderHover} transition-all duration-300 text-center group hover:transform hover:scale-105 shadow-lg ${isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
-                  }`}
+                variants={cardVariants}
+                whileHover={{ y: -8, transition: { duration: 0.2 } }}
+                className="bg-white backdrop-blur-xl rounded-2xl p-8 border border-[#DCE7E8] hover:border-[#1F5C73]/40 transition-all duration-300 text-center shadow-lg shadow-gray-200/50"
               >
                 <div
                   className="w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-6"
                   style={{
-                    backgroundColor: `${contact.color}${isDarkMode ? '30' : '20'}`,
-                    border: `1px solid ${contact.color}${isDarkMode ? '40' : '30'}`
+                    backgroundColor: `${contact.color}10`,
+                    border: `1px solid ${contact.color}20`,
                   }}
                 >
                   <div style={{ color: contact.color }}>{contact.icon}</div>
                 </div>
-                <h3 className={`text-xl font-bold ${themeClasses.text} mb-3`}>
-                  {contact.title}
-                </h3>
-                <p className={`${themeClasses.textSecondary} text-lg`}>
-                  {contact.detail}
-                </p>
-              </div>
+                <h3 className="text-xl font-bold text-[#123E56] mb-3">{contact.title}</h3>
+                <p className="text-[#123E56]/70 text-lg">{contact.detail}</p>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
-      </section>
+      </motion.section>
 
       {/* CTA Section */}
-      <section className="py-32 relative">
+      <motion.section
+        className="py-32 relative"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-50px" }}
+        variants={fadeInUp}
+      >
         <div
           className="absolute inset-0"
           style={{
-            background: isDarkMode
-              ? `linear-gradient(to right, ${logoGreen}20, ${logoYellow}20)`
-              : `linear-gradient(to right, ${logoGreen}10, ${logoYellow}10)`,
+            background: `linear-gradient(to right, ${colors.secondaryBlue}08, ${colors.goldAccent}08)`,
           }}
         ></div>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <h2 className={`text-6xl font-bold ${themeClasses.text} mb-8`}>
+          <h2 className="text-6xl font-bold text-[#123E56] mb-8">
             Ready to Transform
             <br />
-            <span style={{ color: logoGreen }}>African Climate Action?</span>
+            <span style={{ color: colors.goldAccent }}>African Climate Action?</span>
           </h2>
-          <p className={`text-2xl ${themeClasses.textSecondary} mb-12 leading-relaxed`}>
+          <p className="text-2xl text-[#123E56]/80 mb-12 leading-relaxed">
             Join governments, financial institutions, and organizations across Africa
             who trust MAVHU for accurate, verified climate intelligence.
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <button
-              onClick={() => window.location.href = "/request-demo"}
+              onClick={() => (window.location.href = "/request-demo")}
               className="relative py-5 rounded-2xl text-lg font-bold transition-all transform hover:scale-105 shadow-xl overflow-hidden group"
               style={{
-                background: `linear-gradient(to right, ${logoYellow}, ${isDarkMode ? '#FFC107' : '#DAA520'})`,
-                color: isDarkMode ? '#000000' : '#000000',
-                boxShadow: isDarkMode
-                  ? `0 20px 40px ${logoYellow}30`
-                  : `0 20px 40px ${logoYellow}20`
+                background: `linear-gradient(to right, ${colors.goldAccent}, #D4A82E)`,
+                color: "#FFFFFF",
+                boxShadow: `0 20px 40px ${colors.goldAccent}30`,
               }}
             >
               <span className="relative z-10 flex items-center justify-center px-12">
@@ -653,52 +561,33 @@ const AboutPage = () => {
               <div
                 className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                 style={{
-                  background: `linear-gradient(to right, ${logoYellow}CC, ${isDarkMode ? '#FFC107CC' : '#DAA520CC'})`
+                  background: `linear-gradient(to right, ${colors.goldAccent}CC, #C49F2A)`,
                 }}
               ></div>
             </button>
             <button
-              onClick={() => window.location.href = "/partner"}
-              className={`border-2 ${isDarkMode
-                  ? "border-white/30 hover:border-white/50 text-white hover:bg-white/10"
-                  : "border-gray-300 hover:border-gray-500 text-gray-900 hover:bg-gray-100/50"
-                } px-12 py-5 rounded-2xl text-lg font-semibold transition-all backdrop-blur-sm shadow-lg ${isDarkMode ? "shadow-black/20" : "shadow-gray-200/50"
-                }`}
+              onClick={() => (window.location.href = "/partner")}
+              className="border-2 border-[#DCE7E8] hover:border-[#1F5C73]/40 text-[#123E56] hover:bg-[#1F5C73]/5 px-12 py-5 rounded-2xl text-lg font-semibold transition-all backdrop-blur-sm shadow-lg shadow-gray-200/50"
             >
               Partner With Us
             </button>
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      {/* Footer */}
-      <Footer isDarkMode={isDarkMode} themeClasses={themeClasses} />
+      {/* Footer (updated without dark mode props) */}
+      <Footer />
 
-      {/* Add custom style tag for dynamic colors */}
+      {/* Global styles */}
       <style>{`
-        :root {
-          --logo-green: ${logoGreen};
-          --logo-yellow: ${logoYellow};
+        @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&display=swap');
+        
+        * {
+          font-family: 'Inter', system-ui, -apple-system, sans-serif;
         }
         
         button:hover {
           transition: all 0.3s ease;
-        }
-        
-        .bg-logo-green {
-          background-color: ${logoGreen};
-        }
-        
-        .bg-logo-yellow {
-          background-color: ${logoYellow};
-        }
-        
-        .text-logo-green {
-          color: ${logoGreen};
-        }
-        
-        .text-logo-yellow {
-          color: ${logoYellow};
         }
       `}</style>
     </div>
