@@ -118,17 +118,9 @@ const Contact = () => {
       available: "24/7 Response",
     },
     {
-      icon: <Phone className="w-8 h-8" />,
-      title: "Call Us",
-      details: ["+263 78 969 3725", "+263 71 506 3418"],
-      description: "Speak directly with our climate data specialists",
-      color: colors.secondaryBlue,
-      available: "Mon-Fri: 8AM-6PM, Sat: 9AM-2PM",
-    },
-    {
       icon: <MapPin className="w-8 h-8" />,
       title: "Our Office",
-      details: ["Harare, Zimbabwe", "Africa Headquarters"],
+      details: ["Harare, Zimbabwe"],
       description: "Schedule a meeting with our team for personalized solutions",
       color: colors.goldAccent,
       available: "Mon-Fri: 8AM-5PM",
@@ -283,42 +275,41 @@ const Contact = () => {
           </div>
 
           <motion.div
-            className="grid md:grid-cols-2 lg:grid-cols-4 gap-8"
+            className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-          >
-            {contactMethods.map((method, index) => (
-              <motion.div
-                key={index}
-                variants={cardVariants}
-                whileHover={{ y: -8, transition: { duration: 0.2 } }}
-                className="bg-white backdrop-blur-xl rounded-2xl p-8 border border-[#DCE7E8] hover:border-[#1F5C73]/40 transition-all duration-300 text-center shadow-lg shadow-gray-200/50"
+          >{contactMethods.slice(0, 3).map((method, index) => (
+            <motion.div
+              key={method.id || index}          // prefer unique id over index
+              variants={cardVariants}
+              whileHover={{ y: -8, transition: { duration: 0.2 } }}
+              className="bg-white backdrop-blur-xl rounded-2xl p-8 border border-[#DCE7E8] hover:border-[#1F5C73]/40 transition-all duration-300 text-center shadow-lg shadow-gray-200/50"
+            >
+              <div
+                className="w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-6"
+                style={{
+                  backgroundColor: `${method.color}10`,
+                  border: `1px solid ${method.color}20`,
+                }}
               >
-                <div
-                  className="w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-6"
-                  style={{
-                    backgroundColor: `${method.color}10`,
-                    border: `1px solid ${method.color}20`,
-                  }}
-                >
-                  <div style={{ color: method.color }}>{method.icon}</div>
-                </div>
-                <h3 className="text-xl font-bold text-[#123E56] mb-3">{method.title}</h3>
-                <div className="space-y-1 mb-4">
-                  {method.details.map((detail, idx) => (
-                    <p key={idx} className="text-[#123E56]/80 font-semibold">
-                      {detail}
-                    </p>
-                  ))}
-                </div>
-                <p className="text-[#123E56]/60 text-sm mb-3">{method.description}</p>
-                <p className="text-sm font-medium" style={{ color: colors.goldAccent }}>
-                  {method.available}
-                </p>
-              </motion.div>
-            ))}
+                <div style={{ color: method.color }}>{method.icon}</div>
+              </div>
+              <h3 className="text-xl font-bold text-[#123E56] mb-3">{method.title}</h3>
+              <div className="space-y-1 mb-4">
+                {method.details.map((detail, idx) => (
+                  <p key={idx} className="text-[#123E56]/80 font-semibold">
+                    {detail}
+                  </p>
+                ))}
+              </div>
+              <p className="text-[#123E56]/60 text-sm mb-3">{method.description}</p>
+              <p className="text-sm font-medium" style={{ color: colors.goldAccent }}>
+                {method.available}
+              </p>
+            </motion.div>
+          ))}
           </motion.div>
         </div>
       </motion.section>
@@ -540,8 +531,8 @@ const Contact = () => {
                     </div>
                     <div>
                       <h4 className="font-semibold text-[#123E56] mb-1">Phone</h4>
-                      <p className="text-[#123E56]/80">+263 78 969 3725</p>
-                      <p className="text-[#123E56]/60 text-sm">+263 71 506 3418</p>
+                      <p className="text-[#123E56]/80">+60 16-654 4128</p>
+                      <p className="text-[#123E56]/60 text-sm">+263 77 280 7864</p>
                     </div>
                   </div>
                   <div className="flex items-start">
@@ -557,7 +548,6 @@ const Contact = () => {
                     <div>
                       <h4 className="font-semibold text-[#123E56] mb-1">Location</h4>
                       <p className="text-[#123E56]/80">Harare, Zimbabwe</p>
-                      <p className="text-[#123E56]/60 text-sm">Africa Headquarters</p>
                     </div>
                   </div>
                 </div>
