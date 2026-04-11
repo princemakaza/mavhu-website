@@ -1,9 +1,20 @@
 import React from "react";
-import { Star, Shield, Clock, Mail, ExternalLink, MapPin, Phone } from "lucide-react";
+import {
+  Star,
+  Shield,
+  Clock,
+  Mail,
+  ExternalLink,
+  MapPin,
+  Phone,
+  CheckCircle,
+  BarChart3,
+  Database,
+  Smartphone,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
-// Import the logo from assets
 import LogoImage from "../assets/logo.png";
 
 // Color palette (matching Navbar and brand guidelines)
@@ -15,6 +26,64 @@ const colors = {
   softGrey: "#DCE7E8",
   white: "#FFFFFF",
 };
+
+// Services data – must match the array used in Navbar
+const servicesData = [
+  {
+    title: "Verification-as-a-Service (VaaS)",
+    description:
+      "MRV workflows, field verification, and carbon market compliance solutions that support project developers, registries, and climate finance stakeholders.",
+    useCases: ["carbon credits", "verification", "reporting", "audit trails"],
+    icon: <CheckCircle className="w-7 h-7" />,
+    color: colors.secondaryBlue,
+    hoverDetail:
+      "End-to-end verification infrastructure covering baseline assessment, monitoring protocol design, field data collection, algorithmic cross-validation, and audit-trail generation. Designed to meet Verra VCS, Gold Standard, and UNFCCC MRV requirements.",
+    route: "/services/vaas",
+  },
+  {
+    title: "Data & Dashboard Solutions",
+    description:
+      "Enterprise-grade ESG dashboards, environmental data feeds, and automated reporting tools for operational and sustainability teams.",
+    useCases: ["ESG reporting", "supply-chain monitoring", "risk intelligence"],
+    icon: <BarChart3 className="w-7 h-7" />,
+    color: colors.goldAccent,
+    hoverDetail:
+      "Configurable SaaS dashboards delivering real-time environmental KPIs, automated alert systems, and one-click report generation. Integrates with existing BI stacks via API and supports multi-jurisdiction ESG disclosure formats.",
+    route: "/services/dashboard",
+  },
+  {
+    title: "Climate APIs",
+    description:
+      "Plug-and-play climate and environmental intelligence APIs for integration into enterprise systems, finance platforms, and digital products.",
+    useCases: [
+      "risk scoring",
+      "emissions data",
+      "geospatial layers",
+      "compliance systems",
+    ],
+    icon: <Database className="w-7 h-7" />,
+    color: "#2E7D6B",
+    hoverDetail:
+      "RESTful and GraphQL API endpoints covering land-use change, soil carbon, climate risk, MRV status, and ESG metrics. Comprehensive developer documentation, sandbox environment, and enterprise SLAs available.",
+    route: "/services/api",
+  },
+  {
+    title: "Farm-Level Compliance & Training",
+    description:
+      "Field-level data capture, grower compliance workflows, and training support for smallholder farmer programs and off-taker ecosystems.",
+    useCases: [
+      "traceability",
+      "grower onboarding",
+      "field compliance",
+      "regenerative adoption",
+    ],
+    icon: <Smartphone className="w-7 h-7" />,
+    color: colors.secondaryBlue,
+    hoverDetail:
+      "Mobile-first farmer data capture tools supporting offline field use, GPS-referenced plot mapping, and compliance checklists. Combined with structured training curricula covering climate-smart practices and digital literacy.",
+    route: "/services/farm",
+  },
+];
 
 const Footer: React.FC = () => {
   const navigate = useNavigate();
@@ -42,13 +111,12 @@ const Footer: React.FC = () => {
     hover: { scale: 1.02, transition: { duration: 0.2 } },
   };
 
-  // Render logo text with upside-down 'A' (∀) in "AFRICA"
   const renderLogoText = () => (
-    <span className="text-2xl font-bold tracking-tight" style={{ color: colors.primaryDark }}>
-      MΛVHU{" "}
-      <span style={{ color: colors.goldAccent }}>
-        AFRICA
-      </span>
+    <span
+      className="text-2xl font-bold tracking-tight"
+      style={{ color: colors.primaryDark }}
+    >
+      MΛVHU <span style={{ color: colors.goldAccent }}>AFRICA</span>
     </span>
   );
 
@@ -70,14 +138,17 @@ const Footer: React.FC = () => {
           <motion.div variants={itemVariants} className="col-span-1">
             <div className="flex items-start mb-6">
               <div className="flex-shrink-0">
-                <img src={LogoImage} alt="MAVHU AFRICA Logo" className="h-16 w-auto" />
+                <img
+                  src={LogoImage}
+                  alt="MAVHU AFRICA Logo"
+                  className="h-16 w-auto"
+                />
               </div>
-              <div className="ml-3">
-                {renderLogoText()}
-              </div>
+              <div className="ml-3">{renderLogoText()}</div>
             </div>
             <p className="text-[#123E56]/80 mb-6 max-w-md leading-relaxed">
-              Transforming climate data into trusted, verified, and locally rooted intelligence for African climate action.
+              Transforming climate data into trusted, verified, and locally
+              rooted intelligence for African climate action.
             </p>
             <div className="flex flex-col space-y-3">
               {[
@@ -118,24 +189,19 @@ const Footer: React.FC = () => {
             </ul>
           </motion.div>
 
-          {/* Services */}
+          {/* Services - now using servicesData from navbar */}
           <motion.div variants={itemVariants}>
-            <h3 className="text-lg font-semibold text-[#123E56] mb-6">Services</h3>
+            <h3 className="text-lg font-semibold text-[#123E56] mb-6">Our Services</h3>
             <ul className="space-y-4">
-              {[
-                { name: "ESG Dashboard", path: "/services" },
-                { name: "Farmer Field App", path: "/services" },
-                { name: "Climate Data APIs", path: "/services" },
-                { name: "Climate Risk Intelligence", path: "/services" },
-              ].map((service, index) => (
+              {servicesData.map((service, index) => (
                 <li key={index}>
                   <motion.button
-                    onClick={() => navigate(service.path)}
-                    className="text-[#123E56]/70 hover:text-[#B89A2F] transition-colors duration-300 flex items-center"
+                    onClick={() => navigate(service.route)}
+                    className="text-[#123E56]/70 hover:text-[#B89A2F] transition-colors duration-300 flex items-center text-left"
                     variants={linkHoverVariants}
                     whileHover="hover"
                   >
-                    {service.name}
+                    {service.title}
                     <ExternalLink className="w-3 h-3 ml-2 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </motion.button>
                 </li>
@@ -147,7 +213,6 @@ const Footer: React.FC = () => {
           <motion.div variants={itemVariants}>
             <h3 className="text-lg font-semibold text-[#123E56] mb-6">Contact</h3>
             <ul className="space-y-4">
-              {/* Request Demo Button */}
               <li className="pt-2">
                 <motion.button
                   onClick={() => navigate("/request-demo")}
@@ -165,7 +230,6 @@ const Footer: React.FC = () => {
                   </span>
                 </motion.button>
               </li>
-              {/* Contact Information */}
               <li className="pt-4">
                 <div className="space-y-3">
                   <div className="flex items-center space-x-3">
@@ -173,12 +237,8 @@ const Footer: React.FC = () => {
                     <span className="text-[#123E56]/60 text-sm">info@mavhu.com</span>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <Phone className="w-4 h-4 text-[#123E56]/50" />
-                    <span className="text-[#123E56]/60 text-sm">+27 (0) 12 345 6789</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
                     <MapPin className="w-4 h-4 text-[#123E56]/50" />
-                    <span className="text-[#123E56]/60 text-sm">Pretoria, South Africa</span>
+                    <span className="text-[#123E56]/60 text-sm">Harare, Zimbabwe</span>
                   </div>
                 </div>
               </li>

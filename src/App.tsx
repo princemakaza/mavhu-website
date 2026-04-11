@@ -14,14 +14,32 @@ import CompanyManagementScreen from "./pages/User_Pages/mavhu_team/auth/dashboar
 import SoilHealthCarbonEmissionScreen from "./pages/User_Pages/mavhu_team/apis/soil_health_carbon_screen";
 import CropYieldScreen from "./pages/User_Pages/mavhu_team/apis/crop_yield_screen";
 import GhgEmissionScreen from "./pages/User_Pages/mavhu_team/apis/ghg_emission_screen";
+import RequestDemo from "./pages/User_Pages/Request_Demo";
+import VaasPage from "./pages/User_Pages/Vaas_Page";
+import DashboardPage from "./pages/User_Pages/dashboard_page";
+import ApiPage from "./pages/User_Pages/api_page";
+import FarmPage from "./pages/User_Pages/FarmPage";
+import SkyPage from "./pages/User_Pages/SkyPage";
+import EarthPage from "./pages/User_Pages/EarthPage";
+import AiPage from "./pages/User_Pages/AiPage";
+
+
 function App() {
   return (
     <Router>
       <Routes>
         {/* User Routes */}
         <Route path="/" element={<Landingpage />} />
+        <Route path="/sky" element={<SkyPage />} />
+        <Route path="/earth" element={<EarthPage />} />
+        <Route path="/ai" element={<AiPage />} />
         <Route path="/services" element={<ServicesPage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/request-demo" element={<RequestDemo />} />
+        <Route path="/services/vaas" element={<VaasPage />} />
+        <Route path="/services/dashboard" element={<DashboardPage />} />
+        <Route path="/services/api" element={<ApiPage />} />
+        <Route path="/services/farm" element={<FarmPage />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/pricing" element={<PricingPage />} />
         <Route path="/customer" element={<CustomerPage />} />
