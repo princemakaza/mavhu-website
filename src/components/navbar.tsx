@@ -225,38 +225,65 @@ const Navbar: React.FC = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-8">
-              {simpleNavItems.map((item, index) => {
-                const isActive = isActiveRoute(item.route);
-                return (
-                  <motion.button
-                    key={item.name}
-                    onClick={() => navigateToPage(item.route)}
-                    custom={index}
-                    initial="hidden"
-                    animate="visible"
-                    whileHover="hover"
-                    variants={menuItemVariants}
-                    className={`relative px-3 py-2 text-sm font-medium transition-colors duration-200 ${isActive
-                        ? `text-[${colors.goldAccent}]`
-                        : `text-[${colors.primaryDark}]/80 hover:text-[${colors.secondaryBlue}]`
-                      }`}
-                  >
-                    {item.name}
-                    {isActive && (
-                      <motion.div
-                        className="absolute bottom-0 left-0 right-0 h-0.5"
-                        style={{ backgroundColor: colors.goldAccent }}
-                        layoutId="activeTab"
-                        transition={{
-                          type: "spring",
-                          stiffness: 500,
-                          damping: 30,
-                        }}
-                      />
-                    )}
-                  </motion.button>
-                );
-              })}
+              {/* Home */}
+              <motion.button
+                key="home"
+                onClick={() => navigateToPage("/")}
+                custom={0}
+                initial="hidden"
+                animate="visible"
+                whileHover="hover"
+                variants={menuItemVariants}
+                className={`relative px-3 py-2 text-sm font-medium transition-colors duration-200 ${
+                  isActiveRoute("/")
+                    ? `text-[${colors.goldAccent}]`
+                    : `text-[${colors.primaryDark}]/80 hover:text-[${colors.secondaryBlue}]`
+                }`}
+              >
+                Home
+                {isActiveRoute("/") && (
+                  <motion.div
+                    className="absolute bottom-0 left-0 right-0 h-0.5"
+                    style={{ backgroundColor: colors.goldAccent }}
+                    layoutId="activeTab"
+                    transition={{
+                      type: "spring",
+                      stiffness: 500,
+                      damping: 30,
+                    }}
+                  />
+                )}
+              </motion.button>
+
+              {/* About */}
+              <motion.button
+                key="about"
+                onClick={() => navigateToPage("/about")}
+                custom={1}
+                initial="hidden"
+                animate="visible"
+                whileHover="hover"
+                variants={menuItemVariants}
+                className={`relative px-3 py-2 text-sm font-medium transition-colors duration-200 ${
+                  isActiveRoute("/about")
+                    ? `text-[${colors.goldAccent}]`
+                    : `text-[${colors.primaryDark}]/80 hover:text-[${colors.secondaryBlue}]`
+                }`}
+              >
+                About
+                {isActiveRoute("/about") && (
+                  <motion.div
+                    className="absolute bottom-0 left-0 right-0 h-0.5"
+                    style={{ backgroundColor: colors.goldAccent }}
+                    layoutId="activeTab"
+                    transition={{
+                      type: "spring",
+                      stiffness: 500,
+                      damping: 30,
+                    }}
+                  />
+                )}
+              </motion.button>
 
               {/* Services Dropdown */}
               <div className="relative" ref={dropdownRef}>
@@ -264,10 +291,11 @@ const Navbar: React.FC = () => {
                   onClick={() =>
                     setIsServicesDropdownOpen(!isServicesDropdownOpen)
                   }
-                  className={`relative px-3 py-2 text-sm font-medium transition-colors duration-200 flex items-center gap-1 ${isAnyServiceActive()
+                  className={`relative px-3 py-2 text-sm font-medium transition-colors duration-200 flex items-center gap-1 ${
+                    isAnyServiceActive()
                       ? `text-[${colors.goldAccent}]`
                       : `text-[${colors.primaryDark}]/80 hover:text-[${colors.secondaryBlue}]`
-                    }`}
+                  }`}
                   whileHover={{ scale: 1.02 }}
                 >
                   Services
@@ -304,13 +332,13 @@ const Navbar: React.FC = () => {
                       exit="exit"
                     >
                       <div className="py-2">
-                        {/* All Services (Overview) link */}
                         <motion.button
                           onClick={() => navigateToPage("/services")}
-                          className={`block w-full text-left px-4 py-3 text-sm transition-colors ${location.pathname === "/services"
+                          className={`block w-full text-left px-4 py-3 text-sm transition-colors ${
+                            location.pathname === "/services"
                               ? `bg-[${colors.goldAccent}]/10 text-[${colors.goldAccent}]`
                               : `text-[${colors.primaryDark}]/80 hover:bg-[${colors.lightBackground}]`
-                            }`}
+                          }`}
                           initial={{ opacity: 0, x: -10 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: 0 }}
@@ -324,17 +352,17 @@ const Navbar: React.FC = () => {
                           </div>
                         </motion.button>
 
-                        {/* Individual service items */}
                         {servicesData.map((service, idx) => {
                           const isActive = isActiveRoute(service.route);
                           return (
                             <motion.button
                               key={service.title}
                               onClick={() => navigateToPage(service.route)}
-                              className={`block w-full text-left px-4 py-3 text-sm transition-colors ${isActive
+                              className={`block w-full text-left px-4 py-3 text-sm transition-colors ${
+                                isActive
                                   ? `bg-[${colors.goldAccent}]/10 text-[${colors.goldAccent}]`
                                   : `text-[${colors.primaryDark}]/80 hover:bg-[${colors.lightBackground}]`
-                                }`}
+                              }`}
                               initial={{ opacity: 0, x: -10 }}
                               animate={{ opacity: 1, x: 0 }}
                               transition={{ delay: (idx + 1) * 0.03 }}
@@ -354,6 +382,36 @@ const Navbar: React.FC = () => {
                   )}
                 </AnimatePresence>
               </div>
+
+              {/* Contact (last) */}
+              <motion.button
+                key="contact"
+                onClick={() => navigateToPage("/contact")}
+                custom={2}
+                initial="hidden"
+                animate="visible"
+                whileHover="hover"
+                variants={menuItemVariants}
+                className={`relative px-3 py-2 text-sm font-medium transition-colors duration-200 ${
+                  isActiveRoute("/contact")
+                    ? `text-[${colors.goldAccent}]`
+                    : `text-[${colors.primaryDark}]/80 hover:text-[${colors.secondaryBlue}]`
+                }`}
+              >
+                Contact
+                {isActiveRoute("/contact") && (
+                  <motion.div
+                    className="absolute bottom-0 left-0 right-0 h-0.5"
+                    style={{ backgroundColor: colors.goldAccent }}
+                    layoutId="activeTab"
+                    transition={{
+                      type: "spring",
+                      stiffness: 500,
+                      damping: 30,
+                    }}
+                  />
+                )}
+              </motion.button>
             </div>
           </div>
 
@@ -389,25 +447,39 @@ const Navbar: React.FC = () => {
             }}
           >
             <div className="px-2 pt-2 pb-3 space-y-1">
-              {simpleNavItems.map((item, idx) => {
-                const isActive = isActiveRoute(item.route);
-                return (
-                  <motion.button
-                    key={item.name}
-                    onClick={() => navigateToPage(item.route)}
-                    className={`block w-full text-left px-3 py-2 rounded-lg text-base font-medium ${isActive
-                        ? `text-[${colors.goldAccent}] bg-[${colors.goldAccent}]/10`
-                        : `text-[${colors.primaryDark}]/80`
-                      }`}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: idx * 0.05 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    {item.name}
-                  </motion.button>
-                );
-              })}
+              {/* Home */}
+              <motion.button
+                key="mobile-home"
+                onClick={() => navigateToPage("/")}
+                className={`block w-full text-left px-3 py-2 rounded-lg text-base font-medium ${
+                  isActiveRoute("/")
+                    ? `text-[${colors.goldAccent}] bg-[${colors.goldAccent}]/10`
+                    : `text-[${colors.primaryDark}]/80`
+                }`}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                Home
+              </motion.button>
+
+              {/* About */}
+              <motion.button
+                key="mobile-about"
+                onClick={() => navigateToPage("/about")}
+                className={`block w-full text-left px-3 py-2 rounded-lg text-base font-medium ${
+                  isActiveRoute("/about")
+                    ? `text-[${colors.goldAccent}] bg-[${colors.goldAccent}]/10`
+                    : `text-[${colors.primaryDark}]/80`
+                }`}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.05 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                About
+              </motion.button>
 
               {/* Mobile Services Expandable Section */}
               <div>
@@ -415,10 +487,11 @@ const Navbar: React.FC = () => {
                   onClick={() =>
                     setIsMobileServicesExpanded(!isMobileServicesExpanded)
                   }
-                  className={`flex justify-between items-center w-full text-left px-3 py-2 rounded-lg text-base font-medium ${isAnyServiceActive()
+                  className={`flex justify-between items-center w-full text-left px-3 py-2 rounded-lg text-base font-medium ${
+                    isAnyServiceActive()
                       ? `text-[${colors.goldAccent}] bg-[${colors.goldAccent}]/10`
                       : `text-[${colors.primaryDark}]/80`
-                    }`}
+                  }`}
                   whileTap={{ scale: 0.98 }}
                 >
                   <span>Services</span>
@@ -438,13 +511,13 @@ const Navbar: React.FC = () => {
                       exit={{ opacity: 0, height: 0 }}
                       transition={{ duration: 0.2 }}
                     >
-                      {/* All Services (Overview) for mobile */}
                       <motion.button
                         onClick={() => navigateToPage("/services")}
-                        className={`block w-full text-left px-3 py-2 rounded-md text-sm ${location.pathname === "/services"
+                        className={`block w-full text-left px-3 py-2 rounded-md text-sm ${
+                          location.pathname === "/services"
                             ? `text-[${colors.goldAccent}] bg-[${colors.goldAccent}]/10`
                             : `text-[${colors.primaryDark}]/70`
-                          }`}
+                        }`}
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0 }}
@@ -459,10 +532,11 @@ const Navbar: React.FC = () => {
                           <motion.button
                             key={service.title}
                             onClick={() => navigateToPage(service.route)}
-                            className={`block w-full text-left px-3 py-2 rounded-md text-sm ${isActive
+                            className={`block w-full text-left px-3 py-2 rounded-md text-sm ${
+                              isActive
                                 ? `text-[${colors.goldAccent}] bg-[${colors.goldAccent}]/10`
                                 : `text-[${colors.primaryDark}]/70`
-                              }`}
+                            }`}
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: (idx + 1) * 0.03 }}
@@ -476,6 +550,23 @@ const Navbar: React.FC = () => {
                   )}
                 </AnimatePresence>
               </div>
+
+              {/* Contact (last on mobile) */}
+              <motion.button
+                key="mobile-contact"
+                onClick={() => navigateToPage("/contact")}
+                className={`block w-full text-left px-3 py-2 rounded-lg text-base font-medium ${
+                  isActiveRoute("/contact")
+                    ? `text-[${colors.goldAccent}] bg-[${colors.goldAccent}]/10`
+                    : `text-[${colors.primaryDark}]/80`
+                }`}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.1 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                Contact
+              </motion.button>
             </div>
           </motion.div>
         )}
