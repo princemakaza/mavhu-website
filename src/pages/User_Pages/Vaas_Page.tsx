@@ -379,52 +379,7 @@ const VaasPage: React.FC = () => {
                 </div>
             </motion.section>
 
-            {/* ─── How It Works (Process Steps) ──────────────────────────────────── */}
-            <motion.section
-                className="py-20 relative"
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-60px" }}
-                variants={fadeInUp}
-            >
-                <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${colors.secondaryBlue}04, ${colors.goldAccent}04)` }} />
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-                    <div className="text-center mb-12">
-                        <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-                            How <span className="gradient-text">It Works</span>
-                        </h2>
-                        <p className="text-lg" style={{ color: `${colors.primaryDark}AA` }}>
-                            A streamlined, four‑phase verification process.
-                        </p>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {processSteps.map((step, idx) => (
-                            <motion.div
-                                key={idx}
-                                variants={scaleIn}
-                                className="relative bg-white rounded-2xl p-6 border border-[#DCE7E8] text-center"
-                            >
-                                <div
-                                    className="absolute -top-3 left-1/2 -translate-x-1/2 w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-md"
-                                    style={{ backgroundColor: colors.goldAccent }}
-                                >
-                                    {step.step}
-                                </div>
-                                <div className="mt-6 mb-4 flex justify-center">
-                                    <div className="p-2 rounded-full" style={{ backgroundColor: `${colors.secondaryBlue}10` }}>
-                                        {step.icon}
-                                    </div>
-                                </div>
-                                <h3 className="font-bold text-base mb-2">{step.title}</h3>
-                                <p className="text-xs leading-relaxed" style={{ color: `${colors.primaryDark}80` }}>
-                                    {step.description}
-                                </p>
-                            </motion.div>
-                        ))}
-                    </div>
-                </div>
-            </motion.section>
+        
 
             {/* ─── Benefits with Stats ──────────────────────────────────────────── */}
             <motion.section

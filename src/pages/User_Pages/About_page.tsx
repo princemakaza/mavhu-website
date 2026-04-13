@@ -603,7 +603,7 @@ const AboutPage = () => {
           </div>
 
           <motion.div
-            className="grid md:grid-cols-3 gap-8 mb-12"
+            className="grid md:grid-cols-2 gap-8 mb-12"
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
@@ -613,13 +613,7 @@ const AboutPage = () => {
               {
                 icon: <MapPin className="w-8 h-8" />,
                 title: "Visit Us",
-                detail: "123 Innovation Drive, Harare, Zimbabwe",
-                color: colors.secondaryBlue,
-              },
-              {
-                icon: <Phone className="w-8 h-8" />,
-                title: "Call Us",
-                detail: "+263 78 969 3725",
+                detail: " Harare, Zimbabwe",
                 color: colors.secondaryBlue,
               },
               {
