@@ -305,45 +305,6 @@ const SkyPage: React.FC = () => {
                 </div>
             </motion.section>
 
-            {/* CTA – compact */}
-            <motion.section
-                className="py-16"
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-40px" }}
-                variants={fadeInUp}
-            >
-                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <div
-                        className="rounded-2xl p-8 sm:p-10 shadow-xl"
-                        style={{ background: `linear-gradient(135deg, ${colors.secondaryBlue}08, ${colors.goldAccent}08)`, border: `1px solid ${colors.softGrey}` }}
-                    >
-                        <h2 className="text-2xl sm:text-3xl font-bold mb-3">
-                            Ready to see from <br />
-                            <span className="gradient-text">above?</span>
-                        </h2>
-                        <p className="text-base mb-6 max-w-xl mx-auto" style={{ color: `${colors.primaryDark}BB` }}>
-                            Integrate MAvHU Sky’s geospatial intelligence into your projects, dashboards, or APIs.
-                        </p>
-                        <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                            <button
-                                onClick={() => navigate("/request-demo")}
-                                className="group px-6 py-2.5 rounded-xl font-semibold transition-all hover:scale-105 shadow-md flex items-center justify-center gap-2"
-                                style={{ background: `linear-gradient(135deg, ${colors.goldAccent}, #D4A82E)`, color: "#fff" }}
-                            >
-                                Request a Demo <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
-                            </button>
-                            <button
-                                onClick={() => navigate("/contact")}
-                                className="px-6 py-2.5 rounded-xl font-semibold border-2 transition-all hover:bg-white/50"
-                                style={{ borderColor: colors.softGrey, color: colors.primaryDark }}
-                            >
-                                Contact Sales
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </motion.section>
 
             <Footer isDarkMode={false} themeClasses={themeClasses} />
         </div>
