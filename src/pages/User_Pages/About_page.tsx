@@ -430,65 +430,7 @@ const AboutPage = () => {
         </div>
       </motion.section>
 
-      {/* Our Approach Section (original three cards) */}
-      <motion.section
-        className="py-24 relative"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-50px" }}
-        variants={fadeInUp}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <h2 className="text-5xl font-bold text-[#123E56] mb-6">
-              Our
-              <span style={{ color: colors.goldAccent }}> Approach</span>
-            </h2>
-            <p className="text-xl text-[#123E56]/80 max-w-3xl mx-auto">
-              We combine multiple technologies and methodologies to deliver climate data
-              that is accurate, transparent, and usable.
-            </p>
-          </div>
 
-          <div className="space-y-8">
-            {approach.map((item, index) => (
-              <motion.div
-                key={index}
-                variants={cardVariants}
-                whileHover={{ x: 8, transition: { duration: 0.2 } }}
-                className="rounded-2xl p-8 transition-all duration-300 shadow-md"
-                style={{
-                  background: item.bgColor,
-                  borderLeft: `4px solid ${item.borderColor}`,
-                }}
-              >
-                <div className="flex flex-col md:flex-row items-start md:items-center">
-                  <div
-                    className="w-20 h-20 rounded-xl flex items-center justify-center mr-8 mb-6 md:mb-0"
-                    style={{
-                      backgroundColor: `${item.textColor}15`,
-                      border: `1px solid ${item.textColor}30`,
-                    }}
-                  >
-                    <div style={{ color: item.textColor }}>{item.icon}</div>
-                  </div>
-                  <div className="flex-1">
-                    <h3
-                      className="text-3xl font-bold mb-4"
-                      style={{ color: item.textColor }}
-                    >
-                      {item.title}
-                    </h3>
-                    <p className="text-[#123E56]/80 leading-relaxed">
-                      {item.description}
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </motion.section>
 
       {/* MAVHU Model Section (numbered steps, no arrows) */}
       <motion.section

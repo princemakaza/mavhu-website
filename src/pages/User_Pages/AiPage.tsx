@@ -1,16 +1,13 @@
 import React from "react";
 import { motion } from "framer-motion";
 import {
-    Cpu,
     Brain,
     FileText,
-    Database,
-    Zap,
-    Shield,
-    ArrowRight,
-    CheckCircle,
     RefreshCw,
     TrendingUp,
+    ArrowRight,
+    CheckCircle,
+    Shield,
 } from "lucide-react";
 import Footer from "../../components/Footer";
 import Navbar from "../../components/navbar";
@@ -75,33 +72,6 @@ const AiPage: React.FC = () => {
             description: "Automated report generation, compliance document analysis, and extraction of insights from unstructured text.",
             icon: <FileText className="w-6 h-6" />,
             color: colors.aiAccent,
-        },
-    ];
-
-    const processSteps = [
-        {
-            step: "01",
-            title: "Data Ingestion",
-            description: "Raw satellite, drone, sensor, and field data are fed into our AI pipeline.",
-            icon: <Database className="w-6 h-6" />,
-        },
-        {
-            step: "02",
-            title: "Model Training & Validation",
-            description: "Custom models are trained on African‑specific datasets and continuously validated against ground truth.",
-            icon: <Cpu className="w-6 h-6" />,
-        },
-        {
-            step: "03",
-            title: "Inference & Automation",
-            description: "Trained models run predictions, flag anomalies, and trigger automated workflows.",
-            icon: <Zap className="w-6 h-6" />,
-        },
-        {
-            step: "04",
-            title: "Output & Integration",
-            description: "Results are delivered via APIs, dashboards, or automated reports for MRV and ESG compliance.",
-            icon: <Shield className="w-6 h-6" />,
         },
     ];
 
@@ -236,7 +206,7 @@ const AiPage: React.FC = () => {
                         <motion.div variants={fadeInRight} className="relative">
                             <div className="relative bg-white rounded-xl p-5 border border-[#DCE7E8] shadow-md">
                                 <div className="flex items-center gap-2 mb-3">
-                                    <Cpu className="w-5 h-5" style={{ color: colors.aiAccent }} />
+                                    <Brain className="w-5 h-5" style={{ color: colors.aiAccent }} />
                                     <h4 className="font-bold text-base">Key AI Capabilities</h4>
                                 </div>
                                 <div className="grid grid-cols-2 gap-2">
@@ -298,59 +268,6 @@ const AiPage: React.FC = () => {
                                 <p className="text-sm leading-relaxed" style={{ color: `${colors.primaryDark}80` }}>
                                     {cap.description}
                                 </p>
-                            </motion.div>
-                        ))}
-                    </div>
-                </div>
-            </motion.section>
-
-            {/* Process – Vertical Timeline */}
-            <motion.section
-                id="process"
-                className="py-12 relative"
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-40px" }}
-                variants={fadeInUp}
-            >
-                <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${colors.secondaryBlue}04, ${colors.aiAccent}04)` }} />
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-                    <div className="text-center mb-8">
-                        <h2 className="text-3xl font-bold mb-2">
-                            How <span className="gradient-text">It Works</span>
-                        </h2>
-                        <p className="text-base" style={{ color: `${colors.primaryDark}AA` }}>
-                            From raw data to automated intelligence.
-                        </p>
-                    </div>
-
-                    <div className="max-w-3xl mx-auto">
-                        {processSteps.map((step, idx) => (
-                            <motion.div
-                                key={idx}
-                                variants={fadeInRight}
-                                className="relative flex gap-5 pb-8 last:pb-0 group"
-                            >
-                                {idx < processSteps.length - 1 && (
-                                    <div className="absolute left-6 top-12 bottom-0 w-0.5 bg-gradient-to-b from-[#2E7D6B] to-[#1F5C73] opacity-30" />
-                                )}
-                                <div
-                                    className="relative z-10 flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md"
-                                    style={{ backgroundColor: colors.aiAccent }}
-                                >
-                                    {step.step}
-                                </div>
-                                <div className="flex-1 bg-white rounded-xl p-5 border border-[#DCE7E8] hover-lift">
-                                    <div className="flex items-center gap-2 mb-2">
-                                        <div className="p-1.5 rounded-full" style={{ backgroundColor: `${colors.aiAccent}10` }}>
-                                            {step.icon}
-                                        </div>
-                                        <h3 className="text-lg font-bold" style={{ color: colors.primaryDark }}>{step.title}</h3>
-                                    </div>
-                                    <p className="text-sm leading-relaxed" style={{ color: `${colors.primaryDark}80` }}>
-                                        {step.description}
-                                    </p>
-                                </div>
                             </motion.div>
                         ))}
                     </div>

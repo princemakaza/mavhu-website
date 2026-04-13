@@ -187,9 +187,7 @@ const Contact = () => {
             Thank you for contacting MAVHU AFRICA. We'll get back to you within
             2 business hours during our working hours.
           </p>
-          <p className="text-[#123E56]/60 text-sm mb-8">
-            For urgent inquiries, please call +263 78 969 3725
-          </p>
+
           <button
             onClick={() => setIsSubmitted(false)}
             className="relative py-3 px-6 rounded-xl font-bold transition-all transform hover:scale-105 shadow-lg overflow-hidden group"
@@ -519,22 +517,7 @@ const Contact = () => {
                       </a>
                     </div>
                   </div>
-                  <div className="flex items-start">
-                    <div
-                      className="p-2 rounded-lg mr-4 flex-shrink-0"
-                      style={{
-                        backgroundColor: `${colors.secondaryBlue}10`,
-                        border: `1px solid ${colors.secondaryBlue}20`,
-                      }}
-                    >
-                      <Phone className="w-5 h-5" style={{ color: colors.secondaryBlue }} />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-[#123E56] mb-1">Phone</h4>
-                      <p className="text-[#123E56]/80">+60 16-654 4128</p>
-                      <p className="text-[#123E56]/60 text-sm">+263 77 280 7864</p>
-                    </div>
-                  </div>
+
                   <div className="flex items-start">
                     <div
                       className="p-2 rounded-lg mr-4 flex-shrink-0"
