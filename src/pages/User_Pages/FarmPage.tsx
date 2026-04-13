@@ -405,45 +405,7 @@ const FarmPage: React.FC = () => {
         </div>
       </motion.section>
 
-      {/* ─── Final CTA ──────────────────────────────────────────────────────── */}
-      <motion.section
-        className="py-24 relative"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-60px" }}
-        variants={fadeInUp}
-      >
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div
-            className="rounded-3xl p-10 sm:p-14 shadow-2xl"
-            style={{ background: `linear-gradient(135deg, ${colors.secondaryBlue}08, ${colors.goldAccent}08)`, border: `1px solid ${colors.softGrey}` }}
-          >
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-              Ready to digitise your <br />
-              <span className="gradient-text">smallholder programme?</span>
-            </h2>
-            <p className="text-lg mb-8 max-w-xl mx-auto" style={{ color: `${colors.primaryDark}BB` }}>
-              Empower farmers, verify compliance, and unlock climate finance – all from one platform.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button
-                onClick={() => navigate("/request-demo")}
-                className="group px-8 py-3 rounded-xl font-bold transition-all hover:scale-105 shadow-lg flex items-center justify-center gap-2"
-                style={{ background: `linear-gradient(135deg, ${colors.goldAccent}, #D4A82E)`, color: "#fff" }}
-              >
-                Request Demo <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
-              </button>
-              <button
-                onClick={() => navigate("/contact")}
-                className="px-8 py-3 rounded-xl font-semibold border-2 transition-all hover:bg-white/50"
-                style={{ borderColor: colors.softGrey, color: colors.primaryDark }}
-              >
-                Contact Sales
-              </button>
-            </div>
-          </div>
-        </div>
-      </motion.section>
+ 
 
       <Footer isDarkMode={false} themeClasses={themeClasses} />
     </div>
