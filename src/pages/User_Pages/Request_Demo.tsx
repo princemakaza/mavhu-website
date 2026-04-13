@@ -551,7 +551,7 @@ const RequestDemo = () => {
                                         <div>
                                             <h4 className="font-semibold text-[#123E56] mb-1">Location</h4>
                                             <p className="text-[#123E56]/80">Harare, Zimbabwe</p>
-                                            <p className="text-[#123E56]/60 text-sm">Africa Headquarters</p>
+                                            <p className="text-[#123E56]/60 text-sm">Headquarters</p>
                                         </div>
                                     </div>
                                 </div>

@@ -5,10 +5,6 @@ import {
     Scan,
     CloudRain,
     Wifi,
-    BarChart3,
-    Globe,
-    Zap,
-    Shield,
     ArrowRight,
     CheckCircle,
 } from "lucide-react";
@@ -42,10 +38,6 @@ const cardVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
 };
-const scaleIn = {
-    hidden: { opacity: 0, scale: 0.95 },
-    visible: { opacity: 1, scale: 1, transition: { duration: 0.4, type: "spring", stiffness: 120 } },
-};
 
 const SkyPage: React.FC = () => {
     const navigate = useNavigate();
@@ -74,33 +66,6 @@ const SkyPage: React.FC = () => {
             description: "Live atmospheric, soil moisture, and air quality data from custom sensor grids and airborne platforms.",
             icon: <Wifi className="w-6 h-6" />,
             color: colors.secondaryBlue,
-        },
-    ];
-
-    const processSteps = [
-        {
-            step: "01",
-            title: "Data Acquisition",
-            description: "Scheduled satellite passes, drone flights, and sensor feeds collect raw environmental data.",
-            icon: <Globe className="w-6 h-6" />,
-        },
-        {
-            step: "02",
-            title: "Radiometric Calibration",
-            description: "Raw signals are corrected for atmospheric interference, sensor noise, and geometric distortions.",
-            icon: <BarChart3 className="w-6 h-6" />,
-        },
-        {
-            step: "03",
-            title: "Processing & Fusion",
-            description: "Multi‑source data is harmonised, mosaicked, and merged into analysis‑ready formats.",
-            icon: <Zap className="w-6 h-6" />,
-        },
-        {
-            step: "04",
-            title: "Intelligent Delivery",
-            description: "Processed layers are pushed to MAvHU’s platform, APIs, and dashboards for immediate use.",
-            icon: <Shield className="w-6 h-6" />,
         },
     ];
 
@@ -259,7 +224,7 @@ const SkyPage: React.FC = () => {
                 </div>
             </motion.section>
 
-            {/* Capabilities – 4 cards (unchanged but compact) */}
+            {/* Capabilities – 4 cards */}
             <motion.section
                 id="capabilities"
                 className="py-12"
@@ -303,58 +268,7 @@ const SkyPage: React.FC = () => {
                 </div>
             </motion.section>
 
-            {/* Process – Vertical Timeline (like EarthPage) */}
-            <motion.section
-                id="process"
-                className="py-12 relative"
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-40px" }}
-                variants={fadeInUp}
-            >
-                <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${colors.secondaryBlue}04, ${colors.goldAccent}04)` }} />
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-                    <div className="text-center mb-8">
-                        <h2 className="text-3xl font-bold mb-2">
-                            How <span className="gradient-text">It Works</span>
-                        </h2>
-                        <p className="text-base" style={{ color: `${colors.primaryDark}AA` }}>
-                            From raw signal to analysis‑ready intelligence.
-                        </p>
-                    </div>
-
-                    <div className="max-w-3xl mx-auto">
-                        {processSteps.map((step, idx) => (
-                            <motion.div
-                                key={idx}
-                                variants={fadeInRight}
-                                className="relative flex gap-5 pb-8 last:pb-0 group"
-                            >
-                                {idx < processSteps.length - 1 && (
-                                    <div className="absolute left-6 top-12 bottom-0 w-0.5 bg-gradient-to-b from-[#B89A2F] to-[#1F5C73] opacity-30" />
-                                )}
-                                <div className="relative z-10 flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md"
-                                    style={{ backgroundColor: colors.goldAccent }}>
-                                    {step.step}
-                                </div>
-                                <div className="flex-1 bg-white rounded-xl p-5 border border-[#DCE7E8] hover-lift">
-                                    <div className="flex items-center gap-2 mb-2">
-                                        <div className="p-1.5 rounded-full" style={{ backgroundColor: `${colors.secondaryBlue}10` }}>
-                                            {step.icon}
-                                        </div>
-                                        <h3 className="text-lg font-bold" style={{ color: colors.primaryDark }}>{step.title}</h3>
-                                    </div>
-                                    <p className="text-sm leading-relaxed" style={{ color: `${colors.primaryDark}80` }}>
-                                        {step.description}
-                                    </p>
-                                </div>
-                            </motion.div>
-                        ))}
-                    </div>
-                </div>
-            </motion.section>
-
-            {/* Data Sources – tag cloud (compact) */}
+            {/* Data Sources – tag cloud */}
             <motion.section
                 className="py-12"
                 initial="hidden"
