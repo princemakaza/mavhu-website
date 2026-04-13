@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://mavhu.com/sitemap.xml
