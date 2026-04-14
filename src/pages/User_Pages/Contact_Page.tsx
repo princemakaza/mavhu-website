@@ -20,8 +20,9 @@ import {
 import { motion } from "framer-motion";
 import Navbar from "../../components/navbar";
 import Footer from "../../components/Footer";
+import { Helmet } from "react-helmet-async";
 
-// Color palette (light mode only, based on brand)
+// Color palette
 const colors = {
   primaryDark: "#123E56",
   secondaryBlue: "#1F5C73",
@@ -31,7 +32,7 @@ const colors = {
   white: "#FFFFFF",
 };
 
-// Animation variants (consistent with landing page)
+// Animation variants
 const fadeInUp = {
   hidden: { opacity: 0, y: 60 },
   visible: {
@@ -61,6 +62,9 @@ const cardVariants = {
   },
 };
 
+// API base URL (change to your EC2 public IP / domain)
+const API_BASE_URL = "http://44.223.50.135:3001/api";
+
 const Contact = () => {
   const [mousePosition, setMousePosition] = React.useState({ x: 0, y: 0 });
   const [formData, setFormData] = React.useState({
@@ -73,6 +77,7 @@ const Contact = () => {
   });
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isSubmitted, setIsSubmitted] = React.useState(false);
+  const [submitError, setSubmitError] = React.useState<string | null>(null);
 
   React.useEffect(() => {
     const handleMouseMove = (e: { clientX: any; clientY: any }) => {
@@ -87,15 +92,31 @@ const Contact = () => {
       ...formData,
       [e.target.name]: e.target.value,
     });
+    // Clear any previous error when user starts typing again
+    if (submitError) setSubmitError(null);
   };
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitError(null);
 
-    // Simulate form submission
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      const response = await fetch(`${API_BASE_URL}/contact`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to send message");
+      }
+
+      // Success
       setIsSubmitted(true);
       setFormData({
         name: "",
@@ -105,7 +126,12 @@ const Contact = () => {
         inquiryType: "",
         message: "",
       });
-    }, 2000);
+    } catch (error: any) {
+      console.error("Submission error:", error);
+      setSubmitError(error.message || "Something went wrong. Please try again later.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const contactMethods = [
@@ -146,67 +172,77 @@ const Contact = () => {
     "Sales & Demo Request",
   ];
 
-  // Success screen (submitted)
+  // Success screen
   if (isSubmitted) {
     return (
-      <div
-        className="min-h-screen flex items-center justify-center"
-        style={{ backgroundColor: colors.lightBackground }}
-      >
-        <div className="fixed inset-0 bg-gradient-to-br from-[#F4FAFA] via-white to-[#DCE7E8]/20">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(31,92,115,0.08),transparent_50%)]"></div>
-          <div
-            className="absolute w-96 h-96 rounded-full blur-3xl transition-all duration-1000 ease-out"
-            style={{
-              left: mousePosition.x - 192,
-              top: mousePosition.y - 192,
-              background: `radial-gradient(circle, ${colors.secondaryBlue}15, transparent 70%)`,
-            }}
-          ></div>
-        </div>
-
-        <motion.div
-          className="text-center max-w-md mx-auto px-6 relative z-10"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
+      <>
+        <Helmet>
+          <title>Mavhu – Contact Us | Partner with Africa’s Climate Data Leader</title>
+          <meta name="description" content="Get in touch with Mavhu. Request a demo, ask about partnerships, or learn how our verified climate intelligence can support your ESG and MRV goals." />
+          <meta property="og:title" content="Contact Mavhu – Start Your Climate Data Journey" />
+          <meta property="og:description" content="Reach out to our team for demos, partnerships, or technical support. Let's build a resilient, data-driven future for Africa." />
+          <meta property="og:url" content="https://mavhu.com/contact" />
+          <meta name="twitter:card" content="summary_large_image" />
+        </Helmet>
+        <div
+          className="min-h-screen flex items-center justify-center"
+          style={{ backgroundColor: colors.lightBackground }}
         >
-          <div
-            className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6"
-            style={{
-              backgroundColor: `${colors.secondaryBlue}10`,
-              border: `2px solid ${colors.secondaryBlue}30`,
-            }}
-          >
-            <CheckCircle className="w-10 h-10" style={{ color: colors.secondaryBlue }} />
-          </div>
-          <h2 className="text-3xl font-bold text-[#123E56] mb-4">
-            Message Sent Successfully!
-          </h2>
-          <p className="text-[#123E56]/80 mb-6">
-            Thank you for contacting MAVHU AFRICA. We'll get back to you within
-            2 business hours during our working hours.
-          </p>
-
-          <button
-            onClick={() => setIsSubmitted(false)}
-            className="relative py-3 px-6 rounded-xl font-bold transition-all transform hover:scale-105 shadow-lg overflow-hidden group"
-            style={{
-              background: `linear-gradient(to right, ${colors.goldAccent}, #D4A82E)`,
-              color: "#FFFFFF",
-              boxShadow: `0 10px 30px ${colors.goldAccent}30`,
-            }}
-          >
-            <span className="relative z-10">Send Another Message</span>
+          <div className="fixed inset-0 bg-gradient-to-br from-[#F4FAFA] via-white to-[#DCE7E8]/20">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(31,92,115,0.08),transparent_50%)]"></div>
             <div
-              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+              className="absolute w-96 h-96 rounded-full blur-3xl transition-all duration-1000 ease-out"
               style={{
-                background: `linear-gradient(to right, ${colors.goldAccent}CC, #C49F2A)`,
+                left: mousePosition.x - 192,
+                top: mousePosition.y - 192,
+                background: `radial-gradient(circle, ${colors.secondaryBlue}15, transparent 70%)`,
               }}
             ></div>
-          </button>
-        </motion.div>
-      </div>
+          </div>
+
+          <motion.div
+            className="text-center max-w-md mx-auto px-6 relative z-10"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            <div
+              className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6"
+              style={{
+                backgroundColor: `${colors.secondaryBlue}10`,
+                border: `2px solid ${colors.secondaryBlue}30`,
+              }}
+            >
+              <CheckCircle className="w-10 h-10" style={{ color: colors.secondaryBlue }} />
+            </div>
+            <h2 className="text-3xl font-bold text-[#123E56] mb-4">
+              Message Sent Successfully!
+            </h2>
+            <p className="text-[#123E56]/80 mb-6">
+              Thank you for contacting MAVHU AFRICA. We'll get back to you within
+              2 business hours during our working hours.
+            </p>
+
+            <button
+              onClick={() => setIsSubmitted(false)}
+              className="relative py-3 px-6 rounded-xl font-bold transition-all transform hover:scale-105 shadow-lg overflow-hidden group"
+              style={{
+                background: `linear-gradient(to right, ${colors.goldAccent}, #D4A82E)`,
+                color: "#FFFFFF",
+                boxShadow: `0 10px 30px ${colors.goldAccent}30`,
+              }}
+            >
+              <span className="relative z-10">Send Another Message</span>
+              <div
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{
+                  background: `linear-gradient(to right, ${colors.goldAccent}CC, #C49F2A)`,
+                }}
+              ></div>
+            </button>
+          </motion.div>
+        </div>
+      </>
     );
   }
 
@@ -229,7 +265,6 @@ const Contact = () => {
         ></div>
       </div>
 
-      {/* Navigation (light mode only) */}
       <Navbar />
 
       {/* Hero Section */}
@@ -278,36 +313,37 @@ const Contact = () => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-          >{contactMethods.slice(0, 3).map((method, index) => (
-            <motion.div
-              key={method.id || index}          // prefer unique id over index
-              variants={cardVariants}
-              whileHover={{ y: -8, transition: { duration: 0.2 } }}
-              className="bg-white backdrop-blur-xl rounded-2xl p-8 border border-[#DCE7E8] hover:border-[#1F5C73]/40 transition-all duration-300 text-center shadow-lg shadow-gray-200/50"
-            >
-              <div
-                className="w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-6"
-                style={{
-                  backgroundColor: `${method.color}10`,
-                  border: `1px solid ${method.color}20`,
-                }}
+          >
+            {contactMethods.slice(0, 3).map((method, index) => (
+              <motion.div
+                key={method.title}
+                variants={cardVariants}
+                whileHover={{ y: -8, transition: { duration: 0.2 } }}
+                className="bg-white backdrop-blur-xl rounded-2xl p-8 border border-[#DCE7E8] hover:border-[#1F5C73]/40 transition-all duration-300 text-center shadow-lg shadow-gray-200/50"
               >
-                <div style={{ color: method.color }}>{method.icon}</div>
-              </div>
-              <h3 className="text-xl font-bold text-[#123E56] mb-3">{method.title}</h3>
-              <div className="space-y-1 mb-4">
-                {method.details.map((detail, idx) => (
-                  <p key={idx} className="text-[#123E56]/80 font-semibold">
-                    {detail}
-                  </p>
-                ))}
-              </div>
-              <p className="text-[#123E56]/60 text-sm mb-3">{method.description}</p>
-              <p className="text-sm font-medium" style={{ color: colors.goldAccent }}>
-                {method.available}
-              </p>
-            </motion.div>
-          ))}
+                <div
+                  className="w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-6"
+                  style={{
+                    backgroundColor: `${method.color}10`,
+                    border: `1px solid ${method.color}20`,
+                  }}
+                >
+                  <div style={{ color: method.color }}>{method.icon}</div>
+                </div>
+                <h3 className="text-xl font-bold text-[#123E56] mb-3">{method.title}</h3>
+                <div className="space-y-1 mb-4">
+                  {method.details.map((detail, idx) => (
+                    <p key={idx} className="text-[#123E56]/80 font-semibold">
+                      {detail}
+                    </p>
+                  ))}
+                </div>
+                <p className="text-[#123E56]/60 text-sm mb-3">{method.description}</p>
+                <p className="text-sm font-medium" style={{ color: colors.goldAccent }}>
+                  {method.available}
+                </p>
+              </motion.div>
+            ))}
           </motion.div>
         </div>
       </motion.section>
@@ -450,6 +486,12 @@ const Contact = () => {
                       />
                     </div>
                   </div>
+
+                  {submitError && (
+                    <div className="text-red-600 text-sm text-center bg-red-50 p-3 rounded-lg">
+                      {submitError}
+                    </div>
+                  )}
 
                   <div className="text-center pt-4">
                     <button
@@ -650,10 +692,8 @@ const Contact = () => {
         </div>
       </motion.section>
 
-      {/* Footer (light mode only) */}
       <Footer />
 
-      {/* Global styles */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&display=swap');
         
