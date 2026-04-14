@@ -22,7 +22,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import Navbar from "../../components/navbar";
 import Footer from "../../components/Footer";
 
-// Colour palette (consistent with the rest of the app)
+// Colour palette
 const colors = {
     primaryDark: "#123E56",
     secondaryBlue: "#1F5C73",
@@ -32,7 +32,7 @@ const colors = {
     white: "#FFFFFF",
 };
 
-// Animation variants (same as landing/contact)
+// Animation variants
 const fadeInUp = {
     hidden: { opacity: 0, y: 60 },
     visible: {
@@ -62,6 +62,9 @@ const cardVariants = {
     },
 };
 
+// API Base URL – replace with your EC2 public IP / domain
+const API_BASE_URL = "http://44.223.50.135:3001/api";
+
 const RequestDemo = () => {
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const [formData, setFormData] = useState({
@@ -75,6 +78,7 @@ const RequestDemo = () => {
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
     const [dateError, setDateError] = useState("");
     const [timeError, setTimeError] = useState("");
 
@@ -103,6 +107,8 @@ const RequestDemo = () => {
         if (name === "preferredTime" && value) {
             setTimeError("");
         }
+        // Clear global error when user edits any field
+        if (submitError) setSubmitError(null);
     };
 
     const handleDateChange = (date: Date | null) => {
@@ -151,11 +157,45 @@ const RequestDemo = () => {
         if (!validateForm()) return;
 
         setIsSubmitting(true);
-        // Simulate API call
-        setTimeout(() => {
-            setIsSubmitting(false);
+        setSubmitError(null);
+
+        // Combine date and time into a single ISO string
+        let combinedDateTime = null;
+        if (formData.preferredDate && formData.preferredTime) {
+            const [hours, minutes] = formData.preferredTime.split(":").map(Number);
+            const dateObj = new Date(formData.preferredDate);
+            dateObj.setHours(hours, minutes, 0, 0);
+            // Convert to ISO string (UTC) – backend can handle it
+            combinedDateTime = dateObj.toISOString();
+        }
+
+        const payload = {
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            organization: formData.organization,
+            preferredDate: combinedDateTime,
+            message: formData.message,
+        };
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/request-demo`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || "Failed to submit demo request");
+            }
+
+            // Success
             setIsSubmitted(true);
-            // Reset form (optional)
+            // Reset form
             setFormData({
                 name: "",
                 email: "",
@@ -165,7 +205,12 @@ const RequestDemo = () => {
                 preferredTime: "",
                 message: "",
             });
-        }, 2000);
+        } catch (error: any) {
+            console.error("Submission error:", error);
+            setSubmitError(error.message || "Something went wrong. Please try again later.");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     // Success screen
@@ -448,6 +493,12 @@ const RequestDemo = () => {
                                             />
                                         </div>
                                     </div>
+
+                                    {submitError && (
+                                        <div className="text-red-600 text-sm text-center bg-red-50 p-3 rounded-lg">
+                                            {submitError}
+                                        </div>
+                                    )}
 
                                     <div className="text-center pt-4">
                                         <button
