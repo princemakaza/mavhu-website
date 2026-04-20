@@ -641,7 +641,7 @@ const LandingPage = () => {
                 style={{ color: `${colors.primaryDark}CC` }}
                 variants={fadeInUp}
               >
-                <strong>MAvHU is Africa's climate data infrastructure company</strong>, delivering trusted environmental intelligence, automated MRV, and actionable climate insights for land-, emissions-, and supply-chain intensive industries.
+                <strong>MAvHU is Africa's climate data infrastructure company</strong>, delivering trusted environmental intelligence, automated MRV, and actionable climate insights for land-use emissions, and supply-chain intensive industries.
               </motion.p>
             </div>
 
