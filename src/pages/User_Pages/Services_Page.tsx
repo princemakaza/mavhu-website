@@ -135,10 +135,17 @@ const ServicesPage = () => {
       <Helmet>
         <title>Mavhu – Services | ESG Dashboards, VaaS, Climate APIs & Farm Solutions</title>
         <meta name="description" content="Explore Mavhu's services: Verification-as-a-Service (VaaS), ESG dashboards, climate data APIs, farm-level compliance, and training for African climate action." />
+        <link rel="canonical" href="https://mavhuafrica.com/services" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Mavhu" />
         <meta property="og:title" content="Mavhu Services – Trusted MRV, Data & APIs" />
         <meta property="og:description" content="From automated MRV to farm-level tools, Mavhu provides the infrastructure for measurable, verifiable, and investable climate action." />
-        <meta property="og:url" content="https://mavhu.com/services" />
+        <meta property="og:url" content="https://mavhuafrica.com/services" />
+        <meta property="og:image" content="https://mavhuafrica.com/logo.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Mavhu Services – Trusted MRV, Data & APIs" />
+        <meta name="twitter:description" content="From automated MRV to farm-level tools, Mavhu provides the infrastructure for measurable, verifiable, and investable climate action." />
+        <meta name="twitter:image" content="https://mavhuafrica.com/logo.jpg" />
       </Helmet>
 
 
