@@ -420,10 +420,37 @@ const LandingPage = () => {
       <Helmet>
         <title>Mavhu – Sustainable Agriculture Intelligence</title>
         <meta name="description" content="Mavhu provides AI-driven insights for soil health, crop yield, and carbon emissions." />
+        <link rel="canonical" href="https://mavhuafrica.com/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Mavhu" />
         <meta property="og:title" content="Mavhu – Smart Farming Solutions" />
         <meta property="og:description" content="Optimize your farm with real-time ESG dashboards." />
-        <meta property="og:url" content="https://mavhu.com/" />
+        <meta property="og:url" content="https://mavhuafrica.com/" />
+        <meta property="og:image" content="https://mavhuafrica.com/logo.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Mavhu – Smart Farming Solutions" />
+        <meta name="twitter:description" content="Optimize your farm with real-time ESG dashboards." />
+        <meta name="twitter:image" content="https://mavhuafrica.com/logo.jpg" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "Mavhu",
+            url: "https://mavhuafrica.com/",
+            logo: "https://mavhuafrica.com/logo.jpg",
+            description:
+              "Mavhu provides AI-driven insights for soil health, crop yield, and carbon emissions.",
+            sameAs: [],
+          })}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: "Mavhu",
+            url: "https://mavhuafrica.com/",
+          })}
+        </script>
       </Helmet>
 
       {/* Original JSX content starts here – unchanged */}

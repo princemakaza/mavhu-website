@@ -181,7 +181,8 @@ const Contact = () => {
           <meta name="description" content="Get in touch with Mavhu. Request a demo, ask about partnerships, or learn how our verified climate intelligence can support your ESG and MRV goals." />
           <meta property="og:title" content="Contact Mavhu – Start Your Climate Data Journey" />
           <meta property="og:description" content="Reach out to our team for demos, partnerships, or technical support. Let's build a resilient, data-driven future for Africa." />
-          <meta property="og:url" content="https://mavhu.com/contact" />
+          <link rel="canonical" href="https://mavhuafrica.com/contact" />
+          <meta property="og:url" content="https://mavhuafrica.com/contact" />
           <meta name="twitter:card" content="summary_large_image" />
         </Helmet>
         <div

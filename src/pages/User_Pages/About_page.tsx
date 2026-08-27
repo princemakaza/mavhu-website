@@ -236,10 +236,17 @@ const AboutPage = () => {
       <Helmet>
         <title>Mavhu – About Us | African Climate Data Infrastructure</title>
         <meta name="description" content="Mavhu is Africa's climate data infrastructure company, delivering verified environmental intelligence, automated MRV, and actionable insights for land, emissions, and supply chains." />
+        <link rel="canonical" href="https://mavhuafrica.com/about" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Mavhu" />
         <meta property="og:title" content="Mavhu – About: Measured, Verified, Sovereign Data" />
         <meta property="og:description" content="We empower African climate action with locally grounded, sovereign data infrastructure. Learn about our mission, vision, and team." />
-        <meta property="og:url" content="https://mavhu.com/about" />
+        <meta property="og:url" content="https://mavhuafrica.com/about" />
+        <meta property="og:image" content="https://mavhuafrica.com/logo.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Mavhu – About: Measured, Verified, Sovereign Data" />
+        <meta name="twitter:description" content="We empower African climate action with locally grounded, sovereign data infrastructure. Learn about our mission, vision, and team." />
+        <meta name="twitter:image" content="https://mavhuafrica.com/logo.jpg" />
       </Helmet>
 
       <div
