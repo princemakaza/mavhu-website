@@ -9,6 +9,10 @@
   <url><loc>https://mavhuafrica.com/request-demo</loc><priority>0.6</priority></url>
   <url><loc>https://mavhuafrica.com/services/vaas</loc><priority>0.7</priority></url>
   <url><loc>https://mavhuafrica.com/services/dashboard</loc><priority>0.7</priority></url>
+  <url><loc>https://mavhuafrica.com/services/mrv-infrastructure</loc><priority>0.8</priority></url>
+  <url><loc>https://mavhuafrica.com/taxonomy</loc><priority>0.7</priority></url>
+  <url><loc>https://mavhuafrica.com/services/agriculture-intelligence</loc><priority>0.8</priority></url>
+  <url><loc>https://mavhuafrica.com/services/financial-intelligence</loc><priority>0.7</priority></url>
   <url><loc>https://mavhuafrica.com/services/api</loc><priority>0.7</priority></url>
   <url><loc>https://mavhuafrica.com/services/farm</loc><priority>0.7</priority></url>
   <url><loc>https://mavhuafrica.com/contact</loc><priority>0.6</priority></url>

@@ -7,15 +7,12 @@ import {
   ExternalLink,
   MapPin,
   Phone,
-  CheckCircle,
-  BarChart3,
-  Database,
-  Smartphone,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
 import LogoImage from "../assets/logo.png";
+import { servicesData } from "./servicesData";
 
 // Color palette (matching Navbar and brand guidelines)
 const colors = {
@@ -26,64 +23,6 @@ const colors = {
   softGrey: "#DCE7E8",
   white: "#FFFFFF",
 };
-
-// Services data – must match the array used in Navbar
-const servicesData = [
-  {
-    title: "Verification-as-a-Service (VaaS)",
-    description:
-      "MRV workflows, field verification, and carbon market compliance solutions that support project developers, registries, and climate finance stakeholders.",
-    useCases: ["carbon credits", "verification", "reporting", "audit trails"],
-    icon: <CheckCircle className="w-7 h-7" />,
-    color: colors.secondaryBlue,
-    hoverDetail:
-      "End-to-end verification infrastructure covering baseline assessment, monitoring protocol design, field data collection, algorithmic cross-validation, and audit-trail generation. Designed to meet Verra VCS, Gold Standard, and UNFCCC MRV requirements.",
-    route: "/services/vaas",
-  },
-  {
-    title: "Data & Dashboard Solutions",
-    description:
-      "Enterprise-grade ESG dashboards, environmental data feeds, and automated reporting tools for operational and sustainability teams.",
-    useCases: ["ESG reporting", "supply-chain monitoring", "risk intelligence"],
-    icon: <BarChart3 className="w-7 h-7" />,
-    color: colors.goldAccent,
-    hoverDetail:
-      "Configurable SaaS dashboards delivering real-time environmental KPIs, automated alert systems, and one-click report generation. Integrates with existing BI stacks via API and supports multi-jurisdiction ESG disclosure formats.",
-    route: "/services/dashboard",
-  },
-  {
-    title: "Climate APIs",
-    description:
-      "Plug-and-play climate and environmental intelligence APIs for integration into enterprise systems, finance platforms, and digital products.",
-    useCases: [
-      "risk scoring",
-      "emissions data",
-      "geospatial layers",
-      "compliance systems",
-    ],
-    icon: <Database className="w-7 h-7" />,
-    color: "#2E7D6B",
-    hoverDetail:
-      "RESTful and GraphQL API endpoints covering land-use change, soil carbon, climate risk, MRV status, and ESG metrics. Comprehensive developer documentation, sandbox environment, and enterprise SLAs available.",
-    route: "/services/api",
-  },
-  {
-    title: "Farm-Level Compliance & Training",
-    description:
-      "Field-level data capture, grower compliance workflows, and training support for smallholder farmer programs and off-taker ecosystems.",
-    useCases: [
-      "traceability",
-      "grower onboarding",
-      "field compliance",
-      "regenerative adoption",
-    ],
-    icon: <Smartphone className="w-7 h-7" />,
-    color: colors.secondaryBlue,
-    hoverDetail:
-      "Mobile-first farmer data capture tools supporting offline field use, GPS-referenced plot mapping, and compliance checklists. Combined with structured training curricula covering climate-smart practices and digital literacy.",
-    route: "/services/farm",
-  },
-];
 
 const Footer: React.FC = () => {
   const navigate = useNavigate();
@@ -172,6 +111,7 @@ const Footer: React.FC = () => {
                 { name: "Home", path: "/" },
                 { name: "About Us", path: "/about" },
                 { name: "Services", path: "/services" },
+                { name: "MRV Taxonomy", path: "/taxonomy" },
                 { name: "Contact", path: "/contact" },
               ].map((link, index) => (
                 <li key={index}>

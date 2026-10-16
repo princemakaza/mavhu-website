@@ -21,6 +21,10 @@ const GhgEmissionScreen = lazy(() => import("./pages/User_Pages/mavhu_team/apis/
 const RequestDemo = lazy(() => import("./pages/User_Pages/Request_Demo"));
 const VaasPage = lazy(() => import("./pages/User_Pages/Vaas_Page"));
 const DashboardPage = lazy(() => import("./pages/User_Pages/dashboard_page"));
+const FinancialIntelligencePage = lazy(() => import("./pages/User_Pages/FinancialIntelligencePage"));
+const MrvInfrastructurePage = lazy(() => import("./pages/User_Pages/MrvInfrastructurePage"));
+const TaxonomyPage = lazy(() => import("./pages/User_Pages/TaxonomyPage"));
+const AgricultureIntelligencePage = lazy(() => import("./pages/User_Pages/AgricultureIntelligencePage"));
 const ApiPage = lazy(() => import("./pages/User_Pages/api_page"));
 const FarmPage = lazy(() => import("./pages/User_Pages/FarmPage"));
 const SkyPage = lazy(() => import("./pages/User_Pages/SkyPage"));
@@ -58,6 +62,10 @@ function AppRoutes() {
           <Route path="/request-demo" element={<RequestDemo />} />
           <Route path="/services/vaas" element={<VaasPage />} />
           <Route path="/services/dashboard" element={<DashboardPage />} />
+          <Route path="/services/financial-intelligence" element={<FinancialIntelligencePage />} />
+          <Route path="/services/mrv-infrastructure" element={<MrvInfrastructurePage />} />
+          <Route path="/taxonomy" element={<TaxonomyPage />} />
+          <Route path="/services/agriculture-intelligence" element={<AgricultureIntelligencePage />} />
           <Route path="/services/api" element={<ApiPage />} />
           <Route path="/services/farm" element={<FarmPage />} />
           <Route path="/contact" element={<Contact />} />

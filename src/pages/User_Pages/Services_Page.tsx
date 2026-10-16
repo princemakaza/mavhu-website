@@ -8,7 +8,6 @@ import {
   BarChart3,
 
   Shield,
-  CheckCircle,
 
   ArrowRight,
 
@@ -26,6 +25,7 @@ import skyImage from "../../assets/sky.png";
 import earthImage from "../../assets/earth.png";
 import aiImage from "../../assets/automa.png";
 import { Helmet } from "react-helmet-async";
+import { servicesData } from "../../components/servicesData";
 
 // Color palette
 const colors = {
@@ -36,54 +36,6 @@ const colors = {
   softGrey: "#DCE7E8",
   white: "#FFFFFF",
 };
-
-// Services data (matching the landing page)
-const servicesData = [
-  {
-    title: "Verification-as-a-Service (VaaS)",
-    description:
-      "MRV workflows, field verification, and carbon market compliance solutions that support project developers, registries, and climate finance stakeholders.",
-    useCases: ["carbon credits", "verification", "reporting", "audit trails"],
-    icon: <CheckCircle className="w-7 h-7" />,
-    color: colors.secondaryBlue,
-    hoverDetail:
-      "End-to-end verification infrastructure covering baseline assessment, monitoring protocol design, field data collection, algorithmic cross-validation, and audit-trail generation. Designed to meet Verra VCS, Gold Standard, and UNFCCC MRV requirements.",
-    route: "/services/vaas",
-  },
-  {
-    title: "Data & Dashboard Solutions",
-    description:
-      "Enterprise-grade ESG dashboards, environmental data feeds, and automated reporting tools for operational and sustainability teams.",
-    useCases: ["ESG reporting", "supply-chain monitoring", "risk intelligence"],
-    icon: <BarChart3 className="w-7 h-7" />,
-    color: colors.goldAccent,
-    hoverDetail:
-      "Configurable SaaS dashboards delivering real-time environmental KPIs, automated alert systems, and one-click report generation. Integrates with existing BI stacks via API and supports multi-jurisdiction ESG disclosure formats.",
-    route: "/services/dashboard",
-  },
-  {
-    title: "Climate APIs",
-    description:
-      "Plug-and-play climate and environmental intelligence APIs for integration into enterprise systems, finance platforms, and digital products.",
-    useCases: ["risk scoring", "emissions data", "geospatial layers", "compliance systems"],
-    icon: <Database className="w-7 h-7" />,
-    color: "#2E7D6B",
-    hoverDetail:
-      "RESTful and GraphQL API endpoints covering land-use change, soil carbon, climate risk, MRV status, and ESG metrics. Comprehensive developer documentation, sandbox environment, and enterprise SLAs available.",
-    route: "/services/api",
-  },
-  {
-    title: "Farm-Level Compliance & Training",
-    description:
-      "Field-level data capture, grower compliance workflows, and training support for smallholder farmer programs and off-taker ecosystems.",
-    useCases: ["traceability", "grower onboarding", "field compliance", "regenerative adoption"],
-    icon: <Smartphone className="w-7 h-7" />,
-    color: colors.secondaryBlue,
-    hoverDetail:
-      "Mobile-first farmer data capture tools supporting offline field use, GPS-referenced plot mapping, and compliance checklists. Combined with structured training curricula covering climate-smart practices and digital literacy.",
-    route: "/services/farm",
-  },
-];
 
 // Approach steps (MAVHU Model)
 
@@ -133,18 +85,18 @@ const ServicesPage = () => {
   return (
     <>
       <Helmet>
-        <title>Mavhu – Services | ESG Dashboards, VaaS, Climate APIs & Farm Solutions</title>
-        <meta name="description" content="Explore Mavhu's services: Verification-as-a-Service (VaaS), ESG dashboards, climate data APIs, farm-level compliance, and training for African climate action." />
+        <title>Mavhu – Services | MRV Infrastructure, Agriculture & Financial Intelligence, Climate APIs</title>
+        <meta name="description" content="Explore Mavhu's services: MRV Infrastructure, Agriculture Intelligence, Financial Intelligence, Climate APIs, and Training & Capacity Building for African climate action." />
         <link rel="canonical" href="https://mavhuafrica.com/services" />
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="Mavhu" />
         <meta property="og:title" content="Mavhu Services – Trusted MRV, Data & APIs" />
-        <meta property="og:description" content="From automated MRV to farm-level tools, Mavhu provides the infrastructure for measurable, verifiable, and investable climate action." />
+        <meta property="og:description" content="From MRV infrastructure to agriculture and financial intelligence, Mavhu provides the infrastructure for measurable, verifiable, and investable climate action." />
         <meta property="og:url" content="https://mavhuafrica.com/services" />
         <meta property="og:image" content="https://mavhuafrica.com/logo.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Mavhu Services – Trusted MRV, Data & APIs" />
-        <meta name="twitter:description" content="From automated MRV to farm-level tools, Mavhu provides the infrastructure for measurable, verifiable, and investable climate action." />
+        <meta name="twitter:description" content="From MRV infrastructure to agriculture and financial intelligence, Mavhu provides the infrastructure for measurable, verifiable, and investable climate action." />
         <meta name="twitter:image" content="https://mavhuafrica.com/logo.jpg" />
       </Helmet>
 
@@ -203,7 +155,7 @@ const ServicesPage = () => {
         </motion.section>
 
 
-        {/* Services Section (using servicesData from landing page) */}
+        {/* Services Section (shared servicesData) */}
         <motion.section
           className="py-20 relative"
           initial="hidden"

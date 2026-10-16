@@ -39,6 +39,7 @@ import BackgroundImage3 from "../../assets/bg-api.png";
 import skyImage from "../../assets/sky.png";
 import earthImage from "../../assets/earth.png";
 import aiImage from "../../assets/automa.png";
+import { servicesData } from "../../components/servicesData";
 import { Helmet } from "react-helmet-async";   // ✅ ADDED FOR SEO
 
 // ─── Color Palette ──────────────────────────────────────────────────────────
@@ -271,45 +272,6 @@ const clientsData = [
   },
 ];
 
-const servicesData = [
-  {
-    title: "Verification-as-a-Service (VaaS)",
-    description: "MRV workflows, field verification, and carbon market compliance solutions that support project developers, registries, and climate finance stakeholders.",
-    useCases: ["carbon credits", "verification", "reporting", "audit trails"],
-    icon: <CheckCircle className="w-7 h-7" />,
-    color: colors.secondaryBlue,
-    hoverDetail: "End-to-end verification infrastructure covering baseline assessment, monitoring protocol design, field data collection, algorithmic cross-validation, and audit-trail generation. Designed to meet Verra VCS, Gold Standard, and UNFCCC MRV requirements.",
-    route: "/services/vaas",
-  },
-  {
-    title: "Data & Dashboard Solutions",
-    description: "Enterprise-grade ESG dashboards, environmental data feeds, and automated reporting tools for operational and sustainability teams.",
-    useCases: ["ESG reporting", "supply-chain monitoring", "risk intelligence"],
-    icon: <BarChart3 className="w-7 h-7" />,
-    color: colors.goldAccent,
-    hoverDetail: "Configurable SaaS dashboards delivering real-time environmental KPIs, automated alert systems, and one-click report generation. Integrates with existing BI stacks via API and supports multi-jurisdiction ESG disclosure formats.",
-    route: "/services/dashboard",
-  },
-  {
-    title: "Climate APIs",
-    description: "Plug-and-play climate and environmental intelligence APIs for integration into enterprise systems, finance platforms, and digital products.",
-    useCases: ["risk scoring", "emissions data", "geospatial layers", "compliance systems"],
-    icon: <Database className="w-7 h-7" />,
-    color: "#2E7D6B",
-    hoverDetail: "RESTful and GraphQL API endpoints covering land-use change, soil carbon, climate risk, MRV status, and ESG metrics. Comprehensive developer documentation, sandbox environment, and enterprise SLAs available.",
-    route: "/services/api",
-  },
-  {
-    title: "Farm-Level Compliance & Training",
-    description: "Field-level data capture, grower compliance workflows, and training support for smallholder farmer programs and off-taker ecosystems.",
-    useCases: ["traceability", "grower onboarding", "field compliance", "regenerative adoption"],
-    icon: <Smartphone className="w-7 h-7" />,
-    color: colors.secondaryBlue,
-    hoverDetail: "Mobile-first farmer data capture tools supporting offline field use, GPS-referenced plot mapping, and compliance checklists. Combined with structured training curricula covering climate-smart practices and digital literacy.",
-    route: "/services/farm",
-  },
-];
-
 const impactTabs = [
   {
     id: "land",
@@ -317,7 +279,6 @@ const impactTabs = [
     icon: <TreePine className="w-5 h-5" />,
     heading: "Resilient Land Systems",
     body: "Enabling healthier soils, improved land-use visibility, and climate-smart decision-making across agriculture, mining, and industrial landscapes.",
-    stats: [{ value: "50M+", label: "Hectares Monitored" }, { value: "98%", label: "Data Accuracy" }],
     points: [
       "Real-time land-cover change detection across Sub-Saharan Africa",
       "Soil carbon stock assessments supporting regenerative land management",
@@ -332,7 +293,6 @@ const impactTabs = [
     icon: <DollarSign className="w-5 h-5" />,
     heading: "Climate Finance Readiness",
     body: "Providing the verified baselines and automated MRV workflows required to unlock carbon markets, blended finance, and ESG-linked capital.",
-    stats: [{ value: "200+", label: "Projects Supported" }, { value: "$2B+", label: "Finance Enabled" }],
     points: [
       "Verified carbon baselines meeting Verra VCS and Gold Standard requirements",
       "Automated MRV reducing project development costs by up to 60%",
@@ -347,7 +307,6 @@ const impactTabs = [
     icon: <Leaf className="w-5 h-5" />,
     heading: "Smallholder Empowerment",
     body: "Strengthening grower ecosystems with plot-level intelligence, compliance workflows, and actionable environmental insights that support resilience and productivity.",
-    stats: [{ value: "5000+", label: "Farmers Enrolled" }, { value: "15+", label: "Countries" }],
     points: [
       "Plot-level soil health and productivity intelligence delivered via mobile app",
       "Compliance onboarding workflows for certification and market access",
@@ -362,7 +321,6 @@ const impactTabs = [
     icon: <Activity className="w-5 h-5" />,
     heading: "Trusted ESG & Reporting",
     body: "Delivering auditable environmental data and dashboards that improve disclosure quality, risk transparency, and sustainability governance.",
-    stats: [{ value: "100+", label: "Organisations" }, { value: "CSRD", label: "Aligned" }],
     points: [
       "Structured data outputs aligned with GRI, ISSB, SASB, and TCFD frameworks",
       "Automated report generation reducing ESG disclosure preparation time",
@@ -418,17 +376,17 @@ const LandingPage = () => {
     <>
       {/* ✅ SEO Meta Tags */}
       <Helmet>
-        <title>Mavhu – Sustainable Agriculture Intelligence</title>
+        <title>Mavhu – Africa MRV, Climate Data Africa, Carbon MRV, ESG Africa</title>
         <meta name="description" content="Mavhu provides AI-driven insights for soil health, crop yield, and carbon emissions." />
         <link rel="canonical" href="https://mavhuafrica.com/" />
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="Mavhu" />
-        <meta property="og:title" content="Mavhu – Smart Farming Solutions" />
+        <meta property="og:title" content="Mavhu – Africa MRV, Climate Data Africa, Carbon MRV, ESG Africa" />
         <meta property="og:description" content="Optimize your farm with real-time ESG dashboards." />
         <meta property="og:url" content="https://mavhuafrica.com/" />
         <meta property="og:image" content="https://mavhuafrica.com/logo.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Mavhu – Smart Farming Solutions" />
+        <meta name="twitter:title" content="Mavhu – Africa MRV, Climate Data Africa, Carbon MRV, ESG Africa" />
         <meta name="twitter:description" content="Optimize your farm with real-time ESG dashboards." />
         <meta name="twitter:image" content="https://mavhuafrica.com/logo.jpg" />
         <script type="application/ld+json">
@@ -1259,7 +1217,9 @@ const LandingPage = () => {
                   <motion.div
                     key={idx}
                     variants={cardVariants}
-                    className="relative bg-white rounded-2xl border border-[#DCE7E8] overflow-hidden cursor-pointer group transition-all duration-300"
+                    className={`relative bg-white rounded-2xl border border-[#DCE7E8] overflow-hidden cursor-pointer group transition-all duration-300 ${
+                      servicesData.length % 2 === 1 && idx === servicesData.length - 1 ? "sm:col-span-2" : ""
+                    }`}
                     style={{ boxShadow: hoveredService === idx ? `0 16px 40px ${service.color}20` : "0 4px 16px rgba(18,62,86,0.05)" }}
                     onMouseEnter={() => setHoveredService(idx)}
                     onMouseLeave={() => setHoveredService(null)}
@@ -1344,14 +1304,6 @@ const LandingPage = () => {
                     Learn About Our Training Programs <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
-                <div className="flex flex-row md:flex-col gap-8 md:gap-6">
-                  {[{ n: "100+", l: "Organisations Trained" }, { n: "5000+", l: "Individuals Empowered" }].map((s, i) => (
-                    <div key={i} className="text-center">
-                      <div className="text-3xl sm:text-4xl font-bold gradient-text">{s.n}</div>
-                      <div className="text-xs mt-1 font-medium" style={{ color: `${colors.primaryDark}70` }}>{s.l}</div>
-                    </div>
-                  ))}
-                </div>
               </div>
             </motion.div>
           </div>
@@ -1415,8 +1367,8 @@ const LandingPage = () => {
                 transition={{ duration: 0.35 }}
                 className="bg-white rounded-2xl border border-[#DCE7E8] p-7 sm:p-10 shadow-lg"
               >
-                <div className="grid lg:grid-cols-3 gap-8 items-start">
-                  <div className="lg:col-span-2">
+                <div>
+                  <div>
                     <h3 className="text-2xl sm:text-3xl font-bold mb-4" style={{ color: colors.primaryDark }}>
                       {impactTabs[activeImpactTab].heading}
                     </h3>
@@ -1431,18 +1383,6 @@ const LandingPage = () => {
                         </li>
                       ))}
                     </ul>
-                  </div>
-                  <div className="flex flex-row lg:flex-col gap-6">
-                    {impactTabs[activeImpactTab].stats.map((s, i) => (
-                      <div
-                        key={i}
-                        className="flex-1 rounded-xl p-5 text-center"
-                        style={{ backgroundColor: `${impactTabs[activeImpactTab].color}10`, border: `1px solid ${impactTabs[activeImpactTab].color}20` }}
-                      >
-                        <div className="text-3xl sm:text-4xl font-bold mb-1" style={{ color: impactTabs[activeImpactTab].color }}>{s.value}</div>
-                        <div className="text-xs font-medium" style={{ color: `${colors.primaryDark}80` }}>{s.label}</div>
-                      </div>
-                    ))}
                   </div>
                 </div>
               </motion.div>
