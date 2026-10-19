@@ -580,11 +580,11 @@ const RequestDemo = () => {
                                         <div>
                                             <h4 className="font-semibold text-[#123E56] mb-1">Email</h4>
                                             <a
-                                                href="mailto:demo@mavhu.com"
+                                                href="mailto:info@mavhuafrica.com"
                                                 className="text-[#123E56]/80 hover:underline"
                                                 style={{ color: colors.secondaryBlue }}
                                             >
-                                                info@mavhu.com
+                                                info@mavhuafrica.com
                                             </a>
                                         </div>
                                     </div>

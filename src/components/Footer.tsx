@@ -174,7 +174,7 @@ const Footer: React.FC = () => {
                 <div className="space-y-3">
                   <div className="flex items-center space-x-3">
                     <Mail className="w-4 h-4 text-[#123E56]/50" />
-                    <span className="text-[#123E56]/60 text-sm">info@mavhu.com</span>
+                    <span className="text-[#123E56]/60 text-sm">info@mavhuafrica.com</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <MapPin className="w-4 h-4 text-[#123E56]/50" />

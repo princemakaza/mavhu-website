@@ -638,7 +638,7 @@ const AboutPage = () => {
                 {
                   icon: <Mail className="w-8 h-8" />,
                   title: "Email Us",
-                  detail: "info@mavhu.com",
+                  detail: "info@mavhuafrica.com",
                   color: colors.goldAccent,
                 },
               ].map((contact, index) => (

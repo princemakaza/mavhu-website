@@ -138,7 +138,7 @@ const Contact = () => {
     {
       icon: <Mail className="w-8 h-8" />,
       title: "Email Us",
-      details: ["info@mavhu.com"],
+      details: ["info@mavhuafrica.com"],
       description: "Get detailed responses within 2 business hours",
       color: colors.secondaryBlue,
       available: "24/7 Response",
@@ -552,11 +552,11 @@ const Contact = () => {
                     <div>
                       <h4 className="font-semibold text-[#123E56] mb-1">Email</h4>
                       <a
-                        href="mailto:info@mavhu.com"
+                        href="mailto:info@mavhuafrica.com"
                         className="text-[#123E56]/80 hover:underline"
                         style={{ color: colors.secondaryBlue }}
                       >
-                        info@mavhu.com
+                        info@mavhuafrica.com
                       </a>
                     </div>
                   </div>
